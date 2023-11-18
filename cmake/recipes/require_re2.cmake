@@ -1,0 +1,5 @@
+find_path(RE2_INCLUDE_DIR NAMES re2/re2.h)
+find_library(RE2_LIBRARIES NAMES re2)
+if ((NOT RE2_INCLUDE_DIR) OR (NOT RE2_LIBRARIES))
+    message(FATAL_ERROR "Fail to find re2")
+endif ()

@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+cmake-build-debug
+build
+.idea
+*.pb.h
+
+sql_parse.yacc.*
+sql_lex.flex.*
+third-deps
+carbin

@@ -25,7 +25,7 @@
 #include "ea/gflags/config.h"
 #include "ea/base/tlog.h"
 
-namespace EA::config {
+namespace EA::rpc {
 
     class ConfigServerInteract {
     public:
@@ -141,4 +141,4 @@ namespace EA::config {
         std::mutex _master_leader_mutex;
         butil::EndPoint _master_leader_address;
     };
-}  // namespace EA::config
+}  // namespace EA::rpc

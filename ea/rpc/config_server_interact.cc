@@ -14,9 +14,9 @@
 //
 
 
-#include "ea/config/config_server_interact.h"
+#include "ea/rpc/config_server_interact.h"
 
-namespace EA::config {
+namespace EA::rpc {
 
     int ConfigServerInteract::init(bool is_backup) {
         if (is_backup) {
@@ -52,5 +52,5 @@ namespace EA::config {
         _is_inited = true;
         return 0;
     }
-}  // namespace EA::config
+}  // namespace EA::rpc
 

@@ -13,7 +13,7 @@
 // limitations under the License.
 //
 #include "ea/config/config_state_machine.h"
-#include "ea/config/config_server_interact.h"
+#include "ea/rpc/config_server_interact.h"
 #include "ea/config/config_manager.h"
 #include <braft/util.h>
 #include <braft/storage.h>
@@ -339,7 +339,7 @@ namespace EA::config {
     }
 
     int ConfigStateMachine::send_set_peer_request(bool remove_peer, const std::string &change_peer) {
-        ConfigServerInteract config_server_interact;
+        EA::rpc::ConfigServerInteract config_server_interact;
         if (config_server_interact.init() != 0) {
             TLOG_ERROR("service server interact init fail when set peer");
             return -1;

@@ -21,7 +21,7 @@ file(GLOB GFLAGS gflags/*.cc)
 file(GLOB RAFT raft/*.cc)
 #file(GLOB RAFT raft/*.cc)
 
-set(EA_COMMON
+set(EA_BASE
         ${RDB_SRC}
         ${GFLAGS}
         ${BASE}
@@ -41,11 +41,25 @@ carbin_cc_library(
         NAMESPACE ea
         NAME base
         SOURCES
-        ${EA_COMMON}
+        ${EA_BASE}
         COPTS
         ${USER_CXX_FLAGS}
         DEPS
         eaproto::eaproto_STATIC
+        ${CARBIN_DEPS_LINK}
+        PUBLIC
+)
+file(GLOB EA_RPC rpc/*.cc)
+carbin_cc_library(
+        NAMESPACE ea
+        NAME rpc
+        SOURCES
+        ${EA_RPC}
+        COPTS
+        ${USER_CXX_FLAGS}
+        DEPS
+        eaproto::eaproto_STATIC
+        ea::base
         ${CARBIN_DEPS_LINK}
         PUBLIC
 )
@@ -62,7 +76,41 @@ carbin_cc_binary(
         DEPS
         ${CARBIN_DEPS_LINK}
         ea::base
+        ea::rpc
         eaproto::eaproto_STATIC
+        PUBLIC
+)
+
+file(GLOB ROUTER router/*.cc)
+carbin_cc_binary(
+        NAMESPACE ea
+        NAME router_server
+        SOURCES
+        ${ROUTER}
+        COPTS
+        ${USER_CXX_FLAGS}
+        "-Wno-strict-aliasing"
+        DEPS
+        ${CARBIN_DEPS_LINK}
+        ea::base
+        ea::rpc
+        eaproto::eaproto_STATIC
+        PUBLIC
+)
+
+file(GLOB CLI_SRC cli/*.cc)
+carbin_cc_binary(
+        NAMESPACE ea
+        NAME eacli
+        SOURCES
+        ${CLI_SRC}
+        COPTS
+        ${USER_CXX_FLAGS}
+        "-Wno-strict-aliasing"
+        DEPS
+        ${CARBIN_DEPS_LINK}
+        eaproto::eaproto_STATIC
+        ea::rpc
         PUBLIC
 )
 
@@ -196,22 +244,7 @@ carbin_cc_binary(
         PUBLIC
 )
 
-file(GLOB ROUTER router/*.cc)
-carbin_cc_binary(
-        NAMESPACE elasticann
-        NAME earouter
-        SOURCES
-        ${ROUTER}
-        COPTS
-        ${USER_CXX_FLAGS}
-        "-Wno-strict-aliasing"
-        DEPS
-        ${CARBIN_DEPS_LINK}
-        elasticann::common
-        elasticann::ops_server
-        eaproto::eaproto_STATIC
-        PUBLIC
-)
+
 
 file(GLOB CLIENT_SRC client/*.cc)
 carbin_cc_binary(

@@ -23,7 +23,7 @@
 #include "turbo/log/sinks/daily_file_sink.h"
 #include "turbo/log/sinks/stdout_color_sinks.h"
 #include "turbo/files/filesystem.h"
-#include "ea/base/proto_helper.h"
+#include "ea/base/proto_help.h"
 #include "turbo/log/logging.h"
 
 namespace EA {

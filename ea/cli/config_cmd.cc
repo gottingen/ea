@@ -22,7 +22,7 @@
 #include "turbo/files/filesystem.h"
 #include "turbo/files/sequential_read_file.h"
 #include "turbo/times/clock.h"
-#include "ea/rpc/proto_help.h"
+#include "ea/base/proto_help.h"
 
 namespace EA::client {
     void setup_config_cmd(turbo::App &app) {
@@ -209,13 +209,13 @@ namespace EA::client {
         auto opt = ConfigOptionContext::get_instance();
         rc->set_name(opt->config_name);
         rc->set_time(static_cast<int>(turbo::ToTimeT(turbo::Now())));
-        auto r = EA::rpc::string_to_config_type(opt->config_type);
+        auto r = EA::string_to_config_type(opt->config_type);
         if (!r.ok()) {
             return r.status();
         }
         rc->set_type(r.value());
         auto v = rc->mutable_version();
-        auto st = EA::rpc::string_to_version(opt->config_version, v);
+        auto st = EA::string_to_version(opt->config_version, v);
         if (!st.ok()) {
             return st;
         }
@@ -261,7 +261,7 @@ namespace EA::client {
         rc->set_name(opt->config_name);
         if (!opt->config_version.empty()) {
             auto v = rc->mutable_version();
-            return EA::rpc::string_to_version(opt->config_version, v);
+            return EA::string_to_version(opt->config_version, v);
         }
         return turbo::OkStatus();
     }
@@ -274,7 +274,7 @@ namespace EA::client {
         rc->set_name(opt->config_name);
         if (!opt->config_version.empty()) {
             auto v = rc->mutable_version();
-            return EA::rpc::string_to_version(opt->config_version, v);
+            return EA::string_to_version(opt->config_version, v);
         }
         return turbo::OkStatus();
     }
@@ -326,7 +326,7 @@ namespace EA::client {
                                                             res.config_response().config().version().patch())});
         auto last = result_table.size() - 1;
         result_table[last].format().font_color(turbo::Color::green);
-        result_table.add_row(turbo::Table::Row_t{"type", EA::rpc::config_type_to_string(res.config_response().config().type())});
+        result_table.add_row(turbo::Table::Row_t{"type", EA::config_type_to_string(res.config_response().config().type())});
         last = result_table.size() - 1;
         result_table[last].format().font_color(turbo::Color::green);
         result_table.add_row(turbo::Table::Row_t{"size", turbo::Format(res.config_response().config().content().size())});

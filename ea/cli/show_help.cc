@@ -94,7 +94,7 @@ namespace EA::client {
         } else if (!s.ok()) {
             result.add_row(
                     Row_t{"fail", turbo::Format("{}", static_cast<int>(req.op_type())),
-                          EA::rpc::get_op_string(req.op_type()),
+                          EA::get_op_string(req.op_type()),
                           s.message()});
             auto last = result.size() - 1;
             result[last][0].format().font_color(turbo::Color::red).font_style(
@@ -103,7 +103,7 @@ namespace EA::client {
         } else {
             result.add_row(
                     Row_t{"success", turbo::Format("{}", static_cast<int>(req.op_type())),
-                          EA::rpc::get_op_string(req.op_type()),
+                          EA::get_op_string(req.op_type()),
                           s.message()});
             auto last = result.size() - 1;
             result[last][0].format().font_color(turbo::Color::green).font_style(
@@ -128,7 +128,7 @@ namespace EA::client {
         } else if (!s.ok()) {
             result.add_row(
                     Row_t{"fail", turbo::Format("{}", static_cast<int>(req.op_type())),
-                          EA::rpc::get_op_string(req.op_type()),
+                          EA::get_op_string(req.op_type()),
                           s.message()});
             auto last = result.size() - 1;
             result[last][0].format().font_color(turbo::Color::red).font_style(
@@ -137,7 +137,7 @@ namespace EA::client {
         } else {
             result.add_row(
                     Row_t{"success", turbo::Format("{}", static_cast<int>(req.op_type())),
-                          EA::rpc::get_op_string(req.op_type()),
+                          EA::get_op_string(req.op_type()),
                           s.message()});
             auto last = result.size() - 1;
             result[last][0].format().font_color(turbo::Color::green).font_style(

@@ -19,7 +19,7 @@
 #include "turbo/base/status.h"
 #include "eaproto/router/router.interface.pb.h"
 #include "turbo/format/table.h"
-#include "ea/rpc/proto_help.h"
+#include "ea/base/proto_help.h"
 
 namespace EA::client {
     class ShowHelper {
@@ -53,18 +53,18 @@ namespace EA::client {
     /// inlines
     ///
     inline turbo::Table ShowHelper::show_response(const std::string_view &server, EA::proto::ErrCode code, EA::proto::QueryOpType qt, const std::string &msg) {
-        return show_response_impl(server, code, static_cast<int>(qt), EA::rpc::get_op_string(qt), msg);
+        return show_response_impl(server, code, static_cast<int>(qt), EA::get_op_string(qt), msg);
     }
 
     inline turbo::Table ShowHelper::show_response(const std::string_view &server, EA::proto::ErrCode code, EA::proto::OpType qt, const std::string &msg) {
-        return show_response_impl(server, code, static_cast<int>(qt), EA::rpc::get_op_string(qt), msg);
+        return show_response_impl(server, code, static_cast<int>(qt), EA::get_op_string(qt), msg);
     }
 
     inline turbo::Table ShowHelper::rpc_error_status(const turbo::Status &s, EA::proto::OpType qt) {
-        return rpc_error_status_impl(s, static_cast<int>(qt), EA::rpc::get_op_string(qt));
+        return rpc_error_status_impl(s, static_cast<int>(qt), EA::get_op_string(qt));
     }
     inline turbo::Table ShowHelper::rpc_error_status(const turbo::Status &s, EA::proto::QueryOpType qt) {
-        return rpc_error_status_impl(s, static_cast<int>(qt), EA::rpc::get_op_string(qt));
+        return rpc_error_status_impl(s, static_cast<int>(qt), EA::get_op_string(qt));
     }
 
     struct ScopeShower {

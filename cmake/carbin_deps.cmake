@@ -71,29 +71,6 @@ else ()
     SET(ZLIB_LIBRARIES z)
 endif ()
 
-#rapidjson
-if (CARBIN_WITH_SYSTEM_LIBS)
-    find_path(RAPIDJSON_INCLUDE_DIR NAMES rapidjson/rapidjson.h)
-    if (NOT RAPIDJSON_INCLUDE_DIR)
-        message(FATAL_ERROR "Fail to find rapidjson")
-    endif ()
-    ADD_LIBRARY(rapidjson SHARED IMPORTED GLOBAL)
-else ()
-    include(rapidjson)
-endif ()
-
-#apache arrow
-if (CARBIN_WITH_SYSTEM_LIBS)
-    find_path(ARROW_INCLUDE_DIR NAMES arrow/api.h)
-    find_library(ARROW_LIBRARIES NAMES arrow)
-    if ((NOT ARROW_INCLUDE_DIR) OR (NOT ARROW_LIBRARIES))
-        message(FATAL_ERROR "Fail to find arrow")
-    endif ()
-    ADD_LIBRARY(arrow SHARED IMPORTED GLOBAL)
-else ()
-    include(arrow)
-endif ()
-
 #bluebird
 if (CARBIN_WITH_SYSTEM_LIBS)
     find_path(TURBO_INCLUDE_DIR NAMES turbo/version.h)
@@ -226,9 +203,7 @@ SET(DEP_INC
         ${OPENSSL_INCLUDE_DIR}
         ${ZLIB_INCLUDE_DIR}
         #        ${BZ2_INCLUDE_DIR}
-        ${ARROW_INCLUDE_DIR}
         ${BLUEBIRD_INCLUDE_DIR}
-        ${RAPIDJSON_INCLUDE_DIR}
 
         ${PROTOBUF_INCLUDE_DIR}
         ${GFLAGS_INCLUDE_DIR}
@@ -251,7 +226,6 @@ set(CARBIN_DEPS_LINK
         ${OPENSSL_SSL_LIBRARY}
         ${LEVELDB_LIBRARIES}
         ${ROCKSDB_LIBRARIES}
-        ${ARROW_LIBRARIES}
         ${SNAPPY_LIBRARIES}
         ${ZLIB_LIBRARIES}
         ${GFLAGS_LIBRARIES}

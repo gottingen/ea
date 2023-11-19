@@ -18,7 +18,7 @@
 #include <fstream>
 #include <brpc/server.h>
 #include <gflags/gflags.h>
-#include "ea/dict/dict_server.h"
+#include "ea/ops/dict/dict_server.h"
 #include "ea/rdb/storage.h"
 #include "ea/base/memory_profile.h"
 #include "turbo/files/filesystem.h"

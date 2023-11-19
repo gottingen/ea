@@ -13,8 +13,8 @@
 // limitations under the License.
 //
 
-#ifndef EA_CONFIG_CONFIG_SERVER_H_
-#define EA_CONFIG_CONFIG_SERVER_H_
+#ifndef EA_OPS_CONFIG_CONFIG_SERVER_H_
+#define EA_OPS_CONFIG_CONFIG_SERVER_H_
 
 #include "eaproto/ops/ops.interface.pb.h"
 #include "brpc/closure_guard.h"
@@ -55,4 +55,4 @@ namespace EA::config {
 
 }  // namespace EA::config
 
-#endif  // EA_CONFIG_CONFIG_SERVER_H_
+#endif  // EA_OPS_CONFIG_CONFIG_SERVER_H_

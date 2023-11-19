@@ -13,9 +13,9 @@
 // limitations under the License.
 //
 
-#include "ea/dict/dict_manager.h"
-#include "ea/dict/dict_state_machine.h"
-#include "ea/dict/dict_meta.h"
+#include "ea/ops/dict/dict_manager.h"
+#include "ea/ops/dict/dict_state_machine.h"
+#include "ea/ops/dict/dict_meta.h"
 #include "ea/base/file_util.h"
 #include "turbo/files/utility.h"
 #include "braft/raft.h"

@@ -26,7 +26,7 @@ set(EA_BASE
         ${GFLAGS}
         ${BASE}
         ${RAFT}
-        )
+)
 
 add_definitions(
         -D_GNU_SOURCE
@@ -80,7 +80,22 @@ carbin_cc_library(
         PUBLIC
 )
 
-file(GLOB_RECURSE CONFIG_SERVER config/*.cc)
+set(OPS_SRC
+        ${PROJECT_SOURCE_DIR}/ea/ops/constants.cc
+        ${PROJECT_SOURCE_DIR}/ea/ops/raft_dummy.cc
+)
+carbin_cc_library(
+        NAMESPACE ea
+        NAME ops
+        SOURCES
+        ${OPS_SRC}
+        COPTS
+        ${USER_CXX_FLAGS}
+        PUBLIC
+)
+
+
+file(GLOB_RECURSE CONFIG_SERVER ops/config/*.cc)
 carbin_cc_binary(
         NAMESPACE ea
         NAME config_server
@@ -92,12 +107,13 @@ carbin_cc_binary(
         DEPS
         ${CARBIN_DEPS_LINK}
         ea::base
+        ea::ops
         ea::rpc
         eaproto::eaproto_STATIC
         PUBLIC
 )
 
-file(GLOB_RECURSE DICT_SERVER dict/*.cc)
+file(GLOB_RECURSE DICT_SERVER ops/dict/*.cc)
 carbin_cc_binary(
         NAMESPACE ea
         NAME dict_server
@@ -109,6 +125,7 @@ carbin_cc_binary(
         DEPS
         ${CARBIN_DEPS_LINK}
         ea::base
+        ea::ops
         ea::rpc
         eaproto::eaproto_STATIC
         PUBLIC

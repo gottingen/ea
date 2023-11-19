@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include "ea/config/query_config_manager.h"
-#include "ea/config/config_manager.h"
+#include "ea/ops/config/query_config_manager.h"
+#include "ea/ops/config/config_manager.h"
 
 namespace EA::config {
 

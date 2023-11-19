@@ -14,8 +14,8 @@
 //
 
 
-#ifndef EA_CONFIG_CONFIG_MANAGER_H_
-#define EA_CONFIG_CONFIG_MANAGER_H_
+#ifndef EA_OPS_CONFIG_CONFIG_MANAGER_H_
+#define EA_OPS_CONFIG_CONFIG_MANAGER_H_
 
 #include "turbo/container/flat_hash_map.h"
 #include "eaproto/ops/ops.interface.pb.h"
@@ -69,4 +69,4 @@ namespace EA::config {
         bthread_mutex_destroy(&_config_mutex);
     }
 }  // namespace EA::config
-#endif  // EA_CONFIG_CONFIG_MANAGER_H_
+#endif  // EA_OPS_CONFIG_CONFIG_MANAGER_H_

@@ -13,8 +13,8 @@
 // limitations under the License.
 //
 
-#ifndef EA_DICT_QUERY_DICT_MANAGER_H_
-#define EA_DICT_QUERY_DICT_MANAGER_H_
+#ifndef EA_OPS_DICT_QUERY_DICT_MANAGER_H_
+#define EA_OPS_DICT_QUERY_DICT_MANAGER_H_
 
 #include "eaproto/ops/ops.interface.pb.h"
 #include "turbo/container/flat_hash_map.h"
@@ -94,4 +94,4 @@ namespace EA::dict {
     }
 }  // namespace EA::dict
 
-#endif  // EA_DICT_QUERY_DICT_MANAGER_H_
+#endif  // EA_OPS_DICT_QUERY_DICT_MANAGER_H_

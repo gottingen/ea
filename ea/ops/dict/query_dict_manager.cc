@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include "ea/dict/query_dict_manager.h"
-#include "ea/dict/dict_manager.h"
+#include "ea/ops/dict/query_dict_manager.h"
+#include "ea/ops/dict/dict_manager.h"
 #include "ea/base/file_util.h"
 #include "ea/base/tlog.h"
 

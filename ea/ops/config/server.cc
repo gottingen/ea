@@ -18,7 +18,7 @@
 #include <fstream>
 #include <brpc/server.h>
 #include <gflags/gflags.h>
-#include "ea/config/config_server.h"
+#include "ea/ops/config/config_server.h"
 #include "ea/gflags/config.h"
 #include "ea/rdb/storage.h"
 #include "turbo/files/filesystem.h"

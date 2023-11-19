@@ -13,34 +13,18 @@
 // limitations under the License.
 //
 
-#ifndef EA_DICT_DICT_META_H_
-#define EA_DICT_DICT_META_H_
+#ifndef EA_OPS_CONSTANTS_H_
+#define EA_OPS_CONSTANTS_H_
 
-#include "ea/rdb/rkv.h"
+#include <string>
 
-namespace EA::dict {
+namespace EA {
 
-    class DictMeta {
-    public:
-        static DictMeta *get_instance() {
-            static DictMeta ins;
-            return &ins;
-        }
-
-        static EA::rdb::Rkv *get_rkv() {
-            return &get_instance()->_rkv;
-        }
-
-    private:
-        DictMeta();
-
-    private:
-        EA::rdb::Rkv _rkv;
+    struct OpsConstants {
+        static const std::string kOpsConfigPrefix;
+        static const std::string kOpsDictPrefix;
+        static const std::string kOpsMaxPrefix;
     };
+}  // namespace EA
 
-    inline DictMeta::DictMeta(){
-        _rkv.init(std::string(1, 0x02));
-    }
-}  // namespace EA::dict
-
-#endif // EA_DICT_DICT_META_H_
+#endif  // EA_OPS_CONSTANTS_H_

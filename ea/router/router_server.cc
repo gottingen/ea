@@ -20,6 +20,7 @@
 #include "ea/base/tlog.h"
 #include "ea/rpc/config_server_interact.h"
 #include "ea/rpc/dict_server_interact.h"
+#include "ea/rpc/plugin_server_interact.h"
 #include "ea/gflags/router.h"
 
 namespace EA {
@@ -35,14 +36,20 @@ int main(int argc, char **argv) {
         return -1;
     }
     TLOG_INFO("log file load success");
-    // init meta interact
+    // init config interact
     auto r = EA::rpc::ConfigServerInteract::get_instance()->init();
     if (!r.ok()) {
         return -1;
     }
 
-    // init meta interact
+    // init dict interact
     auto ret= EA::rpc::DictServerInteract::get_instance()->init();
+    if (ret != 0) {
+        return -1;
+    }
+
+    // init meta interact
+    ret= EA::rpc::PluginServerInteract::get_instance()->init();
     if (ret != 0) {
         return -1;
     }

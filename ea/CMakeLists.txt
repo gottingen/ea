@@ -131,6 +131,24 @@ carbin_cc_binary(
         PUBLIC
 )
 
+file(GLOB_RECURSE PLUGIN_SERVER ops/plugin/*.cc)
+carbin_cc_binary(
+        NAMESPACE ea
+        NAME plugin_server
+        SOURCES
+        ${PLUGIN_SERVER}
+        COPTS
+        ${USER_CXX_FLAGS}
+        "-Wno-strict-aliasing"
+        DEPS
+        ${CARBIN_DEPS_LINK}
+        ea::base
+        ea::ops
+        ea::rpc
+        eaproto::eaproto_STATIC
+        PUBLIC
+)
+
 file(GLOB ROUTER router/*.cc)
 carbin_cc_binary(
         NAMESPACE ea

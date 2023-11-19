@@ -13,19 +13,35 @@
 // limitations under the License.
 //
 
-#ifndef EA_OPS_CONSTANTS_H_
-#define EA_OPS_CONSTANTS_H_
+#ifndef EA_OPS_PLUGIN_PLUGIN_META_H_
+#define EA_OPS_PLUGIN_PLUGIN_META_H_
 
-#include <string>
+#include "ea/rdb/rkv.h"
+#include "ea/ops/constants.h"
 
-namespace EA {
+namespace EA::plugin {
 
-    struct OpsConstants {
-        static const std::string kOpsConfigPrefix;
-        static const std::string kOpsDictPrefix;
-        static const std::string kOpsPluginPrefix;
-        static const std::string kOpsMaxPrefix;
+    class PluginMeta {
+    public:
+        static PluginMeta *get_instance() {
+            static PluginMeta ins;
+            return &ins;
+        }
+
+        static EA::rdb::Rkv *get_rkv() {
+            return &get_instance()->_rkv;
+        }
+
+    private:
+        PluginMeta();
+
+    private:
+        EA::rdb::Rkv _rkv;
     };
-}  // namespace EA
 
-#endif  // EA_OPS_CONSTANTS_H_
+    inline PluginMeta::PluginMeta(){
+        _rkv.init(EA::OpsConstants::kOpsPluginPrefix);
+    }
+}  // namespace EA::plugin
+
+#endif // EA_OPS_PLUGIN_PLUGIN_META_H_

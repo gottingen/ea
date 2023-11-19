@@ -21,5 +21,6 @@ namespace EA {
 
     const std::string OpsConstants::kOpsConfigPrefix(1, 0x01);
     const std::string OpsConstants::kOpsDictPrefix(1, 0x02);
+    const std::string OpsConstants::kOpsPluginPrefix(1, 0x03);
     const std::string OpsConstants::kOpsMaxPrefix(1, 0xFF);
 }  // namespace EA

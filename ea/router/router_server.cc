@@ -47,14 +47,16 @@ int main(int argc, char**argv) {
         return -1;
     }
     EA::restful::ConfigServer config_restful;
-    if (0 != server.AddService(&config_restful, brpc::SERVER_DOESNT_OWN_SERVICE,
-                               "config/create => create_config,"
-                               "config/remove => remove_config,"
-                               "config/get => get_config,"
-                               "config/list => get_config_list,"
-                               "config/lv => get_config_version_list")) {
-        TLOG_ERROR("Fail to Add config restful service");
-        return -1;
+    if(EA::FLAGS_enable_restful) {
+        if (0 != server.AddService(&config_restful, brpc::SERVER_DOESNT_OWN_SERVICE,
+                                   "config/create => create_config,"
+                                   "config/remove => remove_config,"
+                                   "config/get => get_config,"
+                                   "config/list => get_config_list,"
+                                   "config/lv => get_config_version_list")) {
+            TLOG_ERROR("Fail to Add config restful service");
+            return -1;
+        }
     }
 
     if (server.Start(EA::FLAGS_router_listen.c_str(), nullptr) != 0) {

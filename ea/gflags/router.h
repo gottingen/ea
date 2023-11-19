@@ -20,6 +20,7 @@
 
 namespace EA {
     DECLARE_string(router_listen);
+    DECLARE_bool(enable_restful);
 }  // namespace EA
 
 #endif  // EA_GFLAGS_ROUTER_H_

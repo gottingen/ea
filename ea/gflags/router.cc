@@ -17,4 +17,5 @@
 
 namespace EA {
     DEFINE_string(router_listen, "0.0.0.0:8888", "router default ip port");
+    DEFINE_bool(enable_restful, true, "router default enable restful");
 }

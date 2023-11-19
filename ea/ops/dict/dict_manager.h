@@ -14,8 +14,8 @@
 //
 
 
-#ifndef EA_DICT_DICT_MANAGER_H_
-#define EA_DICT_DICT_MANAGER_H_
+#ifndef EA_OPS_DICT_DICT_MANAGER_H_
+#define EA_OPS_DICT_DICT_MANAGER_H_
 
 #include "turbo/container/flat_hash_map.h"
 #include "eaproto/ops/ops.interface.pb.h"
@@ -98,4 +98,4 @@ namespace EA::dict {
     }
 }  // namespace EA::dict
 
-#endif  // EA_DICT_DICT_MANAGER_H_
+#endif  // EA_OPS_DICT_DICT_MANAGER_H_

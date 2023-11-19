@@ -13,85 +13,84 @@
 // limitations under the License.
 //
 
-#ifndef EA_DICT_QUERY_DICT_MANAGER_H_
-#define EA_DICT_QUERY_DICT_MANAGER_H_
+#ifndef EA_OPS_QUERY_PLUGIN_MANAGER_H_
+#define EA_OPS_QUERY_PLUGIN_MANAGER_H_
 
 #include "eaproto/ops/ops.interface.pb.h"
 #include "turbo/container/flat_hash_map.h"
 #include "ea/base/lru_cache.h"
-#include "ea/gflags/dict.h"
 #include "turbo/files/filesystem.h"
 #include <bthread/mutex.h>
 #include <memory>
 
-namespace EA::dict {
+namespace EA::plugin {
 
-    struct CacheFile {
+    struct CachePlugin {
         int fd{-1};
 
-        ~CacheFile();
+        ~CachePlugin();
 
         std::string file_path;
     };
-    typedef std::shared_ptr<CacheFile> CacheFilePtr;
+    typedef std::shared_ptr<CachePlugin> CachePluginPtr;
 
-    class QueryDictManager {
+    class QueryPluginManager {
     public:
-        static QueryDictManager *get_instance() {
-            static QueryDictManager ins;
+        static QueryPluginManager *get_instance() {
+            static QueryPluginManager ins;
             return &ins;
         }
 
-        ~QueryDictManager();
+        ~QueryPluginManager();
 
         std::string kReadLinkDir;
 
         void init();
 
         void
-        download_dict(const ::EA::proto::QueryOpsServiceRequest *request,
+        download_plugin(const ::EA::proto::QueryOpsServiceRequest *request,
                         ::EA::proto::QueryOpsServiceResponse *response);
 
         void
-        list_dict(const ::EA::proto::QueryOpsServiceRequest *request, ::EA::proto::QueryOpsServiceResponse *response);
+        list_plugin(const ::EA::proto::QueryOpsServiceRequest *request, ::EA::proto::QueryOpsServiceResponse *response);
 
         void
-        tombstone_list_dict(const ::EA::proto::QueryOpsServiceRequest *request,
+        tombstone_list_plugin(const ::EA::proto::QueryOpsServiceRequest *request,
                               ::EA::proto::QueryOpsServiceResponse *response);
 
         void
-        list_dict_version(const ::EA::proto::QueryOpsServiceRequest *request,
+        list_plugin_version(const ::EA::proto::QueryOpsServiceRequest *request,
                             ::EA::proto::QueryOpsServiceResponse *response);
 
         void
-        tombstone_list_dict_version(const ::EA::proto::QueryOpsServiceRequest *request,
+        tombstone_list_plugin_version(const ::EA::proto::QueryOpsServiceRequest *request,
                                       ::EA::proto::QueryOpsServiceResponse *response);
 
 
         void
-        dict_info(const ::EA::proto::QueryOpsServiceRequest *request,
+        plugin_info(const ::EA::proto::QueryOpsServiceRequest *request,
                     ::EA::proto::QueryOpsServiceResponse *response);
 
         void
-        tombstone_dict_info(const ::EA::proto::QueryOpsServiceRequest *request,
+        tombstone_plugin_info(const ::EA::proto::QueryOpsServiceRequest *request,
                               ::EA::proto::QueryOpsServiceResponse *response);
 
     private:
-        QueryDictManager();
+        QueryPluginManager();
 
     private:
-        friend class CacheFile;
-        Cache<std::string, CacheFilePtr> _cache;
-        bthread_mutex_t _dict_cache_mutex;
+        friend class CachePlugin;
+        Cache<std::string, CachePluginPtr> _cache;
+        bthread_mutex_t _plugin_mutex;
     };
 
-    inline QueryDictManager::QueryDictManager() {
-        bthread_mutex_init(&_dict_cache_mutex, nullptr);
+    inline QueryPluginManager::QueryPluginManager() {
+        bthread_mutex_init(&_plugin_mutex, nullptr);
     }
 
-    inline QueryDictManager::~QueryDictManager() {
-        bthread_mutex_destroy(&_dict_cache_mutex);
+    inline QueryPluginManager::~QueryPluginManager() {
+        bthread_mutex_destroy(&_plugin_mutex);
     }
-}  // namespace EA::dict
+}  // namespace EA::plugin
 
-#endif  // EA_DICT_QUERY_DICT_MANAGER_H_
+#endif  // EA_OPS_QUERY_PLUGIN_MANAGER_H_

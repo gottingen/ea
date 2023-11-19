@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include "ea/config/config_manager.h"
-#include "ea/config/config_rkv.h"
-#include "ea/config/config_state_machine.h"
+#include "ea/ops/config/config_manager.h"
+#include "ea/ops/config/config_rkv.h"
+#include "ea/ops/config/config_state_machine.h"
 
 namespace EA::config {
 

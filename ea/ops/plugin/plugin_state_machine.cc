@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include "ea/dict/dict_state_machine.h"
-#include "ea/rpc/dict_server_interact.h"
-#include "ea/dict/dict_manager.h"
-#include "ea/dict/dict_meta.h"
+#include "ea/ops/plugin/plugin_state_machine.h"
+#include "ea/rpc/plugin_server_interact.h"
+#include "ea/ops/plugin/plugin_manager.h"
+#include "ea/ops/plugin/plugin_meta.h"
 #include <braft/util.h>
 #include <braft/storage.h>
 #include "ea/raft/parse_path.h"
 
-namespace EA::dict {
+namespace EA::plugin {
 
-    void DictServiceClosure::Run() {
+    void PluginServiceClosure::Run() {
         if (!status().ok()) {
             if (response) {
                 response->set_errcode(proto::NOT_LEADER);
@@ -38,16 +38,16 @@ namespace EA::dict {
         delete this;
     }
 
-    int DictStateMachine::init(const std::vector<braft::PeerId> &peers) {
+    int PluginStateMachine::init(const std::vector<braft::PeerId> &peers) {
         braft::NodeOptions options;
-        options.election_timeout_ms = FLAGS_dict_election_timeout_ms;
+        options.election_timeout_ms = FLAGS_plugin_election_timeout_ms;
         options.fsm = this;
         options.initial_conf = braft::Configuration(peers);
-        options.snapshot_interval_s = FLAGS_dict_snapshot_interval_s;
-        options.log_uri = FLAGS_dict_log_uri;
+        options.snapshot_interval_s = FLAGS_plugin_snapshot_interval_s;
+        options.log_uri = FLAGS_plugin_log_uri + "0";
         //options.stable_uri = FLAGS_service_stable_uri + "/meta_server";
-        options.raft_meta_uri = FLAGS_dict_stable_uri;// + _file_path;
-        options.snapshot_uri = FLAGS_dict_snapshot_uri;// + _file_path;
+        options.raft_meta_uri = FLAGS_plugin_stable_uri;// + _file_path;
+        options.snapshot_uri = FLAGS_plugin_snapshot_uri;// + _file_path;
         int ret = _node.init(options);
         if (ret < 0) {
             TLOG_ERROR("raft node init fail");
@@ -57,7 +57,7 @@ namespace EA::dict {
         return 0;
     }
 
-    void DictStateMachine::process(google::protobuf::RpcController *controller,
+    void PluginStateMachine::process(google::protobuf::RpcController *controller,
                                    const proto::OpsServiceRequest *request,
                                    proto::OpsServiceResponse *response,
                                    google::protobuf::Closure *done) {
@@ -79,7 +79,7 @@ namespace EA::dict {
             cntl->SetFailed(brpc::EREQUEST, "Fail to serialize request");
             return;
         }
-        DictServiceClosure *closure = new DictServiceClosure;
+        PluginServiceClosure *closure = new PluginServiceClosure;
         closure->request = request->ShortDebugString();
         closure->cntl = cntl;
         closure->response = response;
@@ -91,9 +91,9 @@ namespace EA::dict {
         _node.apply(task);
     }
 
-    void DictStateMachine::start_check_bns() {
+    void PluginStateMachine::start_check_bns() {
         //bns ，自动探测是否迁移
-        if (FLAGS_dict_server_bns.find(":") == std::string::npos) {
+        if (FLAGS_plugin_server_bns.find(":") == std::string::npos) {
             if (!_check_start) {
                 auto fun = [this]() {
                     start_check_migrate();
@@ -104,8 +104,8 @@ namespace EA::dict {
         }
     }
 
-    void DictStateMachine::on_snapshot_save(braft::SnapshotWriter *writer, braft::Closure *done) {
-        TLOG_WARN("start on dict snapshot save");
+    void PluginStateMachine::on_snapshot_save(braft::SnapshotWriter *writer, braft::Closure *done) {
+        TLOG_WARN("start on snapshot save");
         //create a snapshot
         Bthread bth(&BTHREAD_ATTR_SMALL);
         std::function<void()> save_snapshot_function = [this, done, writer]() {
@@ -114,49 +114,49 @@ namespace EA::dict {
         bth.run(save_snapshot_function);
     }
 
-    void DictStateMachine::save_snapshot(braft::Closure *done, braft::SnapshotWriter *writer) {
+    void PluginStateMachine::save_snapshot(braft::Closure *done, braft::SnapshotWriter *writer) {
         brpc::ClosureGuard done_guard(done);
-        std::string snapshot_path = writer->get_path();
-        std::string sst_file_path = snapshot_path + FLAGS_dict_snapshot_sst;
 
-        auto rs = DictMeta::get_rkv()->dump(sst_file_path);
+        std::string snapshot_path = writer->get_path();
+        std::string sst_file_path = snapshot_path + FLAGS_plugin_snapshot_sst;
+
+        auto rs = PluginMeta::get_rkv()->dump(sst_file_path);
         if (!rs.ok()) {
             done->status().set_error(EINVAL, "Fail to finish SstFileWriter");
             return;
         }
-        if (writer->add_file(FLAGS_dict_snapshot_sst) != 0) {
+        if (writer->add_file(FLAGS_plugin_snapshot_sst) != 0) {
             done->status().set_error(EINVAL, "Fail to add file");
             TLOG_WARN("Error while adding file to writer");
             return;
         }
-        /// dict files;
-        std::string dict_base_path = snapshot_path + "/dicts";
+        /// plugin files;
+        std::string plugin_base_path = snapshot_path + "/plugins";
         std::error_code ec;
-        turbo::filesystem::create_directories(dict_base_path, ec);
+        turbo::filesystem::create_directories(plugin_base_path, ec);
         if(ec) {
-            TLOG_WARN("Error while create dicts file snapshot path:{}", dict_base_path);
+            TLOG_WARN("Error while create plugin file snapshot path:{}", plugin_base_path);
             return;
         }
         std::vector<std::string> files;
-        if(DictManager::get_instance()->save_snapshot(snapshot_path, "/dicts",files) != 0) {
-            done->status().set_error(EINVAL, "Fail to snapshot file");
-            TLOG_WARN("Fail to snapshot file");
+        if(PluginManager::get_instance()->save_snapshot(snapshot_path, "/plugins",files) != 0) {
+            done->status().set_error(EINVAL, "Fail to snapshot plugin");
+            TLOG_WARN("Fail to snapshot plugin");
             return;
         }
         for(auto & f: files) {
             if (writer->add_file(f) != 0) {
                 done->status().set_error(EINVAL, "Fail to add file");
-                TLOG_WARN("Error while adding file to writer: {}", "/dicts/" + f);
+                TLOG_WARN("Error while adding file to writer: {}", "/plugins/" + f);
                 return;
             }
         }
     }
 
-    int DictStateMachine::on_snapshot_load(braft::SnapshotReader *reader) {
+    int PluginStateMachine::on_snapshot_load(braft::SnapshotReader *reader) {
         TLOG_WARN("start on snapshot load");
         // clean local data
-        // clean local data
-        auto rs = DictMeta::get_rkv()->clean();
+        auto rs = PluginMeta::get_rkv()->clean();
         if (!rs.ok()) {
             return -1;
         }
@@ -164,14 +164,14 @@ namespace EA::dict {
         reader->list_files(&files);
         for (auto &file: files) {
             TLOG_WARN("snapshot load file:{}", file);
-            if (file == FLAGS_dict_snapshot_sst) {
+            if (file == FLAGS_plugin_snapshot_sst) {
                 std::string snapshot_path = reader->get_path();
                 _applied_index = parse_snapshot_index_from_path(snapshot_path, false);
                 TLOG_WARN("_applied_index:{} path:{}", _applied_index, snapshot_path);
-                snapshot_path.append(FLAGS_dict_snapshot_sst);
+                snapshot_path.append(FLAGS_plugin_snapshot_sst);
 
                 // restore from file
-                auto res = DictMeta::get_rkv()->load(snapshot_path);
+                auto res = PluginMeta::get_rkv()->load(snapshot_path);
                 if (!res.ok()) {
                     TLOG_WARN("Error while ingest file {}, Error {}",
                               snapshot_path, res.ToString());
@@ -180,16 +180,16 @@ namespace EA::dict {
                 }
                 // restore memory store
                 int ret = 0;
-                ret =DictManager::get_instance()->load_snapshot();
+                ret =PluginManager::get_instance()->load_snapshot();
                 if (ret != 0) {
-                    TLOG_ERROR("DictManager load snapshot fail");
+                    TLOG_ERROR("PluginManager load snapshot fail");
                     return -1;
                 }
             }
-            if(turbo::StartsWith(file, "/dicts")) {
-                int ret =DictManager::get_instance()->load_snapshot_file(reader->get_path() + file);
+            if(turbo::StartsWith(file, "/plugins")) {
+                int ret =PluginManager::get_instance()->load_snapshot_file(reader->get_path() + file);
                 if (ret != 0) {
-                    TLOG_ERROR("DictManager load snapshot dict fail");
+                    TLOG_ERROR("PluginManager load snapshot file fail");
                     return -1;
                 }
             }
@@ -197,13 +197,13 @@ namespace EA::dict {
         set_have_data(true);
         return 0;
     }
-    void DictStateMachine::on_leader_start(int64_t term) {
+    void PluginStateMachine::on_leader_start(int64_t term) {
         TLOG_INFO("leader start at term: {}", term);
         start_check_bns();
         _is_leader.store(true);
     }
 
-    void DictStateMachine::on_leader_stop(const butil::Status &status) {
+    void PluginStateMachine::on_leader_stop(const butil::Status &status) {
         TLOG_INFO("leader stop, error_code:%d, error_des:{}",
                   status.error_code(), status.error_cstr());
         _is_leader.store(false);
@@ -215,12 +215,12 @@ namespace EA::dict {
         TLOG_INFO("leader stop");
     }
 
-    void DictStateMachine::on_error(const ::braft::Error &e) {
+    void PluginStateMachine::on_error(const ::braft::Error &e) {
         TLOG_ERROR("service state machine error, error_type:{}, error_code:{}, error_des:{}",
                    static_cast<int>(e.type()), e.status().error_code(), e.status().error_cstr());
     }
 
-    void DictStateMachine::on_configuration_committed(const ::braft::Configuration &conf) {
+    void PluginStateMachine::on_configuration_committed(const ::braft::Configuration &conf) {
         std::string new_peer;
         for (auto iter = conf.begin(); iter != conf.end(); ++iter) {
             new_peer += iter->to_string() + ",";
@@ -228,10 +228,10 @@ namespace EA::dict {
         TLOG_INFO("new conf committed, new peer: {}", new_peer.c_str());
     }
 
-    void DictStateMachine::start_check_migrate() {
+    void PluginStateMachine::start_check_migrate() {
         TLOG_INFO("start check migrate");
         static int64_t count = 0;
-        int64_t sleep_time_count = FLAGS_dict_check_migrate_interval_us / (1000 * 1000LL); //以S为单位
+        int64_t sleep_time_count = FLAGS_plugin_check_migrate_interval_us / (1000 * 1000LL); //以S为单位
         while (_node.is_leader()) {
             int time = 0;
             while (time < sleep_time_count) {
@@ -247,17 +247,17 @@ namespace EA::dict {
         }
     }
 
-    void DictStateMachine::check_migrate() {
+    void PluginStateMachine::check_migrate() {
         //判断service server是否需要做迁移
         std::vector<std::string> instances;
         std::string remove_peer;
         std::string add_peer;
         int ret = 0;
         /*
-        if (get_instance_from_bns(&ret, FLAGS_dict_server_bns, instances, false) != 0 ||
-            (int32_t) instances.size() != FLAGS_dict_replica_number) {
+        if (get_instance_from_bns(&ret, FLAGS_plugin_server_bns, instances, false) != 0 ||
+            (int32_t) instances.size() != FLAGS_plugin_replica_number) {
             TLOG_WARN("get instance from bns fail, bns:%s, ret:{}, instance.size:{}",
-                      FLAGS_dict_server_bns.c_str(), ret, instances.size());
+                      FLAGS_plugin_server_bns.c_str(), ret, instances.size());
             return;
         }
         std::set<std::string> instance_set;
@@ -300,56 +300,56 @@ namespace EA::dict {
         }*/
     }
 
-    void DictStateMachine::on_apply(braft::Iterator &iter) {
+    void PluginStateMachine::on_apply(braft::Iterator &iter) {
         for (; iter.valid(); iter.next()) {
             braft::Closure *done = iter.done();
             brpc::ClosureGuard done_guard(done);
             if (done) {
-                ((DictServiceClosure *) done)->raft_time_cost = ((DictServiceClosure *) done)->time_cost.get_time();
+                ((PluginServiceClosure *) done)->raft_time_cost = ((PluginServiceClosure *) done)->time_cost.get_time();
             }
             butil::IOBufAsZeroCopyInputStream wrapper(iter.data());
             proto::OpsServiceRequest request;
             if (!request.ParseFromZeroCopyStream(&wrapper)) {
                 TLOG_ERROR("parse from protobuf fail when on_apply");
                 if (done) {
-                    if (((DictServiceClosure *) done)->response) {
-                        ((DictServiceClosure *) done)->response->set_errcode(proto::PARSE_FROM_PB_FAIL);
-                        ((DictServiceClosure *) done)->response->set_errmsg("parse from protobuf fail");
+                    if (((PluginServiceClosure *) done)->response) {
+                        ((PluginServiceClosure *) done)->response->set_errcode(proto::PARSE_FROM_PB_FAIL);
+                        ((PluginServiceClosure *) done)->response->set_errmsg("parse from protobuf fail");
                     }
                     braft::run_closure_in_bthread(done_guard.release());
                 }
                 continue;
             }
-            if (done && ((DictServiceClosure *) done)->response) {
-                ((DictServiceClosure *) done)->response->set_op_type(request.op_type());
+            if (done && ((PluginServiceClosure *) done)->response) {
+                ((PluginServiceClosure *) done)->response->set_op_type(request.op_type());
             }
             TLOG_INFO("on apply, term:{}, index:{}, request op_type:{}",
                       iter.term(), iter.index(),
                       proto::OpType_Name(request.op_type()));
             switch (request.op_type()) {
-                case proto::OP_CREATE_DICT: {
-                    DictManager::get_instance()->create_dict(request, done);
+                case proto::OP_CREATE_PLUGIN: {
+                    PluginManager::get_instance()->create_plugin(request, done);
                     break;
                 }
-                case proto::OP_REMOVE_DICT: {
-                    DictManager::get_instance()->remove_dict(request, done);
+                case proto::OP_REMOVE_PLUGIN: {
+                    PluginManager::get_instance()->remove_plugin(request, done);
                     break;
                 }
-                case proto::OP_RESTORE_TOMBSTONE_DICT: {
-                    DictManager::get_instance()->restore_dict(request, done);
+                case proto::OP_RESTORE_TOMBSTONE_PLUGIN: {
+                    PluginManager::get_instance()->restore_plugin(request, done);
                     break;
                 }
-                case proto::OP_REMOVE_TOMBSTONE_DICT: {
-                    DictManager::get_instance()->remove_tombstone_dict(request, done);
+                case proto::OP_REMOVE_TOMBSTONE_PLUGIN: {
+                    PluginManager::get_instance()->remove_tombstone_plugin(request, done);
                     break;
                 }
-                case proto::OP_UPLOAD_DICT: {
-                    DictManager::get_instance()->upload_dict(request, done);
+                case proto::OP_UPLOAD_PLUGIN: {
+                    PluginManager::get_instance()->upload_plugin(request, done);
                     break;
                 }
                 default: {
                     TLOG_ERROR("unsupport request type, type:{}", request.op_type());
-                    DICT_SERVICE_SET_DONE_AND_RESPONSE(done, proto::UNSUPPORT_REQ_TYPE, "unsupport request type");
+                    PLUGIN_SERVICE_SET_DONE_AND_RESPONSE(done, proto::UNSUPPORT_REQ_TYPE, "unsupport request type");
                 }
             }
             _applied_index = iter.index();
@@ -359,10 +359,10 @@ namespace EA::dict {
         }
     }
 
-    int DictStateMachine::send_set_peer_request(bool remove_peer, const std::string &change_peer) {
-        EA::rpc::DictServerInteract dict_server_interact;
-        if (dict_server_interact.init() != 0) {
-            TLOG_ERROR("dict server interact init fail when set peer");
+    int PluginStateMachine::send_set_peer_request(bool remove_peer, const std::string &change_peer) {
+        EA::rpc::PluginServerInteract plugin_server_interact;
+        if (plugin_server_interact.init() != 0) {
+            TLOG_ERROR("service server interact init fail when set peer");
             return -1;
         }
         proto::RaftControlRequest request;
@@ -383,7 +383,7 @@ namespace EA::dict {
             request.add_new_peers(change_peer);
         }
         proto::RaftControlResponse response;
-        int ret = dict_server_interact.send_request("raft_control", request, response);
+        int ret = plugin_server_interact.send_request("raft_control", request, response);
         if (ret != 0) {
             TLOG_WARN("set peer when service server migrate fail, request:{}, response:{}",
                       request.ShortDebugString(), response.ShortDebugString());
@@ -391,4 +391,4 @@ namespace EA::dict {
         return ret;
     }
 
-}  // namespace EA::dict
+}  // namespace EA::plugin

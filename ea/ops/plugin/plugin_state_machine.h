@@ -14,8 +14,8 @@
 //
 
 
-#ifndef EA_DICT_DICT_STATE_MACHINE_H_
-#define EA_DICT_DICT_STATE_MACHINE_H_
+#ifndef EA_OPS_PLUGIN_PLUGIN_STATE_MACHINE_H_
+#define EA_OPS_PLUGIN_PLUGIN_STATE_MACHINE_H_
 
 #include <braft/raft.h>
 #include "ea/raft/raft_control.h"
@@ -24,14 +24,14 @@
 #include "ea/base/time_cost.h"
 #include "ea/base/bthread.h"
 
-namespace EA::dict {
-    class DictStateMachine;
+namespace EA::plugin {
+    class PluginStateMachine;
 
-    struct DictServiceClosure : public braft::Closure {
+    struct PluginServiceClosure : public braft::Closure {
         void Run() override;
 
         brpc::Controller *cntl;
-        DictStateMachine *state_machine;
+        PluginStateMachine *state_machine;
         google::protobuf::Closure *done;
         proto::OpsServiceResponse *response;
         std::string request;
@@ -40,16 +40,16 @@ namespace EA::dict {
         TimeCost time_cost;
     };
 
-    class DictStateMachine : public braft::StateMachine {
+    class PluginStateMachine : public braft::StateMachine {
     public:
 
-        DictStateMachine(const std::string &identify,
+        PluginStateMachine(const std::string &identify,
                          const braft::PeerId &peerId) :
                 _node(identify, peerId),
                 _is_leader(false),
                 _check_migrate(&BTHREAD_ATTR_SMALL) {}
 
-        ~DictStateMachine() override = default;
+        ~PluginStateMachine() override = default;
 
         int init(const std::vector<braft::PeerId> &peers);
 
@@ -137,14 +137,14 @@ namespace EA::dict {
         int64_t _applied_index{0};
     };
 
-}  // namespace EA::dict
+}  // namespace EA::plugin
 
-#define DICT_SERVICE_SET_DONE_AND_RESPONSE(done, errcode, err_message) \
+#define PLUGIN_SERVICE_SET_DONE_AND_RESPONSE(done, errcode, err_message) \
     do {\
-        if (done && ((DictServiceClosure*)done)->response) {\
-            ((DictServiceClosure*)done)->response->set_errcode(errcode);\
-            ((DictServiceClosure*)done)->response->set_errmsg(err_message);\
+        if (done && ((PluginServiceClosure*)done)->response) {\
+            ((PluginServiceClosure*)done)->response->set_errcode(errcode);\
+            ((PluginServiceClosure*)done)->response->set_errmsg(err_message);\
         }\
     }while (0);
 
-#endif  // EA_DICT_DICT_STATE_MACHINE_H_
+#endif  // EA_OPS_PLUGIN_PLUGIN_STATE_MACHINE_H_

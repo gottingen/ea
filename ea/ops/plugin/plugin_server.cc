@@ -12,35 +12,36 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include "ea/dict/dict_server.h"
-#include "ea/dict/query_dict_manager.h"
-#include "ea/dict/dict_state_machine.h"
+#include "ea/ops/plugin/plugin_server.h"
+#include "ea/ops/plugin/query_plugin_manager.h"
+#include "ea/ops/plugin/plugin_state_machine.h"
+#include "ea/gflags/plugin.h"
 
-namespace EA::dict {
-    void DictServer::dict_manage(::google::protobuf::RpcController* controller,
+namespace EA::plugin {
+    void PluginServer::plugin_manage(::google::protobuf::RpcController* controller,
                  const ::EA::proto::OpsServiceRequest* request,
                  ::EA::proto::OpsServiceResponse* response,
                  ::google::protobuf::Closure* done)  {
         brpc::ClosureGuard done_guard(done);
         auto op_type = request->op_type();
         switch (op_type) {
-            case EA::proto::OP_CREATE_DICT:{
+            case EA::proto::OP_CREATE_PLUGIN:{
                 _machine->process(controller, request, response, done_guard.release());
                 break;
             }
-            case EA::proto::OP_UPLOAD_DICT:{
+            case EA::proto::OP_UPLOAD_PLUGIN:{
                 _machine->process(controller, request, response, done_guard.release());
                 break;
             }
-            case EA::proto::OP_REMOVE_DICT:{
+            case EA::proto::OP_REMOVE_PLUGIN:{
                 _machine->process(controller, request, response, done_guard.release());
                 break;
             }
-            case EA::proto::OP_RESTORE_TOMBSTONE_DICT:{
+            case EA::proto::OP_RESTORE_TOMBSTONE_PLUGIN:{
                 _machine->process(controller, request, response, done_guard.release());
                 break;
             }
-            case EA::proto::OP_REMOVE_TOMBSTONE_DICT:{
+            case EA::proto::OP_REMOVE_TOMBSTONE_PLUGIN:{
                 _machine->process(controller, request, response, done_guard.release());
                 break;
             }
@@ -51,39 +52,39 @@ namespace EA::dict {
         }
     }
 
-    void DictServer::dict_query(::google::protobuf::RpcController *controller,
+    void PluginServer::plugin_query(::google::protobuf::RpcController *controller,
                    const ::EA::proto::QueryOpsServiceRequest *request,
                    ::EA::proto::QueryOpsServiceResponse *response,
                    ::google::protobuf::Closure *done) {
         brpc::ClosureGuard done_guard(done);
         auto op_type = request->op_type();
         switch (op_type) {
-            case EA::proto::QUERY_DOWNLOAD_DICT:{
-                QueryDictManager::get_instance()->download_dict(request, response);
+            case EA::proto::QUERY_DOWNLOAD_PLUGIN:{
+                QueryPluginManager::get_instance()->download_plugin(request, response);
                 break;
             }
-            case EA::proto::QUERY_INFO_DICT:{
-                QueryDictManager::get_instance()->dict_info(request, response);
+            case EA::proto::QUERY_PLUGIN_INFO:{
+                QueryPluginManager::get_instance()->plugin_info(request, response);
                 break;
             }
-            case EA::proto::QUERY_TOMBSTONE_DICT_INFO:{
-                QueryDictManager::get_instance()->tombstone_dict_info(request, response);
+            case EA::proto::QUERY_TOMBSTONE_PLUGIN_INFO:{
+                QueryPluginManager::get_instance()->tombstone_plugin_info(request, response);
                 break;
             }
-            case EA::proto::QUERY_LIST_DICT:{
-                QueryDictManager::get_instance()->list_dict(request, response);
+            case EA::proto::QUERY_LIST_PLUGIN:{
+                QueryPluginManager::get_instance()->list_plugin(request, response);
                 break;
             }
-            case EA::proto::QUERY_LIST_DICT_VERSION:{
-                QueryDictManager::get_instance()->list_dict_version(request, response);
+            case EA::proto::QUERY_LIST_PLUGIN_VERSION:{
+                QueryPluginManager::get_instance()->list_plugin_version(request, response);
                 break;
             }
-            case EA::proto::QUERY_TOMBSTONE_LIST_DICT:{
-                QueryDictManager::get_instance()->tombstone_list_dict(request, response);
+            case EA::proto::QUERY_TOMBSTONE_LIST_PLUGIN:{
+                QueryPluginManager::get_instance()->tombstone_list_plugin(request, response);
                 break;
             }
-            case EA::proto::QUERY_TOMBSTONE_LIST_DICT_VERSION:{
-                QueryDictManager::get_instance()->tombstone_list_dict_version(request, response);
+            case EA::proto::QUERY_TOMBSTONE_LIST_PLUGIN_VERSION:{
+                QueryPluginManager::get_instance()->tombstone_list_plugin_version(request, response);
                 break;
             }
             default:{
@@ -93,11 +94,12 @@ namespace EA::dict {
         }
     }
 
-    int DictServer::init(const std::vector<braft::PeerId> &peers) {
+    int PluginServer::init(const std::vector<braft::PeerId> &peers) {
+        TLOG_INFO("service rocksdb init success");
         butil::EndPoint addr;
-        butil::str2endpoint(FLAGS_dict_listen.c_str(), &addr);
+        butil::str2endpoint(FLAGS_plugin_listen.c_str(), &addr);
         braft::PeerId peer_id(addr, 0);
-        _machine = new(std::nothrow)DictStateMachine("dict_raft", peer_id);
+        _machine = new(std::nothrow)PluginStateMachine("plugin_raft", peer_id);
         if (_machine == nullptr) {
             TLOG_ERROR("new meta_state_machine fail");
             return -1;
@@ -109,24 +111,24 @@ namespace EA::dict {
         }
         TLOG_INFO("service state machine init success");
         /// clean read links
-        //QueryDictManager::get_instance()->init();
+        QueryPluginManager::get_instance()->init();
         return 0;
     }
 
-    bool DictServer::have_data() {
+    bool PluginServer::have_data() {
         if(!_machine) {
             return true;
         }
         return _machine->have_data();
     }
 
-    void DictServer::shutdown_raft() {
+    void PluginServer::shutdown_raft() {
         if(_machine) {
             _machine->shutdown_raft();
         }
     }
 
-    void DictServer::close() {
+    void PluginServer::close() {
 
     }
-}  // EA::dict
+}  // namespace EA::plugin

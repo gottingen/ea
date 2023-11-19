@@ -13,30 +13,34 @@
 // limitations under the License.
 //
 
-#ifndef EA_CONFIG_QUERY_CONFIG_MANAGER_H_
-#define EA_CONFIG_QUERY_CONFIG_MANAGER_H_
+#ifndef EA_OPS_CONFIG_CONFIG_RKV_H_
+#define EA_OPS_CONFIG_CONFIG_RKV_H_
 
-#include "eaproto/ops/ops.interface.pb.h"
-
+#include "ea/rdb/rkv.h"
+#include "ea/ops/constants.h"
 namespace EA::config {
 
-    class QueryConfigManager {
+    class ConfigRkv {
     public:
-        static QueryConfigManager *get_instance() {
-            static QueryConfigManager ins;
+        static ConfigRkv *get_instance() {
+            static ConfigRkv ins;
             return &ins;
         }
 
-        void
-        get_config(const ::EA::proto::QueryOpsServiceRequest *request, ::EA::proto::QueryOpsServiceResponse *response);
+        static EA::rdb::Rkv *get_rkv() {
+            return &get_instance()->_rkv;
+        }
 
-        void
-        list_config(const ::EA::proto::QueryOpsServiceRequest *request, ::EA::proto::QueryOpsServiceResponse *response);
+    private:
+        ConfigRkv();
 
-        void
-        list_config_version(const ::EA::proto::QueryOpsServiceRequest *request,
-                            ::EA::proto::QueryOpsServiceResponse *response);
+    private:
+        EA::rdb::Rkv _rkv;
     };
+
+    inline ConfigRkv::ConfigRkv(){
+        _rkv.init(EA::OpsConstants::kOpsConfigPrefix);
+    }
 }  // namespace EA::config
 
-#endif  // EA_CONFIG_QUERY_CONFIG_MANAGER_H_
+#endif // EA_OPS_CONFIG_CONFIG_RKV_H_

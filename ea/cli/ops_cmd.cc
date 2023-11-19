@@ -15,6 +15,7 @@
 #include "ea/cli/ops_cmd.h"
 #include "ea/cli/config_cmd.h"
 #include "ea/cli/dict_cmd.h"
+#include "ea/cli/plugin_cmd.h"
 #include "turbo/format/print.h"
 
 namespace EA::client {
@@ -28,6 +29,7 @@ namespace EA::client {
         EA::client::setup_config_cmd(*sub);
         // Add options to sub, binding them to opt.
         EA::client::setup_dict_cmd(*sub);
+        EA::client::setup_plugin_cmd(*sub);
         // Set the run function as callback to be called when this subcommand is issued.
         sub->callback([sub]() { run_ops_cmd(*sub); });
         //sub->require_subcommand();

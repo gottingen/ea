@@ -14,8 +14,8 @@
 //
 
 
-#ifndef EA_CONFIG_CONFIG_STATE_MACHINE_H_
-#define EA_CONFIG_CONFIG_STATE_MACHINE_H_
+#ifndef EA_OPS_CONFIG_CONFIG_STATE_MACHINE_H_
+#define EA_OPS_CONFIG_CONFIG_STATE_MACHINE_H_
 
 #include <braft/raft.h>
 #include "ea/raft/raft_control.h"
@@ -136,4 +136,4 @@ namespace EA::config {
         }\
     }while (0);
 
-#endif  // EA_CONFIG_CONFIG_STATE_MACHINE_H_
+#endif  // EA_OPS_CONFIG_CONFIG_STATE_MACHINE_H_

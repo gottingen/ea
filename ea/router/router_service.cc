@@ -15,6 +15,7 @@
 #include "ea/router/router_service.h"
 #include "ea/rpc/config_server_interact.h"
 #include "ea/rpc/dict_server_interact.h"
+#include "ea/rpc/plugin_server_interact.h"
 
 namespace EA::router {
 
@@ -59,6 +60,29 @@ namespace EA::router {
                                        ::google::protobuf::Closure* done) {
         brpc::ClosureGuard done_guard(done);
         auto ret = EA::rpc::DictServerInteract::get_instance()->send_request("dict_query", *request, *response);
+        if(ret != 0) {
+            TLOG_ERROR("rpc to meta server:query error:{}", controller->ErrorText());
+        }
+
+    }
+
+    void RouterServiceImpl::plugin_manage(::google::protobuf::RpcController* controller,
+                                        const ::EA::proto::OpsServiceRequest* request,
+                                        ::EA::proto::OpsServiceResponse* response,
+                                        ::google::protobuf::Closure* done) {
+        brpc::ClosureGuard done_guard(done);
+        auto ret = EA::rpc::PluginServerInteract::get_instance()->send_request("plugin_manage", *request, *response);
+        if(ret != 0) {
+            TLOG_ERROR("rpc to ops server:ops_manage error:{}", controller->ErrorText());
+        }
+
+    }
+    void RouterServiceImpl::plugin_query(::google::protobuf::RpcController* controller,
+                                       const ::EA::proto::QueryOpsServiceRequest* request,
+                                       ::EA::proto::QueryOpsServiceResponse* response,
+                                       ::google::protobuf::Closure* done) {
+        brpc::ClosureGuard done_guard(done);
+        auto ret = EA::rpc::PluginServerInteract::get_instance()->send_request("plugin_query", *request, *response);
         if(ret != 0) {
             TLOG_ERROR("rpc to meta server:query error:{}", controller->ErrorText());
         }

@@ -38,7 +38,7 @@ function(carbin_cc_binary)
 
 
     carbin_raw("-----------------------------------")
-    carbin_print_label("Building Test" "${CARBIN_CC_BINARY_NAME}")
+    carbin_print_label("Building Binary" "${CARBIN_CC_BINARY_NAME}")
     carbin_raw("-----------------------------------")
     if (VERBOSE_CARBIN_BUILD)
         carbin_print_list_label("Sources" CARBIN_CC_BINARY_SOURCES)

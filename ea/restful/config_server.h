@@ -23,26 +23,30 @@ namespace EA::restful {
 
     class ConfigServer : public EA::proto::ConfigRestfulService {
     public:
-        void create_config(::google::protobuf::RpcController* controller,
-                                   const ::EA::proto::ConfigEntity* request,
-                                   ::EA::proto::ConfigRestfulResponse* response,
-                                   ::google::protobuf::Closure* done) override;
-        void remove_config(::google::protobuf::RpcController* controller,
-                                   const ::EA::proto::ConfigEmptyRequest* request,
-                                   ::EA::proto::ConfigRestfulResponse* response,
-                                   ::google::protobuf::Closure* done) override;
-        void get_config(::google::protobuf::RpcController* controller,
-                                const ::EA::proto::ConfigEmptyRequest* request,
-                                ::EA::proto::ConfigRestfulResponse* response,
-                                ::google::protobuf::Closure* done) override;
-        void get_config_list(::google::protobuf::RpcController* controller,
-                                     const ::EA::proto::ConfigEmptyRequest* request,
-                                     ::EA::proto::ConfigRestfulResponse* response,
-                                     ::google::protobuf::Closure* done) override;
-        void get_config_version_list(::google::protobuf::RpcController* controller,
-                                             const ::EA::proto::ConfigEmptyRequest* request,
-                                             ::EA::proto::ConfigRestfulResponse* response,
-                                             ::google::protobuf::Closure* done) override;
+        void create_config(::google::protobuf::RpcController *controller,
+                           const ::EA::proto::ConfigEntity *request,
+                           ::EA::proto::ConfigRestfulResponse *response,
+                           ::google::protobuf::Closure *done) override;
+
+        void remove_config(::google::protobuf::RpcController *controller,
+                           const ::EA::proto::ConfigEmptyRequest *request,
+                           ::EA::proto::ConfigRestfulResponse *response,
+                           ::google::protobuf::Closure *done) override;
+
+        void get_config(::google::protobuf::RpcController *controller,
+                        const ::EA::proto::ConfigEmptyRequest *request,
+                        ::EA::proto::ConfigRestfulResponse *response,
+                        ::google::protobuf::Closure *done) override;
+
+        void get_config_list(::google::protobuf::RpcController *controller,
+                             const ::EA::proto::ConfigEmptyRequest *request,
+                             ::EA::proto::ConfigRestfulResponse *response,
+                             ::google::protobuf::Closure *done) override;
+
+        void get_config_version_list(::google::protobuf::RpcController *controller,
+                                     const ::EA::proto::ConfigEmptyRequest *request,
+                                     ::EA::proto::ConfigRestfulResponse *response,
+                                     ::google::protobuf::Closure *done) override;
     };
 
 }  // namespace EA::restful

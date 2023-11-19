@@ -136,6 +136,7 @@ namespace EA::config {
     }
 
     bool ConfigManager::load_config_snapshot(const std::string &key, const std::string &value) {
+        TURBO_UNUSED(key);
         proto::ConfigEntity config_pb;
         if (!config_pb.ParseFromString(value)) {
             TLOG_ERROR("parse from pb fail when load database snapshot, key:{}", value);

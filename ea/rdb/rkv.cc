@@ -15,6 +15,7 @@
 
 #include "ea/rdb/rkv.h"
 #include "ea/base/tlog.h"
+#include "ea/rdb/sst_file_writer.h"
 
 namespace EA::rdb {
 
@@ -104,6 +105,76 @@ namespace EA::rdb {
             if(!func(iter->key().ToString(),iter->value().ToString())) {
                 return turbo::InternalError("");
             }
+        }
+        return turbo::OkStatus();
+    }
+
+    turbo::Status Rkv::dump(const std::string &path) {
+        rocksdb::ReadOptions read_options;
+        read_options.prefix_same_as_start = true;
+        read_options.total_order_seek = true;
+        auto config_prefix =  Storage::kRkvPrefix + _namespace;
+        auto iter = Storage::get_instance()->new_iterator(read_options, _handle);
+        iter->Seek(config_prefix);
+        std::unique_ptr<rocksdb::Iterator> iter_lock(iter);
+        rocksdb::Options option = Storage::get_instance()->get_options(_handle);
+        SstFileWriter sst_writer(option);
+        auto s = sst_writer.open(path);
+        if (!s.ok()) {
+            TLOG_WARN("Error while opening file {}, Error: {}", path,
+                      s.ToString());
+            return turbo::InternalError("Error while opening file {}, Error: {}", path,
+                                        s.ToString());
+        }
+        for (; iter->Valid(); iter->Next()) {
+            auto res = sst_writer.put(iter->key(), iter->value());
+            if (!res.ok()) {
+                TLOG_WARN("Error while adding Key: {}, Error: {}",
+                          iter->key().ToString(),
+                          s.ToString());
+                return turbo::InternalError("Error while adding Key: {}, Error: {}",
+                                            iter->key().ToString(),
+                                            s.ToString());
+            }
+        }
+
+        //close the file
+        s = sst_writer.finish();
+        if (!s.ok()) {
+            TLOG_WARN("Error while finishing file {}, Error: {}", path,
+                      s.ToString());
+            return turbo::InternalError("Error while finishing file {}, Error: {}", path,
+                                        s.ToString());
+        }
+        return turbo::OkStatus();
+    }
+    turbo::Status Rkv::clean() {
+        // clean local data
+        auto config_prefix =  Storage::kRkvPrefix + _namespace;
+        std::string remove_start_key(config_prefix);
+        rocksdb::WriteOptions options;
+        auto status = Storage::get_instance()->remove_range(options,_handle, remove_start_key,config_prefix,false);
+        if (!status.ok()) {
+            TLOG_ERROR("remove_range error when on clean rkv load: code={}, msg={}",
+                       status.code(), status.ToString());
+            return turbo::InternalError("remove_range error when on clean rkv load: code={}, msg={}",
+                                        status.code(), status.ToString());
+        } else {
+            TLOG_WARN("remove range success when on clean rkv:code:{}, msg={}",
+                      status.code(), status.ToString());
+        }
+        return turbo::OkStatus();
+    }
+
+    turbo::Status Rkv::load(const std::string &path) {
+        rocksdb::IngestExternalFileOptions ifo;
+        auto res = Storage::get_instance()->ingest_external_file(_handle,{path},ifo);
+        if (!res.ok()) {
+            TLOG_WARN("Error while load rkv file {}, Error {}",
+                      path, res.ToString());
+            return turbo::InternalError("Error while load rkv file {}, Error {}",
+                                        path, res.ToString());
+
         }
         return turbo::OkStatus();
     }

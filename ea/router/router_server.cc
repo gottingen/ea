@@ -19,13 +19,14 @@
 #include <brpc/server.h>
 #include "ea/base/tlog.h"
 #include "ea/rpc/config_server_interact.h"
+#include "ea/rpc/dict_server_interact.h"
 #include "ea/gflags/router.h"
 
 namespace EA {
 
 }  // namespace EA
 
-int main(int argc, char**argv) {
+int main(int argc, char **argv) {
     google::SetCommandLineOption("flagfile", "conf/router_gflags.conf");
     google::ParseCommandLineFlags(&argc, &argv, true);
 
@@ -35,8 +36,14 @@ int main(int argc, char**argv) {
     }
     TLOG_INFO("log file load success");
     // init meta interact
-    auto r =EA::rpc::ConfigServerInteract::get_instance()->init();
-    if(!r.ok()) {
+    auto r = EA::rpc::ConfigServerInteract::get_instance()->init();
+    if (!r.ok()) {
+        return -1;
+    }
+
+    // init meta interact
+    auto ret= EA::rpc::DictServerInteract::get_instance()->init();
+    if (ret != 0) {
         return -1;
     }
 
@@ -47,7 +54,7 @@ int main(int argc, char**argv) {
         return -1;
     }
     EA::restful::ConfigServer config_restful;
-    if(EA::FLAGS_enable_restful) {
+    if (EA::FLAGS_enable_restful) {
         if (0 != server.AddService(&config_restful, brpc::SERVER_DOESNT_OWN_SERVICE,
                                    "config/create => create_config,"
                                    "config/remove => remove_config,"

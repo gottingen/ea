@@ -97,6 +97,23 @@ carbin_cc_binary(
         PUBLIC
 )
 
+file(GLOB_RECURSE DICT_SERVER dict/*.cc)
+carbin_cc_binary(
+        NAMESPACE ea
+        NAME dict_server
+        SOURCES
+        ${DICT_SERVER}
+        COPTS
+        ${USER_CXX_FLAGS}
+        "-Wno-strict-aliasing"
+        DEPS
+        ${CARBIN_DEPS_LINK}
+        ea::base
+        ea::rpc
+        eaproto::eaproto_STATIC
+        PUBLIC
+)
+
 file(GLOB ROUTER router/*.cc)
 carbin_cc_binary(
         NAMESPACE ea
@@ -130,183 +147,3 @@ carbin_cc_binary(
         ea::rpc
         PUBLIC
 )
-
-#[[
-file(GLOB META_SERVER meta_server/*.cc)
-
-carbin_cc_library(
-        NAMESPACE elasticann
-        NAME mete_server
-        SOURCES
-        ${META_SERVER}
-        COPTS
-        ${USER_CXX_FLAGS}
-        DEPS
-        eaproto::eaproto_STATIC
-        elasticann::common
-        ${CARBIN_DEPS_LINK}
-)
-
-file(GLOB_RECURSE CONFIG_SERVER ops/config/*.cc)
-file(GLOB_RECURSE PLUGIN_SERVER ops/plugin/*.cc)
-file(GLOB_RECURSE DICT_SERVER ops/dict/*.cc)
-file(GLOB_RECURSE DISCOVERY_SERVER ops/servlet/*.cc)
-set(OPS_SERVER
-        ${CONFIG_SERVER}
-        ${PLUGIN_SERVER}
-        ${DICT_SERVER}
-        ${DISCOVERY_SERVER}
-        ${PROJECT_SOURCE_DIR}/elasticann/ops/constants.cc
-        ${PROJECT_SOURCE_DIR}/elasticann/ops/file_util.cc
-        ${PROJECT_SOURCE_DIR}/elasticann/ops/service_rocksdb.cc
-)
-carbin_cc_library(
-        NAMESPACE elasticann
-        NAME ops_server
-        SOURCES
-        ${OPS_SERVER}
-        COPTS
-        ${USER_CXX_FLAGS}
-        DEPS
-        eaproto::eaproto_STATIC
-        elasticann::common
-        ${CARBIN_DEPS_LINK}
-)
-
-carbin_cc_binary(
-        NAMESPACE elasticann
-        NAME eameta
-        SOURCES
-        ${META_SERVER}
-        ${RAFT_META}
-        server/eameta.cc
-        COPTS
-        ${USER_CXX_FLAGS}
-        "-Wno-strict-aliasing"
-        DEPS
-        ${CARBIN_DEPS_LINK}
-        elasticann::common
-        eaproto::eaproto_STATIC
-        PUBLIC
-)
-
-carbin_cc_binary(
-        NAMESPACE elasticann
-        NAME eaconfig
-        SOURCES
-        ${META_SERVER}
-        ${RAFT_META}
-        server/eaconfig.cc
-        COPTS
-        ${USER_CXX_FLAGS}
-        "-Wno-strict-aliasing"
-        DEPS
-        ${CARBIN_DEPS_LINK}
-        elasticann::common
-        elasticann::ops_server
-        eaproto::eaproto_STATIC
-        PUBLIC
-)
-
-carbin_cc_binary(
-        NAMESPACE elasticann
-        NAME eaplugin
-        SOURCES
-        ${META_SERVER}
-        ${RAFT_META}
-        server/eaplugin.cc
-        COPTS
-        ${USER_CXX_FLAGS}
-        "-Wno-strict-aliasing"
-        DEPS
-        ${CARBIN_DEPS_LINK}
-        elasticann::common
-        elasticann::ops_server
-        eaproto::eaproto_STATIC
-        PUBLIC
-)
-
-carbin_cc_binary(
-        NAMESPACE elasticann
-        NAME eadict
-        SOURCES
-        ${META_SERVER}
-        ${RAFT_META}
-        server/eadict.cc
-        COPTS
-        ${USER_CXX_FLAGS}
-        "-Wno-strict-aliasing"
-        DEPS
-        ${CARBIN_DEPS_LINK}
-        elasticann::common
-        elasticann::ops_server
-        eaproto::eaproto_STATIC
-        PUBLIC
-)
-
-file(GLOB STORE_SERVER raft_store/*.cc)
-carbin_cc_binary(
-        NAMESPACE elasticann
-        NAME eastore
-        SOURCES
-        ${STORE_SERVER}
-        server/eastore.cc
-        COPTS
-        ${USER_CXX_FLAGS}
-        "-Wno-strict-aliasing"
-        DEPS
-        ${CARBIN_DEPS_LINK}
-        elasticann::common
-        eaproto::eaproto_STATIC
-        PUBLIC
-)
-
-
-
-file(GLOB CLIENT_SRC client/*.cc)
-carbin_cc_binary(
-        NAMESPACE elasticann
-        NAME eacli
-        SOURCES
-        ${CLIENT_SRC}
-        COPTS
-        ${USER_CXX_FLAGS}
-        "-Wno-strict-aliasing"
-        DEPS
-        ${CARBIN_DEPS_LINK}
-        eaproto::eaproto_STATIC
-        PUBLIC
-)
-
-
-file(GLOB ROUTER_SERVER raft_dummy/*.cc)
-carbin_cc_binary(
-        NAMESPACE elasticann
-        NAME eadb
-        SOURCES
-        ${ROUTER_SERVER}
-        server/db_server.cc
-        COPTS
-        ${USER_CXX_FLAGS}
-        "-Wno-strict-aliasing"
-        DEPS
-        ${CARBIN_DEPS_LINK}
-        elasticann::common
-        eaproto::eaproto_STATIC
-        PUBLIC
-)
-
-file(GLOB EA_CLIENT client/*.cc)
-carbin_cc_library(
-        NAMESPACE elasticann
-        NAME eaclient
-        SOURCES
-        ${EA_CLIENT}
-        COPTS
-        ${USER_CXX_FLAGS}
-        "-Wno-strict-aliasing"
-        DEPS
-        ${CARBIN_DEPS_LINK}
-        elasticann::common
-        elasticann::proto-object
-)]]

@@ -14,7 +14,7 @@
 //
 #include "ea/cli/ops_cmd.h"
 #include "ea/cli/config_cmd.h"
-#include "ea/cli/option_context.h"
+#include "ea/cli/dict_cmd.h"
 #include "turbo/format/print.h"
 
 namespace EA::client {
@@ -27,7 +27,7 @@ namespace EA::client {
         auto *sub = app.add_subcommand("ops", "ops operations");
         EA::client::setup_config_cmd(*sub);
         // Add options to sub, binding them to opt.
-
+        EA::client::setup_dict_cmd(*sub);
         // Set the run function as callback to be called when this subcommand is issued.
         sub->callback([sub]() { run_ops_cmd(*sub); });
         //sub->require_subcommand();

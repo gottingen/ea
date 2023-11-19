@@ -43,6 +43,13 @@ namespace EA::rdb {
         turbo::Status mremove(const std::vector<std::string> &keys);
 
         turbo::Status scan(const scan_func &func);
+
+        turbo::Status clean();
+
+        turbo::Status dump(const std::string &path);
+
+        turbo::Status load(const std::string &path);
+
     private:
         std::string make_key(const std::string& user_key);
     private:

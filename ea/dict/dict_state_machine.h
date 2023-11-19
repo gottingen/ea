@@ -14,8 +14,8 @@
 //
 
 
-#ifndef EA_CONFIG_CONFIG_STATE_MACHINE_H_
-#define EA_CONFIG_CONFIG_STATE_MACHINE_H_
+#ifndef EA_DICT_DICT_STATE_MACHINE_H_
+#define EA_DICT_DICT_STATE_MACHINE_H_
 
 #include <braft/raft.h>
 #include "ea/raft/raft_control.h"
@@ -24,14 +24,14 @@
 #include "ea/base/time_cost.h"
 #include "ea/base/bthread.h"
 
-namespace EA::config {
-    class ConfigStateMachine;
+namespace EA::dict {
+    class DictStateMachine;
 
-    struct ConfigServiceClosure : public braft::Closure {
+    struct DictServiceClosure : public braft::Closure {
         void Run() override;
 
         brpc::Controller *cntl;
-        ConfigStateMachine *state_machine;
+        DictStateMachine *state_machine;
         google::protobuf::Closure *done;
         proto::OpsServiceResponse *response;
         std::string request;
@@ -40,23 +40,34 @@ namespace EA::config {
         TimeCost time_cost;
     };
 
-    class ConfigStateMachine : public braft::StateMachine {
+    class DictStateMachine : public braft::StateMachine {
     public:
 
-        ConfigStateMachine(const std::string &identify,
+        DictStateMachine(const std::string &identify,
                          const braft::PeerId &peerId) :
                 _node(identify, peerId),
                 _is_leader(false),
                 _check_migrate(&BTHREAD_ATTR_SMALL) {}
 
-        ~ConfigStateMachine() override = default;
+        ~DictStateMachine() override = default;
 
         int init(const std::vector<braft::PeerId> &peers);
 
         void raft_control(google::protobuf::RpcController *controller,
                                   const proto::RaftControlRequest *request,
                                   proto::RaftControlResponse *response,
-                                  google::protobuf::Closure *done);
+                                  google::protobuf::Closure *done) {
+            brpc::ClosureGuard done_guard(done);
+            if (!is_leader() && !request->force()) {
+                TLOG_INFO("node is not leader when raft control, region_id: {}", request->region_id());
+                response->set_errcode(proto::NOT_LEADER);
+                response->set_region_id(request->region_id());
+                response->set_leader(butil::endpoint2str(_node.leader_id().addr).c_str());
+                response->set_errmsg("not leader");
+                return;
+            }
+            common_raft_control(controller, request, response, done_guard.release(), &_node);
+        }
 
         void process(google::protobuf::RpcController *controller,
                              const proto::OpsServiceRequest *request,
@@ -112,28 +123,28 @@ namespace EA::config {
         }
 
     private:
-        virtual turbo::Status send_set_peer_request(bool remove_peer, const std::string &change_peer);
+        virtual int send_set_peer_request(bool remove_peer, const std::string &change_peer);
 
         void save_snapshot(braft::Closure *done, braft::SnapshotWriter *writer);
 
     protected:
-        braft::Node       _node;
+        braft::Node _node;
         std::atomic<bool> _is_leader;
     private:
-        Bthread           _check_migrate;
-        bool              _check_start = false;
-        bool              _have_data = false;
-        int64_t           _applied_index{0};
+        Bthread _check_migrate;
+        bool _check_start = false;
+        bool _have_data = false;
+        int64_t _applied_index{0};
     };
 
-}  // namespace EA::config
+}  // namespace EA::dict
 
-#define CONFIG_SERVICE_SET_DONE_AND_RESPONSE(done, errcode, err_message) \
+#define DICT_SERVICE_SET_DONE_AND_RESPONSE(done, errcode, err_message) \
     do {\
-        if (done && ((ConfigServiceClosure*)done)->response) {\
-            ((ConfigServiceClosure*)done)->response->set_errcode(errcode);\
-            ((ConfigServiceClosure*)done)->response->set_errmsg(err_message);\
+        if (done && ((DictServiceClosure*)done)->response) {\
+            ((DictServiceClosure*)done)->response->set_errcode(errcode);\
+            ((DictServiceClosure*)done)->response->set_errmsg(err_message);\
         }\
     }while (0);
 
-#endif  // EA_CONFIG_CONFIG_STATE_MACHINE_H_
+#endif  // EA_DICT_DICT_STATE_MACHINE_H_

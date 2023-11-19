@@ -14,28 +14,53 @@
 
 #include "ea/router/router_service.h"
 #include "ea/rpc/config_server_interact.h"
+#include "ea/rpc/dict_server_interact.h"
 
 namespace EA::router {
 
-    void RouterServiceImpl::config_manage(::google::protobuf::RpcController* controller,
-                    const ::EA::proto::OpsServiceRequest* request,
-                    ::EA::proto::OpsServiceResponse* response,
-                    ::google::protobuf::Closure* done) {
+    void RouterServiceImpl::config_manage(::google::protobuf::RpcController *controller,
+                                          const ::EA::proto::OpsServiceRequest *request,
+                                          ::EA::proto::OpsServiceResponse *response,
+                                          ::google::protobuf::Closure *done) {
         brpc::ClosureGuard done_guard(done);
         auto ret = EA::rpc::ConfigServerInteract::get_instance()->send_request("config_manage", *request, *response);
-        if(!ret.ok()) {
+        if (!ret.ok()) {
             TLOG_ERROR("rpc to config server:config_manage error:{}", controller->ErrorText());
         }
 
     }
-    void RouterServiceImpl::config_query(::google::protobuf::RpcController* controller,
-                   const ::EA::proto::QueryOpsServiceRequest* request,
-                   ::EA::proto::QueryOpsServiceResponse* response,
-                   ::google::protobuf::Closure* done) {
+
+    void RouterServiceImpl::config_query(::google::protobuf::RpcController *controller,
+                                         const ::EA::proto::QueryOpsServiceRequest *request,
+                                         ::EA::proto::QueryOpsServiceResponse *response,
+                                         ::google::protobuf::Closure *done) {
         brpc::ClosureGuard done_guard(done);
-        auto ret =  EA::rpc::ConfigServerInteract::get_instance()->send_request("config_query", *request, *response);
-        if(!ret.ok()) {
+        auto ret = EA::rpc::ConfigServerInteract::get_instance()->send_request("config_query", *request, *response);
+        if (!ret.ok()) {
             TLOG_ERROR("rpc to config server:config_query error:{}", controller->ErrorText());
+        }
+
+    }
+
+    void RouterServiceImpl::dict_manage(::google::protobuf::RpcController* controller,
+                                        const ::EA::proto::OpsServiceRequest* request,
+                                        ::EA::proto::OpsServiceResponse* response,
+                                        ::google::protobuf::Closure* done) {
+        brpc::ClosureGuard done_guard(done);
+        auto ret = EA::rpc::DictServerInteract::get_instance()->send_request("dict_manage", *request, *response);
+        if(ret != 0) {
+            TLOG_ERROR("rpc to ops server:ops_manage error:{}", controller->ErrorText());
+        }
+
+    }
+    void RouterServiceImpl::dict_query(::google::protobuf::RpcController* controller,
+                                       const ::EA::proto::QueryOpsServiceRequest* request,
+                                       ::EA::proto::QueryOpsServiceResponse* response,
+                                       ::google::protobuf::Closure* done) {
+        brpc::ClosureGuard done_guard(done);
+        auto ret = EA::rpc::DictServerInteract::get_instance()->send_request("dict_query", *request, *response);
+        if(ret != 0) {
+            TLOG_ERROR("rpc to meta server:query error:{}", controller->ErrorText());
         }
 
     }

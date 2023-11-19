@@ -37,7 +37,7 @@ namespace EA::rpc {
             return &_instance;
         }
 
-        ConfigServerInteract()  = default;
+        ConfigServerInteract() = default;
 
         bool is_inited() {
             return _is_inited;
@@ -49,8 +49,8 @@ namespace EA::rpc {
 
         template<typename Request, typename Response>
         turbo::Status send_request(const std::string &service_name,
-                         const Request &request,
-                         Response &response) {
+                                   const Request &request,
+                                   Response &response) {
             const ::google::protobuf::ServiceDescriptor *service_desc = proto::ConfigService::descriptor();
             const ::google::protobuf::MethodDescriptor *method =
                     service_desc->FindMethodByName(service_name);
@@ -79,7 +79,7 @@ namespace EA::rpc {
                     if (short_channel.Init(leader_address, &channel_opt) != 0) {
                         TLOG_WARN("connect with config server fail. channel Init fail, leader_addr:{}",
                                   butil::endpoint2str(leader_address).c_str());
-                        _set_leader_address(butil::EndPoint());
+                        set_leader_address(butil::EndPoint());
                         ++retry_time;
                         continue;
                     }
@@ -87,7 +87,7 @@ namespace EA::rpc {
                 } else {
                     _bns_channel.CallMethod(method, &cntl, &request, &response, nullptr);
                     if (!cntl.Failed() && response.errcode() == proto::SUCCESS) {
-                        _set_leader_address(cntl.remote_side());
+                        set_leader_address(cntl.remote_side());
                         TLOG_INFO("connect with config server success by bns name, leader:{}",
                                   butil::endpoint2str(cntl.remote_side()).c_str());
                         return turbo::OkStatus();
@@ -98,13 +98,13 @@ namespace EA::rpc {
                 if (cntl.Failed()) {
                     TLOG_WARN("connect with server fail. send request fail, error:{}, log_id:{}",
                               cntl.ErrorText(), cntl.log_id());
-                    _set_leader_address(butil::EndPoint());
+                    set_leader_address(butil::EndPoint());
                     ++retry_time;
                     continue;
                 }
                 if (response.errcode() == proto::HAVE_NOT_INIT) {
                     TLOG_WARN("connect with server fail. HAVE_NOT_INIT  log_id:{}", cntl.log_id());
-                    _set_leader_address(butil::EndPoint());
+                    set_leader_address(butil::EndPoint());
                     ++retry_time;
                     continue;
                 }
@@ -114,7 +114,7 @@ namespace EA::rpc {
                               response.leader(), cntl.log_id());
                     butil::EndPoint leader_addr;
                     butil::str2endpoint(response.leader().c_str(), &leader_addr);
-                    _set_leader_address(leader_addr);
+                    set_leader_address(leader_addr);
                     ++retry_time;
                     continue;
                 }
@@ -131,7 +131,8 @@ namespace EA::rpc {
             return turbo::UnavailableError("can not connect service");
         }
 
-        void _set_leader_address(const butil::EndPoint &addr) {
+    private:
+        void set_leader_address(const butil::EndPoint &addr) {
             std::unique_lock<std::mutex> lock(_master_leader_mutex);
             _master_leader_address = addr;
         }

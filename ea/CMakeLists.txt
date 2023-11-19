@@ -64,6 +64,22 @@ carbin_cc_library(
         PUBLIC
 )
 
+file(GLOB EA_RESTFUL restful/*.cc)
+carbin_cc_library(
+        NAMESPACE ea
+        NAME restful
+        SOURCES
+        ${EA_RESTFUL}
+        COPTS
+        ${USER_CXX_FLAGS}
+        DEPS
+        eaproto::eaproto_STATIC
+        ea::base
+        ea::rpc
+        ${CARBIN_DEPS_LINK}
+        PUBLIC
+)
+
 file(GLOB_RECURSE CONFIG_SERVER config/*.cc)
 carbin_cc_binary(
         NAMESPACE ea
@@ -94,6 +110,7 @@ carbin_cc_binary(
         ${CARBIN_DEPS_LINK}
         ea::base
         ea::rpc
+        ea::restful
         eaproto::eaproto_STATIC
         PUBLIC
 )

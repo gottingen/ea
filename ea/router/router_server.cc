@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "ea/router/router_service.h"
+#include "ea/restful/config_server.h"
 #include <gflags/gflags.h>
 #include <gflags/gflags_declare.h>
 #include <brpc/server.h>
@@ -45,6 +46,17 @@ int main(int argc, char**argv) {
         TLOG_ERROR("Fail to Add router service");
         return -1;
     }
+    EA::restful::ConfigServer config_restful;
+    if (0 != server.AddService(&config_restful, brpc::SERVER_DOESNT_OWN_SERVICE,
+                               "config/create => create_config,"
+                               "config/remove => remove_config,"
+                               "config/get => get_config,"
+                               "config/list => get_config_list,"
+                               "config/lv => get_config_version_list")) {
+        TLOG_ERROR("Fail to Add config restful service");
+        return -1;
+    }
+
     if (server.Start(EA::FLAGS_router_listen.c_str(), nullptr) != 0) {
         TLOG_ERROR("Fail to start server");
         return -1;

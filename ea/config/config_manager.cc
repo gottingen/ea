@@ -19,7 +19,7 @@
 namespace EA::config {
 
     void ConfigManager::create_config(const ::EA::proto::OpsServiceRequest &request, braft::Closure *done) {
-        auto &create_request = request.request_config();
+        auto &create_request = const_cast<EA::proto::ConfigEntity&>(request.request_config());
         auto &name = create_request.name();
         turbo::ModuleVersion version(create_request.version().major(), create_request.version().minor(),
                                      create_request.version().patch());
@@ -41,6 +41,9 @@ namespace EA::config {
             TLOG_INFO("config :{} version: {} must be larger than current:{}", name, version.to_string(), it->second.rbegin()->first.to_string());
             CONFIG_SERVICE_SET_DONE_AND_RESPONSE(done, proto::INPUT_PARAM_ERROR, "Version numbers must increase monotonically");
             return;
+        }
+        if(!create_request.has_time()) {
+            create_request.set_time(turbo::ToTimeT(turbo::Now()));
         }
         std::string rocks_key = make_config_key(name, version);
         std::string rocks_value;

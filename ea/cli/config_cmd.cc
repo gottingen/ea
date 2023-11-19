@@ -39,8 +39,8 @@ namespace EA::client {
         inputs->require_option(1);
         cc->add_option("-v, --version", opt->config_version, "config version [1.2.3]")->required();
         cc->add_option("-t, --type", opt->config_type, "config type [json|toml|yaml|xml|gflags|text|ini]")->default_val("json");
-
         cc->callback([]() { run_config_create_cmd(); });
+
         auto cl = ns->add_subcommand("list", " list config");
         cl->add_option("-n,--name", opt->config_name, "config name");
         cl->callback([]() { run_config_list_cmd(); });

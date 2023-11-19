@@ -12,9 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-//
-// Created by jeff on 23-11-19.
-//
+
 #include "ea/ops/constants.h"
 
 namespace EA {
@@ -23,4 +21,5 @@ namespace EA {
     const std::string OpsConstants::kOpsDictPrefix(1, 0x02);
     const std::string OpsConstants::kOpsPluginPrefix(1, 0x03);
     const std::string OpsConstants::kOpsMaxPrefix(1, 0xFF);
+
 }  // namespace EA

@@ -18,7 +18,7 @@
 
 namespace EA::rpc {
 
-    int ConfigServerInteract::init(bool is_backup) {
+    turbo::Status ConfigServerInteract::init(bool is_backup) {
         if (is_backup) {
             if (!FLAGS_config_backup_server_bns.empty()) {
                 return init_internal(FLAGS_config_backup_server_bns);
@@ -26,10 +26,10 @@ namespace EA::rpc {
         } else {
             return init_internal(FLAGS_config_server_bns);
         }
-        return 0;
+        return turbo::OkStatus();
     }
 
-    int ConfigServerInteract::init_internal(const std::string &file_bns) {
+    turbo::Status ConfigServerInteract::init_internal(const std::string &file_bns) {
         _master_leader_address.ip = butil::IP_ANY;
         _master_leader_address.port = 0;
         _connect_timeout = FLAGS_config_connect_timeout;
@@ -47,10 +47,10 @@ namespace EA::rpc {
         }
         if (_bns_channel.Init(config_server_addr.c_str(), "rr", &channel_opt) != 0) {
             TLOG_ERROR("file server bns pool init fail. bns_name:{}", config_server_addr);
-            return -1;
+            return turbo::UnavailableError("file server bns pool init fail. bns_name:{}", config_server_addr);
         }
         _is_inited = true;
-        return 0;
+        return turbo::OkStatus();
     }
 }  // namespace EA::rpc
 

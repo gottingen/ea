@@ -112,7 +112,7 @@ namespace EA::config {
         }
 
     private:
-        virtual int send_set_peer_request(bool remove_peer, const std::string &change_peer);
+        virtual turbo::Status send_set_peer_request(bool remove_peer, const std::string &change_peer);
 
         void save_snapshot(braft::Closure *done, braft::SnapshotWriter *writer);
 

@@ -338,11 +338,12 @@ namespace EA::config {
         }
     }
 
-    int ConfigStateMachine::send_set_peer_request(bool remove_peer, const std::string &change_peer) {
+    turbo::Status ConfigStateMachine::send_set_peer_request(bool remove_peer, const std::string &change_peer) {
         EA::rpc::ConfigServerInteract config_server_interact;
-        if (config_server_interact.init() != 0) {
+        auto r = config_server_interact.init();
+        if (r.ok()) {
             TLOG_ERROR("service server interact init fail when set peer");
-            return -1;
+            return r;
         }
         proto::RaftControlRequest request;
         request.set_op_type(proto::SetPeer);
@@ -350,7 +351,7 @@ namespace EA::config {
         std::vector<braft::PeerId> peers;
         if (!_node.list_peers(&peers).ok()) {
             TLOG_WARN("node list peer fail");
-            return -1;
+            return turbo::UnavailableError("node list peer fail");
         }
         for (auto &peer: peers) {
             request.add_old_peers(butil::endpoint2str(peer.addr).c_str());
@@ -362,12 +363,12 @@ namespace EA::config {
             request.add_new_peers(change_peer);
         }
         proto::RaftControlResponse response;
-        int ret = config_server_interact.send_request("raft_control", request, response);
-        if (ret != 0) {
+        auto rs = config_server_interact.send_request("raft_control", request, response);
+        if (!rs.ok() || response.errcode() != EA::proto::SUCCESS) {
             TLOG_WARN("set peer when service server migrate fail, request:{}, response:{}",
                       request.ShortDebugString(), response.ShortDebugString());
         }
-        return ret;
+        return rs;
     }
 
 }  // namespace EA::config

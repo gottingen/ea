@@ -33,7 +33,10 @@ int main(int argc, char**argv) {
     }
     TLOG_INFO("log file load success");
     // init meta interact
-    EA::rpc::ConfigServerInteract::get_instance()->init();
+    auto r =EA::rpc::ConfigServerInteract::get_instance()->init();
+    if(!r.ok()) {
+        return -1;
+    }
 
     brpc::Server server;
     EA::router::RouterServiceImpl router;

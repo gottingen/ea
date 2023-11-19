@@ -23,7 +23,7 @@ namespace EA::router {
                     ::google::protobuf::Closure* done) {
         brpc::ClosureGuard done_guard(done);
         auto ret = EA::rpc::ConfigServerInteract::get_instance()->send_request("config_manage", *request, *response);
-        if(ret != 0) {
+        if(!ret.ok()) {
             TLOG_ERROR("rpc to config server:config_manage error:{}", controller->ErrorText());
         }
 
@@ -34,7 +34,7 @@ namespace EA::router {
                    ::google::protobuf::Closure* done) {
         brpc::ClosureGuard done_guard(done);
         auto ret =  EA::rpc::ConfigServerInteract::get_instance()->send_request("config_query", *request, *response);
-        if(ret != 0) {
+        if(!ret.ok()) {
             TLOG_ERROR("rpc to config server:config_query error:{}", controller->ErrorText());
         }
 

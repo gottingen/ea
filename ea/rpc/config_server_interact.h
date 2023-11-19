@@ -14,7 +14,8 @@
 //
 
 
-#pragma once
+#ifndef EA_RPC_CONFIG_SERVER_INTERACT_H_
+#define EA_RPC_CONFIG_SERVER_INTERACT_H_
 
 #include <butil/endpoint.h>
 #include <brpc/channel.h>
@@ -42,12 +43,12 @@ namespace EA::rpc {
             return _is_inited;
         }
 
-        int init(bool is_backup = false);
+        turbo::Status init(bool is_backup = false);
 
-        int init_internal(const std::string &meta_bns);
+        turbo::Status init_internal(const std::string &meta_bns);
 
         template<typename Request, typename Response>
-        int send_request(const std::string &service_name,
+        turbo::Status send_request(const std::string &service_name,
                          const Request &request,
                          Response &response) {
             const ::google::protobuf::ServiceDescriptor *service_desc = proto::ConfigService::descriptor();
@@ -55,7 +56,7 @@ namespace EA::rpc {
                     service_desc->FindMethodByName(service_name);
             if (method == nullptr) {
                 TLOG_ERROR("service name not exist, service:{}", service_name);
-                return -1;
+                return turbo::UnimplementedError("service name not exist, service:{}", service_name);
             }
             int retry_time = 0;
             uint64_t log_id = butil::fast_rand();
@@ -89,7 +90,7 @@ namespace EA::rpc {
                         _set_leader_address(cntl.remote_side());
                         TLOG_INFO("connect with config server success by bns name, leader:{}",
                                   butil::endpoint2str(cntl.remote_side()).c_str());
-                        return 0;
+                        return turbo::OkStatus();
                     }
                 }
 
@@ -117,15 +118,17 @@ namespace EA::rpc {
                     ++retry_time;
                     continue;
                 }
+                return turbo::OkStatus();
+                /*
                 if (response.errcode() != proto::SUCCESS) {
                     TLOG_WARN("send config server fail, log_id:{}, response:{}", cntl.log_id(),
                               response.ShortDebugString());
-                    return -1;
+                    return turbo::UnknownError("");
                 } else {
-                    return 0;
-                }
+
+                }*/
             } while (retry_time < RETRY_TIMES);
-            return -1;
+            return turbo::UnavailableError("can not connect service");
         }
 
         void _set_leader_address(const butil::EndPoint &addr) {
@@ -142,3 +145,5 @@ namespace EA::rpc {
         butil::EndPoint _master_leader_address;
     };
 }  // namespace EA::rpc
+
+#endif  // EA_RPC_CONFIG_SERVER_INTERACT_H_

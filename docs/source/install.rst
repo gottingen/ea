@@ -11,8 +11,7 @@ build with cmake
 System Dependencies
 ------------
 
-.. code-block:: console
-    :lonenos:
+.. code-block::
 
     apt install openssl
     pip install carbin

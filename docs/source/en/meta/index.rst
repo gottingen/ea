@@ -10,11 +10,11 @@ EA focuses on building a search service framework suitable for artificial intell
 The search system contains many components, including explicit requirements such as engines,
 sorting, etc., but also includes configuration systems, statistics, etc. that serve the search business.
 
-Contents
---------
+Content
+======
 
 .. toctree::
-    :maxdepth: 3
+    :maxdepth: 2
 
-    中文文档 <cn/index.rst>
-    English <en/index.rst>
+    config
+    atomic

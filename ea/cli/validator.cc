@@ -16,7 +16,7 @@
 #include "ea/cli/validator.h"
 #include "turbo/container/flat_hash_set.h"
 
-namespace EA::client {
+namespace EA::cli {
     static turbo::flat_hash_set<char> AllowChar{'a', 'b', 'c', 'd', 'e', 'f', 'g',
                                                 'h', 'i', 'j', 'k', 'l', 'm', 'n',
                                                 'o', 'p', 'q', 'r', 's', 't',
@@ -39,4 +39,4 @@ namespace EA::client {
         }
         return turbo::OkStatus();
     }
-}  // namespace EA::client
+}  // namespace EA::cli

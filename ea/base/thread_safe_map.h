@@ -12,15 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
+//
+// Created by jeff on 23-11-25.
+//
 
 #ifndef EA_BASE_THREAD_SAFE_MAP_H_
 #define EA_BASE_THREAD_SAFE_MAP_H_
 
-#include <cstddef>
 #include <cstdint>
+#include <unordered_map>
 #include <functional>
-#include <bthread/butex.h>
-#include "turbo/container/flat_hash_map.h"
+#include <bthread/mutex.h>
 
 namespace EA {
 
@@ -238,7 +240,7 @@ namespace EA {
         }
 
     private:
-        turbo::flat_hash_map<KEY, VALUE> _map[MAP_COUNT];
+        std::unordered_map<KEY, VALUE> _map[MAP_COUNT];
         bthread_mutex_t _mutex[MAP_COUNT];
         DISALLOW_COPY_AND_ASSIGN(ThreadSafeMap);
     };

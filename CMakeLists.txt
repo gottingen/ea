@@ -94,12 +94,6 @@ install(DIRECTORY ${PROJECT_NAME}
         PATTERN "*.h"
         )
 
-install(DIRECTORY ${PROJECT_BINARY_DIR}/${PROJECT_NAME}
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-        FILES_MATCHING
-        PATTERN "*.inc"
-        PATTERN "*.h"
-        )
 
 # Layout. This works for all platforms:
 #   * <prefix>/lib*/cmake/<PROJECT-NAME>

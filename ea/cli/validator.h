@@ -19,9 +19,9 @@
 #include <string>
 #include "turbo/base/status.h"
 
-namespace EA::client {
+namespace EA::cli {
 
     [[nodiscard]] turbo::Status CheckValidNameType(std::string_view ns);
 
-}  // namespace EA::client
+}  // namespace EA::cli
 #endif  // EA_CLI_VALIDATOR_H_

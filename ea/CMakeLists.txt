@@ -15,18 +15,15 @@
 #
 
 file(COPY ${PROJECT_SOURCE_DIR}/conf DESTINATION ${PROJECT_BINARY_DIR})
-file(GLOB RDB_SRC rdb/*.cc)
+file(GLOB ENGINE engine/*.cc)
 file(GLOB BASE base/*.cc)
-file(GLOB GFLAGS gflags/*.cc)
-file(GLOB RAFT raft/*.cc)
-#file(GLOB RAFT raft/*.cc)
 
-set(EA_BASE
-        ${RDB_SRC}
-        ${GFLAGS}
+set(EA_COMMON
         ${BASE}
+        ${ENGINE}
         ${RAFT}
-)
+        ${RPC}
+        )
 
 add_definitions(
         -D_GNU_SOURCE
@@ -37,133 +34,66 @@ add_definitions(
         -DBRPC_WITH_GLOG=OFF
 )
 
+file(GLOB EA_FLAGS flags/*.cc)
 carbin_cc_library(
         NAMESPACE ea
-        NAME base
+        NAME flags
         SOURCES
-        ${EA_BASE}
+        ${EA_FLAGS}
         COPTS
         ${USER_CXX_FLAGS}
         DEPS
-        eaproto::eaproto_STATIC
         ${CARBIN_DEPS_LINK}
         PUBLIC
 )
-file(GLOB EA_RPC rpc/*.cc)
+
 carbin_cc_library(
         NAMESPACE ea
-        NAME rpc
+        NAME common
         SOURCES
-        ${EA_RPC}
+        ${EA_COMMON}
         COPTS
         ${USER_CXX_FLAGS}
         DEPS
-        eaproto::eaproto_STATIC
-        ea::base
+        eapi::eapi
+        ea::flags
         ${CARBIN_DEPS_LINK}
         PUBLIC
 )
 
-file(GLOB EA_RESTFUL restful/*.cc)
+file(GLOB EA_CLIENT client/*.cc)
+
 carbin_cc_library(
         NAMESPACE ea
-        NAME restful
+        NAME client
         SOURCES
-        ${EA_RESTFUL}
+        ${EA_CLIENT}
         COPTS
         ${USER_CXX_FLAGS}
         DEPS
-        eaproto::eaproto_STATIC
-        ea::base
-        ea::rpc
+        eapi::eapi
+        ea::common
+        ea::flags
         ${CARBIN_DEPS_LINK}
         PUBLIC
 )
 
-set(OPS_SRC
-        ${PROJECT_SOURCE_DIR}/ea/ops/constants.cc
-        ${PROJECT_SOURCE_DIR}/ea/ops/raft_dummy.cc
-)
-carbin_cc_library(
-        NAMESPACE ea
-        NAME ops
-        SOURCES
-        ${OPS_SRC}
-        COPTS
-        ${USER_CXX_FLAGS}
-        PUBLIC
-)
 
+file(GLOB META_SERVER meta_server/*.cc)
 
-file(GLOB_RECURSE CONFIG_SERVER ops/config/*.cc)
 carbin_cc_binary(
         NAMESPACE ea
-        NAME config_server
+        NAME eameta
         SOURCES
-        ${CONFIG_SERVER}
+        ${META_SERVER}
         COPTS
         ${USER_CXX_FLAGS}
-        "-Wno-strict-aliasing"
         DEPS
+        eapi::eapi
+        ea::common
+        ea::flags
+        ea::client
         ${CARBIN_DEPS_LINK}
-        ea::base
-        ea::ops
-        ea::rpc
-        eaproto::eaproto_STATIC
-        PUBLIC
-)
-
-file(GLOB_RECURSE DICT_SERVER ops/dict/*.cc)
-carbin_cc_binary(
-        NAMESPACE ea
-        NAME dict_server
-        SOURCES
-        ${DICT_SERVER}
-        COPTS
-        ${USER_CXX_FLAGS}
-        "-Wno-strict-aliasing"
-        DEPS
-        ${CARBIN_DEPS_LINK}
-        ea::base
-        ea::ops
-        ea::rpc
-        eaproto::eaproto_STATIC
-        PUBLIC
-)
-
-file(GLOB_RECURSE PLUGIN_SERVER ops/plugin/*.cc)
-carbin_cc_binary(
-        NAMESPACE ea
-        NAME plugin_server
-        SOURCES
-        ${PLUGIN_SERVER}
-        COPTS
-        ${USER_CXX_FLAGS}
-        "-Wno-strict-aliasing"
-        DEPS
-        ${CARBIN_DEPS_LINK}
-        ea::base
-        ea::ops
-        ea::rpc
-        eaproto::eaproto_STATIC
-        PUBLIC
-)
-
-file(GLOB ROUTER router/*.cc)
-carbin_cc_binary(
-        NAMESPACE ea
-        NAME router_server
-        SOURCES
-        ${ROUTER}
-        COPTS
-        ${USER_CXX_FLAGS}
-        "-Wno-strict-aliasing"
-        DEPS
-        ${CARBIN_DEPS_LINK}
-        ea::base
-        ea::rpc
-        ea::restful
-        eaproto::eaproto_STATIC
         PUBLIC
 )
 
@@ -178,7 +108,7 @@ carbin_cc_binary(
         "-Wno-strict-aliasing"
         DEPS
         ${CARBIN_DEPS_LINK}
-        eaproto::eaproto_STATIC
-        ea::rpc
+        ea::client
+        eapi::eapi
         PUBLIC
 )

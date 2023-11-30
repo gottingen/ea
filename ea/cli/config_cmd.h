@@ -17,13 +17,13 @@
 #define EA_CLI_CONFIG_CMD_H_
 
 #include "turbo/flags/flags.h"
-#include "eaproto/router/router.interface.pb.h"
+#include "eapi/servlet/servlet.interface.pb.h"
 #include "turbo/base/status.h"
 #include "turbo/format/table.h"
 #include <string>
+#include "ea/client/config_client.h"
 
-
-namespace EA::client {
+namespace EA::cli {
 
     struct ConfigOptionContext {
         static ConfigOptionContext *get_instance() {
@@ -36,46 +36,63 @@ namespace EA::client {
         std::string config_file;
         std::string config_version;
         std::string config_type;
+        std::string config_json;
+        std::string config_example;
+        std::vector<std::string> config_watch_list;
+        std::string config_watch_dir;
+        bool clean_local;
+        EA::servlet::ConfigInfo config_request;
     };
 
-    void setup_config_cmd(turbo::App &app);
+    struct ConfigCmd {
+        static void setup_config_cmd(turbo::App &app);
 
-    void run_config_cmd(turbo::App *app);
+        static void run_config_cmd(turbo::App *app);
 
-    void run_config_create_cmd();
+        static void run_config_create_cmd();
 
-    void run_config_list_cmd();
+        static void run_config_list_cmd();
 
-    void run_config_version_list_cmd();
+        static void run_config_dump_cmd();
 
-    void run_config_get_cmd();
+        static void run_config_test_cmd();
 
-    void run_config_remove_cmd();
+        static void run_config_version_list_cmd();
 
-    [[nodiscard]] turbo::Status
-    make_config_create(EA::proto::OpsServiceRequest *req);
+        static void run_config_get_cmd();
 
-    [[nodiscard]] turbo::Status
-    make_config_list(EA::proto::QueryOpsServiceRequest *req);
+        static void run_config_remove_cmd();
 
-    [[nodiscard]] turbo::Status
-    make_config_list_version(EA::proto::QueryOpsServiceRequest *req);
+        static void run_config_watch_cmd();
 
-    [[nodiscard]] turbo::Status
-    make_config_get(EA::proto::QueryOpsServiceRequest *req);
+        [[nodiscard]] static turbo::Status
+        make_example_config_dump(EA::servlet::ConfigInfo *req);
 
-    [[nodiscard]] turbo::Status
-    make_config_remove(EA::proto::OpsServiceRequest *req);
+        [[nodiscard]] static turbo::Status
+        make_config_list(EA::servlet::QueryRequest *req);
+
+        [[nodiscard]] static turbo::Status
+        make_config_list_version(EA::servlet::QueryRequest *req);
+
+        [[nodiscard]] static turbo::Status
+        make_config_get(EA::servlet::QueryRequest *req);
+
+        [[nodiscard]] static turbo::Status
+        make_config_remove(EA::servlet::MetaManagerRequest *req);
 
 
-    turbo::Table show_query_ops_config_list_response(const EA::proto::QueryOpsServiceResponse &res);
+        static turbo::Table show_query_ops_config_list_response(const EA::servlet::QueryResponse &res);
 
-    turbo::Table show_query_ops_config_list_version_response(const EA::proto::QueryOpsServiceResponse &res);
+        static turbo::Table show_query_ops_config_list_version_response(const EA::servlet::QueryResponse &res);
 
-    turbo::Table show_query_ops_config_get_response(const EA::proto::QueryOpsServiceResponse &res, const turbo::Status &save_status);
+        static turbo::Table
+        show_query_ops_config_get_response(const EA::servlet::QueryResponse &res, const turbo::Status &save_status);
 
-    turbo::Status save_config_to_file(const std::string &path, const EA::proto::QueryOpsServiceResponse &res);
+        static turbo::Status save_config_to_file(const std::string &path, const EA::servlet::QueryResponse &res);
 
-}  // namespace EA::client
+        static turbo::Status save_config_to_file(const std::string &basedir, const EA::client::ConfigCallbackData &data);
+    };
+
+}  // namespace EA::cli
 
 #endif // EA_CLI_CONFIG_CMD_H_

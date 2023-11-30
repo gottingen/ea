@@ -16,9 +16,9 @@
 
 #pragma once
 
-#include <atomic>
 #include "ea/base/bthread.h"
 #include "ea/base/thread_safe_map.h"
+#include <atomic>
 
 namespace EA {
 
@@ -34,7 +34,7 @@ namespace EA {
         void memory_gc_thread();
 
         int init() {
-#ifdef EA_TCMALLOC
+#ifdef BAIKAL_TCMALLOC
             _memory_gc_bth.run([this]() {memory_gc_thread();});
 #endif
             return 0;

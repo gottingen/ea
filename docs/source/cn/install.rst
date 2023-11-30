@@ -1,14 +1,14 @@
 .. Copyright 2023 The Elastic AI Search Authors.
 
-Build
-=====
+编译
+===
 
 
 .. image:: image/cmake.svg
 
 build with cmake
 
-System Dependencies
+系统依赖
 ------------
 
 .. code-block::

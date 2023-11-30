@@ -1,4 +1,4 @@
-Elastic AI
+EA META
 ====
 
 Elastic AI abbreviated as EA, In future documents, we will all call it EA.
@@ -10,11 +10,14 @@ EA focuses on building a search service framework suitable for artificial intell
 The search system contains many components, including explicit requirements such as engines,
 sorting, etc., but also includes configuration systems, statistics, etc. that serve the search business.
 
-Content
-======
-
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 1
+   :caption: CONFIG
 
     config
+
+.. toctree::
+    :maxdepth: 1
+   :caption: ATOMIC
+
     atomic

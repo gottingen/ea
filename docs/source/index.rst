@@ -1,5 +1,5 @@
 Elastic AI
-====
+==========
 
 Elastic AI abbreviated as EA, In future documents, we will all call it EA.
 
@@ -12,9 +12,33 @@ sorting, etc., but also includes configuration systems, statistics, etc. that se
 
 Contents
 --------
+.. toctree::
+    :maxdepth: 1
+   :caption: 总览
+
+    cn/overview
 
 .. toctree::
-    :maxdepth: 3
+    :maxdepth: 1
+   :caption: 安装
 
-    中文文档 <cn/index.rst>
-    English <en/index.rst>
+    cn/install
+
+
+.. toctree::
+    :maxdepth: 1
+   :caption: OVERVIEW
+
+    en/overview
+
+.. toctree::
+    :maxdepth: 1
+   :caption: INSTALLATION
+
+    en/install
+
+.. toctree::
+    :maxdepth: 1
+   :caption: META_SERVICE
+
+    en/meta/index

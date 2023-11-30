@@ -144,24 +144,7 @@ if (CARBIN_WITH_SYSTEM_LIBS)
 else ()
     include(rocksdb)
 endif ()
-#[[
-if (CARBIN_WITH_SYSTEM_LIBS)
-    find_path(MARIADB_INCLUDE_DIR NAMES mariadb/mysql.h)
-    if (MARIADB_INCLUDE_DIR)
-        set(MARIADB_INCLUDE_DIR ${MARIADB_INCLUDE_DIR}/mariadb)
-    else ()
-        find_path(MARIADB_INCLUDE_DIR NAMES mysql.h)
-    endif ()
-    find_library(MARIADB_LIBRARIES NAMES mariadbclient)
-    if ((NOT MARIADB_INCLUDE_DIR) OR (NOT MARIADB_LIBRARIES))
-        message(FATAL_ERROR "Fail to find mariadbclient")
-    endif ()
-    ADD_LIBRARY(mariadb SHARED IMPORTED GLOBAL)
-else ()
-    include(mariadb)
-endif ()
-message(mysqlclient: ${MARIADB_INCLUDE_DIR}, ${MARIADB_LIBRARIES})
-]]
+
 #brpc
 if (CARBIN_WITH_SYSTEM_LIBS)
     #leveldb(for brpc)
@@ -193,10 +176,9 @@ endif ()
 message(braft lib : ${BRAFT_LIBRARIES})
 
 include_directories(${ROCKSDB_INCLUDE_DIR})
-
+find_package(eapi REQUIRED)
 #message(STATUS "ssl:" ${OPENSSL_SSL_LIBRARY})
 #message(STATUS "crypto:" ${OPENSSL_CRYPTO_LIBRARY})
-find_package(eaproto REQUIRED)
 SET(DEP_INC
         ${CMAKE_CURRENT_BINARY_DIR}/proto
 

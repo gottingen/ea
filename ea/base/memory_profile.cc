@@ -15,16 +15,15 @@
 
 
 #include "ea/base/memory_profile.h"
-#include "ea/gflags/base.h"
-
-#ifdef EA_TCMALLOC
+#include "ea/flags/base.h"
+#ifdef BAIKAL_TCMALLOC
 #include <gperftools/malloc_extension.h>
 #endif
 
 namespace EA {
 
     void MemoryGCHandler::memory_gc_thread() {
-#ifdef EA_TCMALLOC
+#ifdef BAIKAL_TCMALLOC
         char stats_buffer[1000] = {0};
         const size_t BYTES_TO_GC = 8 * 1024 * 1024;
         TimeCost stats_cost;

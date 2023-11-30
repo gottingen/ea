@@ -1,13 +1,15 @@
-Welcome to Lumache's documentation!
-===================================
+Elastic AI
+====
 
-**Lumache** (/lu'make/) is a Python library for cooks and food lovers
-that creates recipes mixing random ingredients.
-It pulls data from the `Open Food Facts database <https://world.openfoodfacts.org/>`_
-and offers a *simple* and *intuitive* API.
+Elastic AI abbreviated as EA, In future documents, we will all call it EA.
 
-Check out the :doc:`usage` section for further information, including
-how to :ref:`installation` the project.
+EA is a fast, typo-tolerant search engine for building delightful search experiences based on AI and IR.
+and so EA is open source `github <https://github.com/gottingen/ea>`_.
+
+EA focuses on building a search service framework suitable for artificial intelligence access.
+The search system contains many components, including explicit requirements such as engines,
+sorting, etc., but also includes configuration systems, statistics, etc. that serve the search business.
+
 
 .. note::
 
@@ -18,5 +20,6 @@ Contents
 
 .. toctree::
 
-   usage
-   api
+    install
+    usage
+    api

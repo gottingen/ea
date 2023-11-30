@@ -31,14 +31,14 @@ function(carbin_cc_binary)
     cmake_parse_arguments(
             CARBIN_CC_BINARY
             "PUBLIC"
-            "NAME"
+            "NAME;NAMESPACE"
             "DEPS;SOURCES;DEFINITIONS;COPTS"
             ${ARGN}
     )
 
 
     carbin_raw("-----------------------------------")
-    carbin_print_label("Building Binary" "${CARBIN_CC_BINARY_NAME}")
+    carbin_print_label("Building Binary" "${CARBIN_CC_BINARY_NAME}::${CARBIN_CC_BINARY_NAME}")
     carbin_raw("-----------------------------------")
     if (VERBOSE_CARBIN_BUILD)
         carbin_print_list_label("Sources" CARBIN_CC_BINARY_SOURCES)

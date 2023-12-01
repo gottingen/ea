@@ -1,7 +1,7 @@
 Elastic AI
 ==========
 
-.. image:: image/ea_big.png
+.. |ea_big_icon| image:: image/ea_big.png
    :alt: EA
 
 Elastic AI abbreviated as EA, In future documents, we will all call it EA.

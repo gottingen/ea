@@ -67,7 +67,7 @@ Contents
 .. toctree::
     :caption: ACKNOWLEDGE
 
-    en/faq acknowledge
+    en/acknowledge
 
 
 

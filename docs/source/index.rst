@@ -42,7 +42,6 @@ Contents
 
 .. toctree::
     :caption: ADMINISTRATE
-
     :maxdepth: 2
 
     en/administrate

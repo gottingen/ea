@@ -4,12 +4,10 @@ Build and Install
 =================================================
 
 Build Prepare
-=====
+====================
 
 EA uses cmake as the build system, and EA servers need to run on the Linux platform.
 
-Dependencies
----------------------------------
 
 ..  |ea_requirements| list-table:: EA requirements
     :widths: 15 10 10 10 10
@@ -108,7 +106,7 @@ and the docs `carbin docs <carbin.readthedocs.io/>`_.
 
 
 Ubuntu Dependencies
-____________________________________
+----------------------------------
 
 install dependencies::
 
@@ -117,7 +115,7 @@ install dependencies::
 
 
 centos Dependencies
-___________________________________
+-----------------------------------
 
 install dependencies::
 
@@ -127,13 +125,13 @@ install dependencies::
 
 
 install cmake
-___________________________________
+-------------------------------------
 
 EA relies on some external projects, and some external projects have higher requirements for the cmake
 version. It is a good choice to try to install a newer version of cmake.
 
 install EA Dependencies
-__________________________________
+-------------------------------------
 
 install dependencies::
 

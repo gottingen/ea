@@ -14,32 +14,27 @@ Contents
 --------
 
 .. toctree::
-    :maxdepth: 3
     :caption: 概要
 
     cn/overview
 
 .. toctree::
-    :maxdepth: 3
     :caption: 安装
 
     cn/install
 
 
 .. toctree::
-    :maxdepth: 3
     :caption: OVERVIEW
 
     en/overview
 
 .. toctree::
-    :maxdepth: 3
     :caption: INSTALLATION
 
     en/install
 
 .. toctree::
-    :maxdepth: 3
     :caption: META_SERVICE
 
     en/meta/index

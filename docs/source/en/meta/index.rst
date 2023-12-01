@@ -12,13 +12,11 @@ sorting, etc., but also includes configuration systems, statistics, etc. that se
 
 
 .. toctree::
-    :maxdepth: 2
    :caption: CONFIG
 
     config
 
 .. toctree::
-    :maxdepth: 2
    :caption: ATOMIC
 
     atomic

@@ -14,6 +14,8 @@ Contents
 --------
 
 .. toctree::
+    :maxdepth: 3
+    :caption: 概要
 
     cn/overview
 
@@ -25,6 +27,8 @@ Contents
 
 
 .. toctree::
+    :maxdepth: 3
+    :caption: OVERVIEW
 
     en/overview
 

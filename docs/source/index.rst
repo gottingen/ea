@@ -14,32 +14,30 @@ Contents
 --------
 
 .. toctree::
-    :caption: 概要
-
-    cn/overview
-
-.. toctree::
-    :caption: 安装
-
-    cn/install
-
-
-.. toctree::
-    :caption: OVERVIEW
+    :caption: ENGLISH
 
     en/overview
 
 .. toctree::
-    :caption: INSTALLATION
 
     en/install
 
 .. toctree::
-    :caption: META SERVICE
 
     en/meta/introduction
     en/meta/config
     en/meta/atomic
+
+.. toctree::
+    :caption: 中文文档
+
+    cn/overview
+
+.. toctree::
+
+    cn/install
+
+
 
 
 

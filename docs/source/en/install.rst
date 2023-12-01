@@ -1,6 +1,6 @@
 .. Copyright 2023 The Elastic AI Search Authors.
 
-Build
+Build Prepare
 =====
 
 EA uses cmake as the build system, and EA servers need to run on the Linux platform.
@@ -100,7 +100,8 @@ and build level dependencies only need to be installed on the compilation machin
 projects managed by carbin do not need to be installed manually. Dependencies of NONE managed
 need to be installed manually. Next, the first step is to install the NONE managed dependent
 projects, and the second step is to install the dependent projects managed by carbin with one
-click. If you want to learn more about the use of caibin, please see: |carbin_github|
+click. If you want to learn more about the use of caibin, please see: `carbin on github <github.com/gottingen/carbin>`_
+and the docs `carbin docs <carbin.readthedocs.io/>`_.
 
 
 Ubuntu Dependencies
@@ -108,8 +109,8 @@ ____________________________________
 
 install dependencies::
 
-    sudo apt-get install -y git g++ make libssl-dev
-    pip install carbin
+    >sudo apt-get install -y git g++ make libssl-dev
+    >pip install carbin
 
 
 centos Dependencies
@@ -117,9 +118,9 @@ ___________________________________
 
 install dependencies::
 
-    sudo yum install epel-release
-    sudo yum install git gcc-c++ make openssl-devel
-    pip install carbin
+    >sudo yum install epel-release
+    >sudo yum install git gcc-c++ make openssl-devel
+    >pip install carbin
 
 
 install cmake
@@ -133,9 +134,56 @@ __________________________________
 
 install dependencies::
 
-    $cd your_EA_root
-    carbin install
+    >git clone https://github.com/gottingen/ea.git
+    >cd ea
+    >carbin install
+
+then the dependencies will be install to `ea/carbin`. the  dependencies descriptions ara in the ea/carbin_deps.txt.
+
+.. note::
+    gottingen/turbo@v0.9.34 --ignore-requirements -DCARBIN_BUILD_TEST=OFF -DCARBIN_BUILD_BENCHMARK=OFF -DCARBIN_BUILD_EXAMPLES=OFF -DBUILD_SHARED_LIBRARY=OFF -DBUILD_STATIC_LIBRARY=ON -DCMAKE_BUILD_TYPE=release
 
 
-Install
-=======
+    in *gottingen/turbo@v0.9.34* `gottingen/turbo` descript which repo, and `v0.9.34` can be a tag or branch.
+    `--ignore-requirements` means that, do not download turbo's requirements recursively. and then, the other's is build
+    arguments for cmake.
+
+Build And Install
+==================================
+
+build::
+
+    > mkdir build
+    > cd build
+    > cmake .. -DCMAKE_INSTALL_PREFIX=you_install_dir
+    > make -j 6
+
+
+Test Running
+=================================
+
+run cmd::
+
+    >./ea/eameta
+    >./ea/eacli meta config list
+    +---------+-----------------------------------------------------------------------------------------+
+    | phase   |                                          status                                         |
+    +---------+-----------------------------------------------------------------------------------------+
+    | prepare |                                            ok                                           |
+    +---------+-----------------------------------------------------------------------------------------+
+    | rpc     |                                            ok                                           |
+    +---------+-----------------------------------------------------------------------------------------+
+    | result  | +---------+----------------+---------+-------------------+------------+---------------+ |
+    |         | | status  | meta leader    | op code | op string         | error code | error message | |
+    |         | +---------+----------------+---------+-------------------+------------+---------------+ |
+    |         | | success | 127.0.0.1:8010 | 19      | QUERY_LIST_CONFIG | 0          | success       | |
+    |         | +---------+----------------+---------+-------------------+------------+---------------+ |
+    +---------+-----------------------------------------------------------------------------------------+
+    | summary | +-------------+--------+                                                                |
+    |         | | config size | 0      |                                                                |
+    |         | +-------------+--------+                                                                |
+    |         | | number      | config |                                                                |
+    |         | +-------------+--------+                                                                |
+    +---------+-----------------------------------------------------------------------------------------+
+
+

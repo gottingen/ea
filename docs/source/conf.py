@@ -18,12 +18,12 @@ def setup(app):
     app.add_css_file("main_stylesheet.css")
 
 extensions = ['breathe', 'sphinx_rtd_theme']
-breathe_projects = { 'eadocs': '../xml' }
+breathe_projects = { 'ea': '../xml' }
 templates_path = ['_templates']
 html_static_path = ['_static']
 source_suffix = '.rst'
 master_doc = 'index'
-project = 'ea'
+project = 'eadocs'
 copyright = 'Copyright 2023 The Elastic-AI Authors.'
 author = 'jeff.li'
 

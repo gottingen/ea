@@ -37,7 +37,7 @@ Contents
 .. toctree::
     :caption: META SERVICE
 
-    en/meta/index
+    en/meta/introduction
     en/meta/config
     en/meta/atomic
 

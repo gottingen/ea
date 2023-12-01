@@ -32,6 +32,11 @@ Contents
     en/meta/atomic
 
 .. toctree::
+
+    en/api/meta
+
+
+.. toctree::
     :caption: 中文文档
 
     cn/overview

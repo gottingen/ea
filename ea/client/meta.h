@@ -31,7 +31,9 @@
 
 
 namespace EA::client {
-
+    ///
+    /// @ingroup meta_client
+    ///
     class MetaClient {
     public:
         static MetaClient *get_instance() {

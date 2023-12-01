@@ -2,11 +2,6 @@
 
 .. _administrate_section:
 
-=================================
-administrate
-=================================
-
-
 ..  toctree::
     :maxdepth: 2
 

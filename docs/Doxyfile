@@ -1,0 +1,29 @@
+PROJECT_NAME      = "ea"
+XML_OUTPUT        = xml
+INPUT             = ../ea/client/loader.h \
+                    ../ea/client/meta.h   \
+                    ../ea/client/dumper.h   \
+                    ../ea/client/base_message_sender.h \
+                    ../ea/client/config_cache.h \
+                    ../ea/client/config_client.h \
+                    ../ea/client/config_info_builder.h \
+                    ../ea/client/meta_sender.h      \
+                    ../ea/client/router_sender.h    \
+                    ../ea/client/servlet_instance_builder.h \
+                    ../ea/client/utility.h
+
+
+GENERATE_LATEX    = NO
+GENERATE_MAN      = NO
+GENERATE_RTF      = NO
+CASE_SENSE_NAMES  = NO
+GENERATE_HTML     = NO
+GENERATE_XML      = YES
+RECURSIVE         = YES
+QUIET             = YES
+JAVADOC_AUTOBRIEF = YES
+WARN_IF_UNDOCUMENTED = NO
+WARN_AS_ERROR = NO
+ENABLE_PREPROCESSING = YES
+MACRO_EXPANSION      = YES
+EXPAND_ONLY_PREDEF   = YES

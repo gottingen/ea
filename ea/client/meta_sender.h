@@ -27,88 +27,115 @@
 
 namespace EA::client {
 
+    /**
+     * @ingroup meta_client
+     */
     class MetaSender : public BaseMessageSender {
     public:
         static const int kRetryTimes = 5;
 
-        ///
-        /// \return
+        /**
+         *
+         * @return
+         */
         static MetaSender *get_instance() {
             static MetaSender _instance;
             return &_instance;
         }
 
-        ///
-        /// \return
+        /**
+         *
+         * @return
+         */
         static MetaSender *get_backup_instance() {
             static MetaSender _instance;
             return &_instance;
         }
 
-        ///
         MetaSender() = default;
 
-        ///
-        /// \return
+        /**
+         *
+         * @return
+         */
         bool is_inited() {
             return _is_inited;
         }
 
-        ///
-        /// \param raft_nodes
-        /// \return
+        /**
+         *
+         * @param raft_nodes
+         * @return
+         */
         turbo::Status init(const std::string &raft_nodes);
 
-        ///
-        /// \param verbose
-        /// \return
+        /**
+         *
+         * @param verbose
+         * @return
+         */
         MetaSender &set_verbose(bool verbose);
 
-        ///
-        /// \param time_ms
-        /// \return
+        /**
+         *
+         * @param time_ms
+         * @return
+         */
         MetaSender &set_time_out(int time_ms);
 
-        ///
-        /// \param time_ms
-        /// \return
+        /**
+         *
+         * @param time_ms
+         * @return
+         */
         MetaSender &set_connect_time_out(int time_ms);
 
-        ///
-        /// \param time_ms
-        /// \return
+        /**
+         *
+         * @param time_ms
+         * @return
+         */
         MetaSender &set_interval_time(int time_ms);
 
-        ///
-        /// \param retry
-        /// \return
+        /**
+         *
+         * @param retry
+         * @return
+         */
         MetaSender &set_retry_time(int retry);
 
-        ///
-        /// \brief return leader address
-        /// \return
+        /**
+         *
+         * @return
+         */
         std::string get_leader() const;
 
-        ///
-        /// \param request
-        /// \param response
-        /// \param retry_times
-        /// \return
+        /**
+         *
+         * @param request
+         * @param response
+         * @param retry_time
+         * @return
+         */
         turbo::Status meta_manager(const EA::servlet::MetaManagerRequest &request,
                                    EA::servlet::MetaManagerResponse &response, int retry_time) override;
 
-        ///
-        /// \param request
-        /// \param response
-        /// \return
+        /**
+         *
+         * @param request
+         * @param response
+         * @return
+         */
         turbo::Status meta_manager(const EA::servlet::MetaManagerRequest &request,
                                    EA::servlet::MetaManagerResponse &response) override;
 
-        ///
-        /// \param request
-        /// \param response
-        /// \param retry_times
-        /// \return
+        /**
+         *
+         * @param request
+         * @param response
+         * @param retry_time
+         * @return
+         */
         turbo::Status meta_query(const EA::servlet::QueryRequest &request,
                                  EA::servlet::QueryResponse &response, int retry_time) override;
 
@@ -119,14 +146,16 @@ namespace EA::client {
         turbo::Status meta_query(const EA::servlet::QueryRequest &request,
                                  EA::servlet::QueryResponse &response) override;
 
-        ///
-        /// \tparam Request
-        /// \tparam Response
-        /// \param service_name
-        /// \param request
-        /// \param response
-        /// \param retry_times
-        /// \return
+        /**
+         *
+         * @tparam Request
+         * @tparam Response
+         * @param service_name
+         * @param request
+         * @param response
+         * @param retry_times
+         * @return
+         */
         template<typename Request, typename Response>
         turbo::Status send_request(const std::string &service_name,
                                    const Request &request,
@@ -134,8 +163,10 @@ namespace EA::client {
 
     private:
 
-        ///
-        /// \param addr
+        /**
+         *
+         * @param addr
+         */
         void set_leader_address(const butil::EndPoint &addr);
 
     private:

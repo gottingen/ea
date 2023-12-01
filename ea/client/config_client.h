@@ -31,6 +31,9 @@
 
 namespace EA::client {
 
+    /**
+     * @ingroup meta_client
+     */
     struct ConfigCallbackData {
         std::string config_name;
         turbo::ModuleVersion current_version;
@@ -39,8 +42,9 @@ namespace EA::client {
         std::string type;
     };
 
-    ///
-    /// \brief return true, apply new version, false do not apply
+    /**
+     *
+     */
     typedef std::function<void(const ConfigCallbackData &config_name)> ConfigCallback;
 
     ///
@@ -60,9 +64,10 @@ namespace EA::client {
             return &ins;
         }
 
-        ///
-        /// \param sender
-        /// \return
+        /**
+         *
+         * @return
+         */
         turbo::Status init();
 
         ///
@@ -71,79 +76,106 @@ namespace EA::client {
         ///
         void join();
 
-        ///
-        /// \param config_name
-        /// \param version
-        /// \param content
-        /// \param type
-        /// \return
+        /**
+         *
+         * @param config_name
+         * @param version
+         * @param content
+         * @param type
+         * @return
+         */
         turbo::Status
         get_config(const std::string &config_name, const std::string &version, std::string &content,
                    std::string *type = nullptr);
 
-        ///
-        /// \param config_name
-        /// \param content
-        /// \return
+        /**
+         *
+         * @param config_name
+         * @param content
+         * @param version
+         * @param type
+         * @return
+         */
         turbo::Status get_config(const std::string &config_name, std::string &content, std::string *version = nullptr,
                                  std::string *type = nullptr);
 
-        ///
-        /// \param config_name
-        /// \param listener
-        /// \return
+        /**
+         *
+         * @param config_name
+         * @param listener
+         * @return
+         */
         turbo::Status watch_config(const std::string &config_name, const ConfigEventListener &listener);
 
-        ///
-        /// \param config_name
-        /// \return
+        /**
+         *
+         * @param config_name
+         * @return
+         */
         turbo::Status unwatch_config(const std::string &config_name);
 
-        ///
-        /// \param config_name
-        /// \return
+        /**
+         *
+         * @param config_name
+         * @return
+         */
         turbo::Status remove_config(const std::string &config_name);
 
-        ///
-        /// \param config_name
-        /// \param version
+        /**
+         *
+         * @param config_name
+         * @param version
+         * @return
+         */
         turbo::Status remove_config(const std::string &config_name, const std::string &version);
 
-        ///
-        /// \param config_name
-        /// \param version
-        /// \return
+        /**
+         *
+         * @param config_name
+         * @param version
+         * @return
+         */
         turbo::Status apply(const std::string &config_name, const turbo::ModuleVersion &version);
 
-        ///
-        /// \param config_name
-        /// \param version
-        /// \return
+        /**
+         *
+         * @param config_name
+         * @param version
+         * @return
+         */
         turbo::Status apply(const std::string &config_name, const std::string &version);
 
-        ///
-        /// \param config_name
-        /// \return
+        /**
+         *
+         * @param config_name
+         * @return
+         */
         turbo::Status unapply(const std::string &config_name);
 
     private:
         ///
         void period_check();
 
-        ///
-        /// \param config_name
-        /// \param version
-        /// \return
+        /**
+         *
+         * @param config_name
+         * @param version
+         * @return
+         */
         turbo::Status do_apply(const std::string &config_name, const turbo::ModuleVersion &version);
 
-        ///
-        /// \param config_name
-        /// \return
+        /**
+         *
+         * @param config_name
+         * @return
+         */
         turbo::Status do_unapply(const std::string &config_name);
 
-        ///
-        /// \param config_name
-        /// \return
+        /**
+         *
+         * @param config_name
+         * @return
+         */
         turbo::Status do_unwatch_config(const std::string &config_name);
     private:
         turbo::flat_hash_map<std::string, turbo::ModuleVersion> _apply_version TURBO_GUARDED_BY(_watch_mutex);

@@ -24,6 +24,9 @@
 
 namespace EA::client {
 
+    /**
+     * @ingroup meta_client
+     */
     class ServletInstanceBuilder {
     public:
         ServletInstanceBuilder() = default;
@@ -33,78 +36,109 @@ namespace EA::client {
         ~ServletInstanceBuilder() = default;
 
     public:
-        ///
-        /// \param ins
+
+        /**
+         *
+         * @param ins
+         */
         void set(EA::servlet::ServletInstance *ins);
 
-        ///
-        /// \param json_str
-        /// \return
+        /**
+         *
+         * @param json_str
+         * @return
+         */
         turbo::Status build_from_json(const std::string &json_str);
 
-        ///
-        /// \param json_path
-        /// \return
+        /**
+         *
+         * @param json_path
+         * @return
+         */
         turbo::Status build_from_json_file(const std::string &json_path);
 
-        ///
-        /// \param namespace_name
-        /// \return
+        /**
+         *
+         * @param namespace_name
+         * @return
+         */
         ServletInstanceBuilder &set_namespace(const std::string &namespace_name);
 
-        ///
-        /// \param zone
-        /// \return
+        /**
+         *
+         * @param zone
+         * @return
+         */
         ServletInstanceBuilder &set_zone(const std::string &zone);
 
-        ///
-        /// \param servlet
-        /// \return
+        /**
+         *
+         * @param servlet
+         * @return
+         */
         ServletInstanceBuilder &set_servlet(const std::string &servlet);
 
-        ///
-        /// \param color
-        /// \return
+        /**
+         *
+         * @param color
+         * @return
+         */
         ServletInstanceBuilder &set_color(const std::string &color);
 
-        ///
-        /// \param env
-        /// \return
+        /**
+         *
+         * @param env
+         * @return
+         */
         ServletInstanceBuilder &set_env(const std::string &env);
 
-        ///
-        /// \param user
-        /// \return
+        /**
+         *
+         * @param user
+         * @return
+         */
         ServletInstanceBuilder &set_user(const std::string &user);
 
-        ///
-        /// \param passwd
-        /// \return
+        /**
+         *
+         * @param passwd
+         * @return
+         */
         ServletInstanceBuilder &set_passwd(const std::string &passwd);
 
-        ///
-        /// \param s
-        /// \return
+        /**
+         *
+         * @param s
+         * @return
+         */
         ServletInstanceBuilder &set_status(const std::string &s);
 
-        ///
-        /// \param address
-        /// \return
+        /**
+         *
+         * @param address
+         * @return
+         */
         ServletInstanceBuilder &set_address(const std::string &address);
 
-        ///
-        /// \param s
-        /// \return
+        /**
+         *
+         * @param s
+         * @return
+         */
         ServletInstanceBuilder &set_status(const EA::servlet::Status &s);
 
-        ///
-        /// \param weight
-        /// \return
+        /**
+         *
+         * @param weight
+         * @return
+         */
         ServletInstanceBuilder &set_weight(int weight);
 
-        ///
-        /// \param time
-        /// \return
+        /**
+         *
+         * @param time
+         * @return
+         */
         ServletInstanceBuilder &set_time(int time);
 
     private:

@@ -24,42 +24,59 @@
 #include "turbo/module/module_version.h"
 
 namespace EA::client {
+    /**
+     * @ingroup meta_client
+     */
 
-    ///
-    /// \param type
-    /// \return
+    /**
+     *
+     * @param type
+     * @return
+     */
     std::string config_type_to_string(EA::servlet::ConfigType type);
 
-    ///
-    /// \param str
-    /// \return
+    /**
+     *
+     * @param str
+     * @return
+     */
     turbo::ResultStatus<EA::servlet::ConfigType> string_to_config_type(const std::string &str);
 
-    ///
-    /// \param str
-    /// \param v
-    /// \return
+    /**
+     *
+     * @param str
+     * @param v
+     * @return
+     */
     turbo::Status string_to_version(const std::string &str, EA::servlet::Version*v);
 
-    ///
-    /// \param str
-    /// \param v
-    /// \return
+    /**
+     *
+     * @param str
+     * @param v
+     * @return
+     */
     turbo::Status string_to_module_version(const std::string &str, turbo::ModuleVersion *v);
 
-    ///
-    /// \param v
-    /// \return
+    /**
+     *
+     * @param v
+     * @return
+     */
     std::string version_to_string(const EA::servlet::Version &v);
 
-    ///
-    /// \param v
-    /// \return
+    /**
+     *
+     * @param v
+     * @return
+     */
     std::string module_version_to_string(const turbo::ModuleVersion &v);
 
-    ///
-    /// \param ns
-    /// \return
+    /**
+     *
+     * @param ns
+     * @return
+     */
     [[nodiscard]] turbo::Status CheckValidNameType(std::string_view ns);
 
 }  // namespace EA::client

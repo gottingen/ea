@@ -24,23 +24,31 @@
 #include <google/protobuf/descriptor.h>
 #include "eapi/servlet/servlet.interface.pb.h"
 
-namespace EA::client {
+        /**
+         * @defgroup meta_client meta client operators
+         *
+         */
 
-    class Loader {
-    public:
+namespace EA {
+    namespace client {
+        /**
+         * @ingroup meta_client
+         *
+         */
+        class Loader {
+        public:
 
-        ///
-        /// \param content json format content
-        /// \param message
-        /// \return
-        static turbo::Status load_proto(const std::string &content, google::protobuf::Message &message);
+            /**
+             * @brief  MetaClient in group  meta_client
+             */
+            static turbo::Status load_proto(const std::string &content, google::protobuf::Message &message);
 
-        ///
-        /// \param path
-        /// \param message
-        /// \return
-        static turbo::Status load_proto_from_file(const std::string &path, google::protobuf::Message &message);
-    };
-}  // namespace EA::client
+            /**
+             * @brief  MetaClient in group  meta_client
+             */
+            static turbo::Status load_proto_from_file(const std::string &path, google::protobuf::Message &message);
+        };
+    }  // namespace EA::client
+}
 
 #endif  // EA_CLIENT_LOADER_H_

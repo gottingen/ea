@@ -1,4 +1,7 @@
 .. Copyright 2023 The Elastic AI Search Authors.
+
+.. _build_and_install_section:
+
 =================================================
 Build and Install
 =================================================

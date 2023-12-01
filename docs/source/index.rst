@@ -28,6 +28,11 @@ Contents
 ..  toctree::
     :maxdepth: 2
 
+    en/quick_start
+
+..  toctree::
+    :maxdepth: 2
+
     en/install
 
 .. toctree::

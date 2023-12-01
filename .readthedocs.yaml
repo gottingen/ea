@@ -11,6 +11,3 @@ python:
 
 sphinx:
   configuration: docs/source/conf.py
-
-conda:
-  file: docs/environment.yml

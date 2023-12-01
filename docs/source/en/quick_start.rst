@@ -2,7 +2,9 @@
 Quick Start
 =================================
 
-.. class:: center
+
+Acknowledge
+=========================================
 
 welcome come to EA!
 
@@ -12,12 +14,19 @@ At the same time, we continue to improve EA's product functions and user experie
 In order to give you a better experience and use of EA, we recommend that you follow the steps below.
 It is our greatest honor that EA can help you. here we go!
 
+Recommendations
+=====================================
+
 Try Install
-===============================================
+---------------------------------------
 
 step 1, download and install EA. the install guide see :ref:`build_and_install_section` section
 
 Try a stand-alone deployment
-===============================================
+-----------------------------------------
 
 step 1, try deploy EA meta stand alone and using `eacli` to manage `eameta` see :ref:`stand_alone_section` section
+
+Try a cluster stand-alone
+-----------------------------------------
+

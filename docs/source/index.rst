@@ -25,7 +25,8 @@ Contents
 
     en/overview
 
-.. toctree::
+..  toctree::
+    :maxdepth: 1
 
     en/install
 

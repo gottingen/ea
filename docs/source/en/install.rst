@@ -187,3 +187,5 @@ run cmd::
     +---------+-----------------------------------------------------------------------------------------+
 
 
+if the command returns the as above, means that ea build and run normal on system. we have build and install it success full.
+then we go to next part to config and deploy `EA`.

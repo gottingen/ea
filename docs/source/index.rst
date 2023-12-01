@@ -35,6 +35,14 @@ Contents
     en/install
 
 .. toctree::
-    :caption: META_SERVICE
+    :caption: META SERVICE
 
     en/meta/index
+
+.. toctree::
+
+    en/meta/config
+
+.. toctree::
+
+    en/meta/atomic

@@ -35,6 +35,16 @@ Contents
 
     en/install
 
+..  toctree::
+    :maxdepth: 2
+
+    en/stand_alone
+
+..  toctree::
+    :maxdepth: 2
+
+    en/administrate
+
 .. toctree::
 
     en/meta/introduction

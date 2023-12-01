@@ -32,6 +32,7 @@ Contents
     en/meta/atomic
 
 .. toctree::
+    :caption: API REFERENCE
 
     en/api/meta
 

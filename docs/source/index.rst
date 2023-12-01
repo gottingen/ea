@@ -21,7 +21,7 @@ Contents
 --------
 
 .. toctree::
-    :caption: ENGLISH
+    :caption: QUICK START
 
     en/overview
 
@@ -40,12 +40,15 @@ Contents
 
     en/stand_alone
 
-..  toctree::
+.. toctree::
+    :caption: ADMINISTRATE
+
     :maxdepth: 2
 
     en/administrate
 
 .. toctree::
+    :caption: DEVELOP
 
     en/meta/introduction
     en/meta/config
@@ -56,17 +59,15 @@ Contents
 
     en/api/meta
 
+.. toctree::
+    :caption: FAQ
+
+    en/faq
 
 .. toctree::
-    :caption: 中文文档
+    :caption: ACKNOWLEDGE
 
-    cn/overview
-
-.. toctree::
-
-    cn/install
-
-
+    en/faq acknowledge
 
 
 

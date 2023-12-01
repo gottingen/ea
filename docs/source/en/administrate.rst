@@ -10,6 +10,7 @@ administrate
 ..  toctree::
     :maxdepth: 2
 
+    eacli
     meta/meta_administrate
 
 

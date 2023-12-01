@@ -1,12 +1,16 @@
 Elastic AI
 ==========
 
-.. |ea_big_icon| image:: image/ea_big.png
-   :alt: EA
+..  image:: image/ea_big.png
+    :height: 200px
+    :width: 240 px
+    :scale: 80 %
+    :align: center
+    :alt: EA
 
-Elastic AI abbreviated as EA, In future documents, we will all call it EA.
+Elastic AI abbreviated as `EA`, In future documents, we will all call it `EA`.
 
-EA is a fast, typo-tolerant search engine for building delightful search experiences based on AI and IR.
+`EA` is a fast, typo-tolerant search engine for building delightful search experiences based on AI and IR.
 and so EA is open source `github <https://github.com/gottingen/ea>`_.
 
 EA focuses on building a search service framework suitable for artificial intelligence access.

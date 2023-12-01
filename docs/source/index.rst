@@ -38,11 +38,8 @@ Contents
     :caption: META SERVICE
 
     en/meta/index
-
-.. toctree::
-
     en/meta/config
-
-.. toctree::
-
     en/meta/atomic
+
+
+

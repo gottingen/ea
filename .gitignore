@@ -39,3 +39,4 @@ sql_parse.yacc.*
 sql_lex.flex.*
 third-deps
 carbin
+docs/xml

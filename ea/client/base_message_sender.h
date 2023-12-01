@@ -21,35 +21,46 @@
 
 namespace EA::client {
 
+    /**
+     * @ingroup meta_client
+     */
     class BaseMessageSender {
     public:
         virtual ~BaseMessageSender() = default;
 
-        ///
-        /// \param request
-        /// \param response
-        /// \param retry_times
-        /// \return
+        /**
+         *
+         * @param request
+         * @param response
+         * @param retry_times
+         * @return
+         */
         virtual turbo::Status meta_manager(const EA::servlet::MetaManagerRequest &request,
                                                                      EA::servlet::MetaManagerResponse &response, int retry_times) = 0;
-        ///
-        /// \param request
-        /// \param response
-        /// \return
+        /**
+         *
+         * @param request
+         * @param response
+         * @return
+         */
         virtual turbo::Status meta_manager(const EA::servlet::MetaManagerRequest &request,
                                            EA::servlet::MetaManagerResponse &response) = 0;
 
-        ///
-        /// \param request
-        /// \param response
-        /// \param retry_times
-        /// \return
+        /**
+         *
+         * @param request
+         * @param response
+         * @param retry_times
+         * @return
+         */
         virtual turbo::Status meta_query(const EA::servlet::QueryRequest &request,
                                                     EA::servlet::QueryResponse &response, int retry_times) = 0;
-        ///
-        /// \param request
-        /// \param response
-        /// \return
+        /**
+         *
+         * @param request
+         * @param response
+         * @return
+         */
         virtual turbo::Status meta_query(const EA::servlet::QueryRequest &request,
                                          EA::servlet::QueryResponse &response) = 0;
     };

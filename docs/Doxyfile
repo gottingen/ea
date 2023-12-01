@@ -1,6 +1,16 @@
 PROJECT_NAME      = "ea"
 XML_OUTPUT        = xml
-INPUT             = ../ea/client/meta.h
+INPUT             = ../ea/client/loader.h \
+                    ../ea/client/meta.h   \
+                    ../ea/client/dumper.h   \
+                    ../ea/client/base_message_sender.h \
+                    ../ea/client/config_cache.h \
+                    ../ea/client/config_client.h \
+                    ../ea/client/config_info_builder.h \
+                    ../ea/client/meta_sender.h      \
+                    ../ea/client/router_sender.h    \
+                    ../ea/client/servlet_instance_builder.h \
+                    ../ea/client/utility.h
 
 
 GENERATE_LATEX    = NO

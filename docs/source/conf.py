@@ -17,13 +17,13 @@ html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 def setup(app):
     app.add_css_file("main_stylesheet.css")
 
-extensions = ['breathe', 'sphinx_rtd_theme']
+extensions = ['breathe']
 breathe_projects = { 'ea': '../xml' }
 templates_path = ['_templates']
 html_static_path = ['_static']
 source_suffix = '.rst'
 master_doc = 'index'
-project = 'eadocs'
+project = 'ea'
 copyright = 'Copyright 2023 The Elastic-AI Authors.'
 author = 'jeff.li'
 

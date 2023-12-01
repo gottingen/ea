@@ -22,6 +22,9 @@
 
 namespace EA::client {
 
+    /**
+     * @ingroup meta_client
+     */
     class ConfigInfoBuilder {
     public:
         ConfigInfoBuilder() = default;
@@ -33,82 +36,102 @@ namespace EA::client {
 
         void set_info(EA::servlet::ConfigInfo *info);
 
-        ///
-        /// \param json_str
-        /// \return
+        /**
+         *
+         * @param json_str
+         * @return
+         */
         turbo::Status build_from_json(const std::string &json_str);
 
-        ///
-        /// \param json_path
-        /// \return
+        /**
+         *
+         * @param json_path
+         * @return
+         */
         turbo::Status build_from_json_file(const std::string &json_path);
 
-        ///
-        /// \param name
-        /// \param file
-        /// \param version
-        /// \param type
-        /// \return
+        /**
+         *
+         * @param name
+         * @param file
+         * @param version
+         * @param type
+         * @return
+         */
         turbo::Status build_from_file(const std::string &name, const std::string &file, const EA::servlet::Version &version,
                                       const EA::servlet::ConfigType &type = EA::servlet::CF_JSON);
 
-        ///
-        /// \param name
-        /// \param file
-        /// \param version
-        /// \param type
-        /// \return
+        /**
+         *
+         * @param name
+         * @param file
+         * @param version
+         * @param type
+         * @return
+         */
         turbo::Status build_from_file(const std::string &name, const std::string &file, const EA::servlet::Version &version,
                                       const std::string &type = "json");
 
-        ///
-        /// \param name
-        /// \param file
-        /// \param version
-        /// \param type
-        /// \return
+        /**
+         *
+         * @param name
+         * @param file
+         * @param version
+         * @param type
+         * @return
+         */
         turbo::Status build_from_file(const std::string &name, const std::string &file, const std::string &version,
                                       const EA::servlet::ConfigType &type = EA::servlet::CF_JSON);
 
-        ///
-        /// \param name
-        /// \param file
-        /// \param version
-        /// \param type
-        /// \return
+        /**
+         *
+         * @param name
+         * @param file
+         * @param version
+         * @param type
+         * @return
+         */
         turbo::Status build_from_file(const std::string &name, const std::string &file, const std::string &version,
                                       const std::string &type = "json");
 
-        ///
-        /// \param name
-        /// \param content
-        /// \param version
-        /// \param type
-        /// \return
+        /**
+         *
+         * @param name
+         * @param content
+         * @param version
+         * @param type
+         * @return
+         */
         turbo::Status build_from_content(const std::string &name, const std::string &content, const EA::servlet::Version &version,
                                          const EA::servlet::ConfigType &type = EA::servlet::CF_JSON);
-        ///
-        /// \param name
-        /// \param content
-        /// \param version
-        /// \param type
-        /// \return
+        /**
+         *
+         * @param name
+         * @param content
+         * @param version
+         * @param type
+         * @return
+         */
         turbo::Status build_from_content(const std::string &name, const std::string &content, const EA::servlet::Version &version,
                                          const std::string &type = "json");
-        ///
-        /// \param name
-        /// \param content
-        /// \param version
-        /// \param type
-        /// \return
+        /**
+         *
+         * @param name
+         * @param content
+         * @param version
+         * @param type
+         * @return
+         */
         turbo::Status build_from_content(const std::string &name, const std::string &content, const std::string &version,
                                          const EA::servlet::ConfigType &type = EA::servlet::CF_JSON);
-        ///
-        /// \param name
-        /// \param content
-        /// \param version
-        /// \param type
-        /// \return
+        /**
+         *
+         * @param name
+         * @param content
+         * @param version
+         * @param type
+         * @return
+         */
         turbo::Status
         build_from_content(const std::string &name, const std::string &content, const std::string &version,
                            const std::string &type = "json");

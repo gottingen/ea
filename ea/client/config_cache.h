@@ -26,6 +26,9 @@
 
 namespace EA::client {
 
+    /**
+     * @ingroup meta_client
+     */
     class ConfigCache {
     public:
         static ConfigCache *get_instance() {
@@ -33,91 +36,114 @@ namespace EA::client {
             return &ins;
         }
 
-        ///
-        /// \brief init cache
-        /// \return
+        /**
+         *
+         * @return
+         */
         turbo::Status init();
 
-        ///
-        /// \param config
-        /// \return
+        /**
+         *
+         * @param config
+         * @return
+         */
         turbo::Status add_config(const EA::servlet::ConfigInfo &config);
 
-        ///
-        /// \brief get extract
-        /// \param name
-        /// \param version
-        /// \param config
-        /// \return
+        /**
+         *
+         * @param name
+         * @param version
+         * @param config
+         * @return
+         */
         turbo::Status
         get_config(const std::string &name, const turbo::ModuleVersion &version, EA::servlet::ConfigInfo &config);
 
-        ///
-        /// \brief get latest version of config
-        /// \param name
-        /// \param config
-        /// \return
+        /**
+         *
+         * @param name
+         * @param config
+         * @return
+         */
         turbo::Status get_config(const std::string &name, EA::servlet::ConfigInfo &config);
 
-        ///
-        /// \param name
-        /// \return
+        /**
+         *
+         * @param name
+         * @return
+         */
         turbo::Status get_config_list(std::vector<std::string> &name);
 
-        ///
-        /// \param config_name
-        /// \param versions
-        /// \return
+        /**
+         *
+         * @param config_name
+         * @param versions
+         * @return
+         */
         turbo::Status
         get_config_version_list(const std::string &config_name, std::vector<turbo::ModuleVersion> &versions);
 
-        ///
-        /// \brief remove signal version of config
-        /// \param config_name
-        /// \param version
-        /// \return
+        /**
+         *
+         * @param config_name
+         * @param version
+         * @return
+         */
         turbo::Status remove_config(const std::string &config_name, const turbo::ModuleVersion &version);
 
-        ///
-        /// \param config_name
-        /// \param version
-        /// \return
+        /**
+         *
+         * @param config_name
+         * @param version
+         * @return
+         */
         turbo::Status remove_config(const std::string &config_name, const std::vector<turbo::ModuleVersion> &version);
 
-        ///
-        /// \brief remove config versions less than the given version
-        /// \param config_name
-        /// \param version
-        /// \return
+        /**
+         *
+         * @param config_name
+         * @param version
+         * @return
+         */
         turbo::Status remove_config_less_than(const std::string &config_name, const turbo::ModuleVersion &version);
 
-        ///
-        /// \brief remove all version of config
-        /// \param config_name
-        /// \return
+        /**
+         *
+         * @param config_name
+         * @return
+         */
         turbo::Status remove_config(const std::string &config_name);
 
     private:
-        ///
-        /// \param dir
-        /// \param config
-        /// \return
+
+        /**
+         *
+         * @param dir
+         * @param config
+         * @return
+         */
         turbo::Status write_config_file(const std::string &dir, const EA::servlet::ConfigInfo &config);
 
-        ///
-        /// \param dir
-        /// \param config
-        /// \return
+        /**
+         *
+         * @param dir
+         * @param config
+         * @return
+         */
         turbo::Status remove_config_file(const std::string &dir, const EA::servlet::ConfigInfo &config);
 
-        ///
-        /// \param dir
-        /// \param config
-        /// \return
+        /**
+         *
+         * @param dir
+         * @param config
+         * @return
+         */
         std::string make_cache_file_path(const std::string &dir, const EA::servlet::ConfigInfo &config);
 
-        ///
-        /// \param config
+        /**
+         *
+         * @param config
+         */
         void do_add_config(const EA::servlet::ConfigInfo &config);
 
     private:

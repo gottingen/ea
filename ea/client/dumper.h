@@ -26,19 +26,26 @@
 
 namespace EA::client {
 
+    /**
+     * @ingroup meta_client
+     */
     class Dumper {
     public:
 
-        ///
-        /// \param path
-        /// \param message
-        /// \return
+        /**
+         *
+         * @param path
+         * @param message
+         * @return
+         */
         static turbo::Status dump_proto_to_file(const std::string &path, const google::protobuf::Message &message);
 
-        ///
-        /// \param messages
-        /// \param content json format content
-        /// \return
+        /**
+         *
+         * @param message
+         * @param content
+         * @return
+         */
         static turbo::Status dump_proto(const google::protobuf::Message &message, std::string &content);
     };
 }  // namespace EA::client

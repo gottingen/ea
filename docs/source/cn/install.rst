@@ -4,12 +4,12 @@
 ====
 
 
-.. image:: image/cmake.svg
+.. image:: ../image/cmake.svg
 
 build with cmake
 
 系统依赖
-------------
+---------------------------------
 
 .. code-block::
 
@@ -17,7 +17,7 @@ build with cmake
     pip install carbin
 
 EA Requirement
-------------
+--------------------------------------------
 
 Install
 =======

@@ -1,35 +1,37 @@
-# Configuration file for the Sphinx documentation builder.
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
-# -- Project information
+import os
+import subprocess
 
-project = 'elasticai'
-copyright = '2023, Jeff'
-author = 'Graziella'
+on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 
-release = '0.1'
-version = '0.1.0'
+if on_rtd:
+    subprocess.check_call('cd ..; doxygen', shell=True)
 
-# -- General configuration
+import sphinx_rtd_theme
 
-extensions = [
-    'sphinx.ext.duration',
-    'sphinx.ext.doctest',
-    'sphinx.ext.autodoc',
-    'sphinx.ext.autosummary',
-    'sphinx.ext.intersphinx',
-]
+html_theme = "sphinx_rtd_theme"
+html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
-intersphinx_mapping = {
-    'python': ('https://docs.python.org/3/', None),
-    'sphinx': ('https://www.sphinx-doc.org/en/master/', None),
-}
-intersphinx_disabled_domains = ['std']
+def setup(app):
+    app.add_css_file("main_stylesheet.css")
 
+extensions = ['breathe', 'sphinx_rtd_theme']
+breathe_projects = { 'eadocs': '../xml' }
 templates_path = ['_templates']
+html_static_path = ['_static']
+source_suffix = '.rst'
+master_doc = 'index'
+project = 'ea'
+copyright = 'Copyright 2023 The Elastic-AI Authors.'
+author = 'jeff.li'
 
-# -- Options for HTML output
+html_logo = 'image/ea_big.png'
 
-html_theme = 'sphinx_rtd_theme'
+exclude_patterns = []
+highlight_language = 'c++'
+pygments_style = 'sphinx'
+todo_include_todos = False
+htmlhelp_basename = 'eadocs'
 
-# -- Options for EPUB output
-epub_show_urls = 'footnote'

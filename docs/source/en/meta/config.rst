@@ -1,5 +1,14 @@
-config
-=====
+EA config
+=========
 
-what
-====
+config options
+=============
+
+create
+------
+
+get
+------
+
+list
+------

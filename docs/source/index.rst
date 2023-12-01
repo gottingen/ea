@@ -1,5 +1,8 @@
 Elastic AI
-====
+==========
+
+.. image:: image/ea_big.png
+   :alt: EA
 
 Elastic AI abbreviated as EA, In future documents, we will all call it EA.
 
@@ -14,7 +17,30 @@ Contents
 --------
 
 .. toctree::
-    :maxdepth: 3
+    :caption: ENGLISH
 
-    中文文档 <cn/index.rst>
-    English <en/index.rst>
+    en/overview
+
+.. toctree::
+
+    en/install
+
+.. toctree::
+
+    en/meta/introduction
+    en/meta/config
+    en/meta/atomic
+
+.. toctree::
+    :caption: 中文文档
+
+    cn/overview
+
+.. toctree::
+
+    cn/install
+
+
+
+
+

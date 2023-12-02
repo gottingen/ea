@@ -1,6 +1,6 @@
 .. Copyright 2023 The Elastic AI Search Authors.
 
-.. _administrate_section:
+.. _meta_administrate_section:
 
 =================================
 meta administrate

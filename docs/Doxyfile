@@ -1,4 +1,4 @@
-PROJECT_NAME      = "ea"
+PROJECT_NAME      = "eadocs"
 XML_OUTPUT        = xml
 INPUT             = ../ea/client/loader.h \
                     ../ea/client/dumper.h   \

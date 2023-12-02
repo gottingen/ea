@@ -1,5 +1,5 @@
 Elastic Architecture Infrastructure
-==========
+================================================
 
 ..  image:: image/ea_big.png
     :height: 200px
@@ -18,7 +18,7 @@ The search system contains many components, including explicit requirements such
 sorting, etc., but also includes configuration systems, statistics, etc. that serve the search business.
 
 Contents
---------
+-------------
 
 .. toctree::
     :caption: QUICK START
@@ -39,6 +39,8 @@ Contents
     :maxdepth: 2
 
     en/stand_alone
+
+.. _administrate_section:
 
 .. toctree::
     :caption: ADMINISTRATE

@@ -12,7 +12,7 @@ Build Prepare
 EA uses cmake as the build system, and EA servers need to run on the Linux platform.
 
 
-..  |ea_requirements| list-table:: EA requirements
+..   list-table:: EA requirements
     :widths: 15 10 10 10 10
     :header-rows: 1
 

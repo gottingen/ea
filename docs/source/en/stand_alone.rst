@@ -447,8 +447,8 @@ node-3 configration::
     -bvar_dump_file=./monitor/bvar.eameta.data
     -ea_log_base_name=meta_log.txt
 
-as deploy signal peer, write the `meta_gflags.conf` configration for every node to
-respectively directory(node-*/confmeta_gflags.conf).
+as deploy signal peer, write the **meta_gflags.conf** configration for every node to
+respectively directory(node-[1|2|3]/conf/meta_gflags.conf).
 
 start up cluster
 ------------------------------------

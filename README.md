@@ -1,4 +1,4 @@
-# EA
+# Elastic Architecture Infrastructure
 
 ![EA](docs/source/image/ea_big.png)
 

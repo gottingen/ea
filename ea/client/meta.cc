@@ -1,5 +1,4 @@
-// Copyright 2023 The Elastic-AI Authors.
-// part of Elastic AI Search
+// Copyright 2023 The Elastic Architecture Infrastructure Authors.
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -12,6 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
+
 #include "ea/client/meta.h"
 #include "ea/client/utility.h"
 #include "turbo/files/sequential_read_file.h"
@@ -468,7 +468,7 @@ namespace EA::client {
         request.set_op_type(EA::servlet::OP_CREATE_NAMESPACE);
 
         EA::servlet::NameSpaceInfo *ns_req = request.mutable_namespace_info();
-        auto rs = CheckValidNameType(ns);
+        auto rs = check_valid_name_type(ns);
         if (!rs.ok()) {
             return rs;
         }
@@ -519,7 +519,7 @@ namespace EA::client {
         request.set_op_type(EA::servlet::OP_DROP_NAMESPACE);
 
         EA::servlet::NameSpaceInfo *ns_req = request.mutable_namespace_info();
-        auto rs = CheckValidNameType(ns);
+        auto rs = check_valid_name_type(ns);
         if (!rs.ok()) {
             return rs;
         }

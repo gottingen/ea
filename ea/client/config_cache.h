@@ -1,5 +1,4 @@
-// Copyright 2023 The Elastic-AI Authors.
-// part of Elastic AI Search
+// Copyright 2023 The Elastic Architecture Infrastructure Authors.
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -27,7 +26,9 @@
 namespace EA::client {
 
     /**
-     * @ingroup meta_client
+     * @ingroup config_client
+     * @brief ConfigCache is used to cache the config files downloaded from the meta server.
+     *        It is used by the MetaClient to cache the config files downloaded from the meta server.
      */
     class ConfigCache {
     public:
@@ -37,80 +38,80 @@ namespace EA::client {
         }
 
         /**
-         *
-         * @return
-         */
+         * @brief init is used to initialize the ConfigCache. It must be called before using the ConfigCache.
+         * @return Status::OK if the ConfigCache was initialized successfully. Otherwise, an error status is returned. 
+         */ 
         turbo::Status init();
 
         /**
-         *
-         * @param config
-         * @return
+         * @brief add_config is used to add a config to the ConfigCache.
+         * @param config [input] is the config to add to the ConfigCache.
+         * @return Status::OK if the config was added successfully. Otherwise, an error status is returned. 
          */
         turbo::Status add_config(const EA::servlet::ConfigInfo &config);
 
         /**
-         *
-         * @param name
-         * @param version
-         * @param config
-         * @return
+         * @brief get_config is used to get a config that matches the name and version from the ConfigCache.
+         * @param name [input] is the name of the config to get.
+         * @param version [input] is the version of the config to get.
+         * @param config [output] is the config received from the ConfigCache.
+         * @return Status::OK if the config was received successfully. Otherwise, an error status is returned. 
          */
         turbo::Status
         get_config(const std::string &name, const turbo::ModuleVersion &version, EA::servlet::ConfigInfo &config);
 
         /**
-         *
-         * @param name
-         * @param config
-         * @return
+         * @brief get_config is used to get the latest version of a config from the ConfigCache.
+         * @param name [input] is the name of the config to get the latest version for.
+         * @param config is the config received from the ConfigCache.
+         * @return Status::OK if the config was received successfully. Otherwise, an error status is returned. 
          */
         turbo::Status get_config(const std::string &name, EA::servlet::ConfigInfo &config);
 
         /**
-         *
-         * @param name
-         * @return
+         * @brief get_config_list is used to get a list of config names from the ConfigCache.
+         * @param name [output] is the list of config names received from the ConfigCache.
+         * @return Status::OK if the config names were received successfully. Otherwise, an error status is returned. 
          */
         turbo::Status get_config_list(std::vector<std::string> &name);
 
         /**
-         *
-         * @param config_name
-         * @param versions
-         * @return
+         * @brief get_config_version_list is used to get a list of config versions from the ConfigCache.
+         * @param config_name [input] is the name of the config to get the versions for.
+         * @param versions [output] is the list of config versions received from the ConfigCache.
+         * @return Status::OK if the config versions were received successfully. Otherwise, an error status is returned. 
          */
         turbo::Status
         get_config_version_list(const std::string &config_name, std::vector<turbo::ModuleVersion> &versions);
 
         /**
-         *
-         * @param config_name
-         * @param version
-         * @return
+         * @brief remove_config is used to remove a config from the ConfigCache.
+         * @param config_name [input] is the name of the config to remove.
+         * @param version [input] is the version of the config to remove.
+         * @return Status::OK if the config names were received successfully. Otherwise, an error status is returned. 
          */
         turbo::Status remove_config(const std::string &config_name, const turbo::ModuleVersion &version);
 
         /**
-         *
-         * @param config_name
-         * @param version
-         * @return
+         * @brief remove_config is used to remove a config from the ConfigCache.
+         * @param config_name [input] is the name of the config to remove.
+         * @param version [input] is the version of the config to remove.
+         * @return Status::OK if the config was removed successfully. Otherwise, an error status is returned.
          */
         turbo::Status remove_config(const std::string &config_name, const std::vector<turbo::ModuleVersion> &version);
 
         /**
-         *
-         * @param config_name
-         * @param version
-         * @return
+         * @brief remove_config_less_than is used to remove a config from the ConfigCache. All versions less than the specified version will be removed.
+         * @param config_name [input] is the name of the config to remove all versions less than.
+         * @param version [input] is the version of the config to remove all versions less than.
+         * @return Status::OK if the config was removed successfully. Otherwise, an error status is returned.
          */
         turbo::Status remove_config_less_than(const std::string &config_name, const turbo::ModuleVersion &version);
 
         /**
-         *
-         * @param config_name
-         * @return
+         * @brief remove_config is used to remove a config from the ConfigCache with all versions.
+         * @param config_name [input] is the name of the config to remove.
+         * @return Status::OK if the config was removed successfully. Otherwise, an error status is returned.
          */
         turbo::Status remove_config(const std::string &config_name);
 

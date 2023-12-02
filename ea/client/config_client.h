@@ -1,5 +1,4 @@
-// Copyright 2023 The Elastic-AI Authors.
-// part of Elastic AI Search
+// Copyright 2023 The Elastic Architecture Infrastructure Authors.
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -12,6 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
+
 //
 // Created by jeff on 23-11-25.
 //
@@ -32,7 +32,8 @@
 namespace EA::client {
 
     /**
-     * @ingroup meta_client
+     * @ingroup config_client
+     * @brief ConfigCallbackData is used to pass data to the ConfigCallback.
      */
     struct ConfigCallbackData {
         std::string config_name;
@@ -43,20 +44,31 @@ namespace EA::client {
     };
 
     /**
-     *
+     * @brief ConfigCallback is used to notify the user when a config is updated.
      */
     typedef std::function<void(const ConfigCallbackData &config_name)> ConfigCallback;
 
-    ///
+    
+    /**
+     * @brief ConfigEventListener is used to store the callback function for a config.
+     */
     struct ConfigEventListener {
         ConfigCallback on_new_config;
         ConfigCallback on_new_version;
     };
+
+    /**
+     * @brief ConfigWatchEntity It is used by the ConfigClient to store the config watch information.      
+    */
     struct ConfigWatchEntity {
         turbo::ModuleVersion notice_version;
         ConfigEventListener listener;
     };
 
+    /**
+     * @brief ConfigClient is used to download config files from the meta server.
+     *        It is used by the MetaClient to download config files from the meta server.
+     */
     class ConfigClient {
     public:
         static ConfigClient *get_instance() {
@@ -65,90 +77,99 @@ namespace EA::client {
         }
 
         /**
-         *
-         * @return
+         * @brief init is used to initialize the ConfigClient. It must be called before using the ConfigClient.
+         * @return Status::OK if the ConfigClient was initialized successfully. Otherwise, an error status is returned. 
          */
         turbo::Status init();
 
-        ///
+        /**
+         * @brief start is used to start the ConfigClient.
+         * @return void
+         * @note It must be called after init.
+         */
         void stop();
 
-        ///
+        /**
+         * @brief join is used to wait for the ConfigClient to stop.
+         * @return void
+         * @note It must be called after stop.
+         */
         void join();
 
         /**
-         *
-         * @param config_name
-         * @param version
-         * @param content
-         * @param type
-         * @return
+         * @brief get_config is used to get a config from the meta server, and add it to the ConfigCache.
+         * @param config_name [input] is the name of the config to get. it can not be empty.
+         * @param version [input] is the version of the config to get. it can not be empty.
+         * @param content [out] is the content of the config received from the meta server.
+         * @param type [out] if not null, it is the type of the config received from the meta server.
+         * @return Status::OK if the config was received successfully. Otherwise, an error status is returned. 
          */
         turbo::Status
         get_config(const std::string &config_name, const std::string &version, std::string &content,
                    std::string *type = nullptr);
 
         /**
-         *
-         * @param config_name
-         * @param content
-         * @param version
-         * @param type
-         * @return
-         */
+         * @brief get_config is used to get a config from the meta server, and add it to the ConfigCache.
+         * @param config_name [input] is the name of the config to get. it can not be empty.
+         * @param content [out] is the content of the config received from the meta server and added to the ConfigCache.
+         * @param version [out] if not null, it is the version of the config received from the meta server and added to the ConfigCache.
+         * @param type [out] if not null, it is the type of the config received from the meta server and added to the ConfigCache.
+         * @return Status::OK if the config was received successfully. Otherwise, an error status is returned. 
+         */ 
         turbo::Status get_config(const std::string &config_name, std::string &content, std::string *version = nullptr,
                                  std::string *type = nullptr);
 
         /**
-         *
-         * @param config_name
-         * @param listener
-         * @return
+         * @brief watch_config is used to watch a config. When the config is updated, the callback function will be called.
+         * @param config_name [input] is the name of the config to watch. it can not be empty.
+         * @param listener [input] is the callback function to call when the config is updated.
+         * @return Status::OK if the config was watched successfully. Otherwise, an error status is returned. 
          */
         turbo::Status watch_config(const std::string &config_name, const ConfigEventListener &listener);
 
         /**
-         *
-         * @param config_name
-         * @return
+         * @brief unwatch_config is used to unwatch a config.
+         * @param config_name [input] is the name of the config to unwatch. it can not be empty.
+         * @return Status::OK if the config was unwatched successfully. Otherwise, an error status is returned. 
          */
         turbo::Status unwatch_config(const std::string &config_name);
 
         /**
-         *
-         * @param config_name
-         * @return
-         */
+         * @brief remove_config is used to remove a config from config cache.
+         * @param config_name [input] is the name of the config to remove. it can not be empty.
+         * @return Status::OK if the config was removed successfully. Otherwise, an error status is returned. 
+         */ 
         turbo::Status remove_config(const std::string &config_name);
 
+
         /**
-         *
-         * @param config_name
-         * @param version
-         * @return
+         * @brief remove_config is used to remove a config from config cache.
+         * @param config_name [input] is the name of the config to remove. it can not be empty.
+         * @param version [input] is the version of the config to remove. it can not be empty.
+         * @return Status::OK if the config was removed successfully. Otherwise, an error status is returned. 
          */
         turbo::Status remove_config(const std::string &config_name, const std::string &version);
 
         /**
-         *
-         * @param config_name
-         * @param version
-         * @return
+         * @brief apply is used to apply a config to the application.
+         * @param config_name [input] is the name of the config to apply. it can not be empty.
+         * @param version [input] is the version of the config to apply. it can not be empty.
+         * @return Status::OK if the config was applied successfully. Otherwise, an error status is returned. 
          */
         turbo::Status apply(const std::string &config_name, const turbo::ModuleVersion &version);
 
         /**
-         *
-         * @param config_name
-         * @param version
-         * @return
+         * @brief apply is used to apply a config to the application.
+         * @param config_name [input] is the name of the config to apply. it can not be empty.
+         * @param version [input] is the version of the config to apply. it can not be empty.
+         * @return Status::OK if the config was applied successfully. Otherwise, an error status is returned. 
          */
         turbo::Status apply(const std::string &config_name, const std::string &version);
 
         /**
-         *
-         * @param config_name
-         * @return
+         * @brief unapply is used to unapply a config from the application.
+         * @param config_name [input] is the name of the config to unapply. it can not be empty.
+         * @return Status::OK if the config was unapplied successfully. Otherwise, an error status is returned. 
          */
         turbo::Status unapply(const std::string &config_name);
 

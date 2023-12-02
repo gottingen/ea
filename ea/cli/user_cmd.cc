@@ -286,11 +286,11 @@ namespace EA::cli {
     turbo::Status make_user_create(EA::servlet::MetaManagerRequest *req) {
         EA::servlet::UserPrivilege *user_req = req->mutable_user_privilege();
         req->set_op_type(EA::servlet::OP_CREATE_USER);
-        auto rs = CheckValidNameType(UserOptionContext::get_instance()->namespace_name);
+        auto rs = check_valid_name_type(UserOptionContext::get_instance()->namespace_name);
         if (!rs.ok()) {
             return rs;
         }
-        rs = CheckValidNameType(UserOptionContext::get_instance()->user_name);
+        rs = check_valid_name_type(UserOptionContext::get_instance()->user_name);
         if (!rs.ok()) {
             return rs;
         }
@@ -303,11 +303,11 @@ namespace EA::cli {
     turbo::Status make_user_remove(EA::servlet::MetaManagerRequest *req) {
         EA::servlet::UserPrivilege *user_req = req->mutable_user_privilege();
         req->set_op_type(EA::servlet::OP_DROP_USER);
-        auto rs = CheckValidNameType(UserOptionContext::get_instance()->namespace_name);
+        auto rs = check_valid_name_type(UserOptionContext::get_instance()->namespace_name);
         if (!rs.ok()) {
             return rs;
         }
-        rs = CheckValidNameType(UserOptionContext::get_instance()->user_name);
+        rs = check_valid_name_type(UserOptionContext::get_instance()->user_name);
         if (!rs.ok()) {
             return rs;
         }
@@ -321,11 +321,11 @@ namespace EA::cli {
         req->set_op_type(EA::servlet::OP_ADD_PRIVILEGE);
         auto opt = UserOptionContext::get_instance();
         EA::servlet::UserPrivilege *pri_req = req->mutable_user_privilege();
-        auto rs = CheckValidNameType(opt->namespace_name);
+        auto rs = check_valid_name_type(opt->namespace_name);
         if (!rs.ok()) {
             return rs;
         }
-        rs = CheckValidNameType(opt->user_name);
+        rs = check_valid_name_type(opt->user_name);
         if (!rs.ok()) {
             return rs;
         }
@@ -397,11 +397,11 @@ namespace EA::cli {
         req->set_op_type(EA::servlet::OP_DROP_PRIVILEGE);
         auto opt = UserOptionContext::get_instance();
         EA::servlet::UserPrivilege *pri_req = req->mutable_user_privilege();
-        auto rs = CheckValidNameType(opt->namespace_name);
+        auto rs = check_valid_name_type(opt->namespace_name);
         if (!rs.ok()) {
             return rs;
         }
-        rs = CheckValidNameType(opt->user_name);
+        rs = check_valid_name_type(opt->user_name);
         if (!rs.ok()) {
             return rs;
         }
@@ -483,11 +483,11 @@ namespace EA::cli {
 
     turbo::Status make_user_info(EA::servlet::QueryRequest *req) {
         req->set_op_type(EA::servlet::QUERY_USER_PRIVILEGE);
-        auto rs = CheckValidNameType(UserOptionContext::get_instance()->namespace_name);
+        auto rs = check_valid_name_type(UserOptionContext::get_instance()->namespace_name);
         if (!rs.ok()) {
             return rs;
         }
-        rs = CheckValidNameType(UserOptionContext::get_instance()->user_name);
+        rs = check_valid_name_type(UserOptionContext::get_instance()->user_name);
         if (!rs.ok()) {
             return rs;
         }

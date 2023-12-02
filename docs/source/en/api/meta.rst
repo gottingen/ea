@@ -1,10 +1,11 @@
+.. Copyright 2023 The Elastic AI Search Authors.
+
+.. _meta_client_section:
 
 
-
-Meta Client Api
+meta client
 =========================
 
-``MetaClient::check_config_file``
 
 .. doxygengroup:: meta_client
    :project: eadocs

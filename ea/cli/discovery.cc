@@ -1,5 +1,4 @@
-// Copyright 2023 The Elastic-AI Authors.
-// part of Elastic AI Search
+// Copyright 2023 The Elastic Architecture Infrastructure Authors.
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -12,6 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
+
 //
 // Created by jeff on 23-11-30.
 //
@@ -201,15 +201,15 @@ namespace EA::cli {
                                                                *instance_req);
             return rs;
         }
-        auto rs = CheckValidNameType(DiscoveryOptionContext::get_instance()->namespace_name);
+        auto rs = check_valid_name_type(DiscoveryOptionContext::get_instance()->namespace_name);
         if (!rs.ok()) {
             return rs;
         }
-        rs = CheckValidNameType(DiscoveryOptionContext::get_instance()->zone_name);
+        rs = check_valid_name_type(DiscoveryOptionContext::get_instance()->zone_name);
         if (!rs.ok()) {
             return rs;
         }
-        rs = CheckValidNameType(DiscoveryOptionContext::get_instance()->servlet_name);
+        rs = check_valid_name_type(DiscoveryOptionContext::get_instance()->servlet_name);
         if (!rs.ok()) {
             return rs;
         }
@@ -240,15 +240,15 @@ namespace EA::cli {
                                                                *instance_req);
             return rs;
         }
-        auto rs = CheckValidNameType(DiscoveryOptionContext::get_instance()->namespace_name);
+        auto rs = check_valid_name_type(DiscoveryOptionContext::get_instance()->namespace_name);
         if (!rs.ok()) {
             return rs;
         }
-        rs = CheckValidNameType(DiscoveryOptionContext::get_instance()->zone_name);
+        rs = check_valid_name_type(DiscoveryOptionContext::get_instance()->zone_name);
         if (!rs.ok()) {
             return rs;
         }
-        rs = CheckValidNameType(DiscoveryOptionContext::get_instance()->servlet_name);
+        rs = check_valid_name_type(DiscoveryOptionContext::get_instance()->servlet_name);
         if (!rs.ok()) {
             return rs;
         }
@@ -270,15 +270,15 @@ namespace EA::cli {
                                                                *instance_req);
             return rs;
         }
-        auto rs = CheckValidNameType(DiscoveryOptionContext::get_instance()->namespace_name);
+        auto rs = check_valid_name_type(DiscoveryOptionContext::get_instance()->namespace_name);
         if (!rs.ok()) {
             return rs;
         }
-        rs = CheckValidNameType(DiscoveryOptionContext::get_instance()->zone_name);
+        rs = check_valid_name_type(DiscoveryOptionContext::get_instance()->zone_name);
         if (!rs.ok()) {
             return rs;
         }
-        rs = CheckValidNameType(DiscoveryOptionContext::get_instance()->servlet_name);
+        rs = check_valid_name_type(DiscoveryOptionContext::get_instance()->servlet_name);
         if (!rs.ok()) {
             return rs;
         }

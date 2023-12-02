@@ -28,14 +28,36 @@
 namespace EA::client {
 
     /**
-     * @ingroup meta_client
+     * @ingroup ea_rpc
+     * @brief MetaSender is used to send messages to the meta server.
+     *       It communicates with the meta server and sends messages to the meta server.
+     *       It needs to be initialized before use. It need judge the leader of meta server.
+     *       If the leader is not found, it will retry to send the request to the meta server.
+     *       If the peer is not leader, it will redirect to the leader and retry to send the
+     *       request to the meta server.
+     * @code
+     *      MetaSender::get_instance()->init("127.0.0.1:8200");
+     *      EA::servlet::MetaManagerRequest request;
+     *      EA::servlet::MetaManagerResponse response;
+     *      request.set_type(EA::servlet::MetaManagerRequest::ADD);
+     *      request.set_name("test");
+     *      request.set_version("1.0.0");
+     *      request.set_content("test");
+     *      auto rs = MetaSender::get_instance()->meta_manager(request, response);
+     *      if(!rs.ok()) {
+     *          TLOG_ERROR("meta manager error:{}", rs.message());
+     *          return;
+     *      }
+     *      TLOG_INFO("meta manager success");
+     *      return;
+     *@endcode
      */
     class MetaSender : public BaseMessageSender {
     public:
         static const int kRetryTimes = 5;
 
         /**
-         *
+         * @brief get_instance is used to get the singleton instance of MetaSender.
          * @return
          */
         static MetaSender *get_instance() {
@@ -44,7 +66,7 @@ namespace EA::client {
         }
 
         /**
-         *
+         * @brief get_backup_instance is used to get the singleton instance of MetaSender.
          * @return
          */
         static MetaSender *get_backup_instance() {
@@ -55,7 +77,7 @@ namespace EA::client {
         MetaSender() = default;
 
         /**
-         *
+         * @brief is_inited is used to check if the MetaSender is initialized.
          * @return
          */
         bool is_inited() {
@@ -63,98 +85,100 @@ namespace EA::client {
         }
 
         /**
-         *
-         * @param raft_nodes
-         * @return
+         * @brief init is used to initialize the MetaSender. It must be called before using the MetaSender.
+         * @param raft_nodes [input] is the raft nodes of the meta server.
+         * @return Status::OK if the MetaSender was initialized successfully. Otherwise, an error status is returned. 
          */
         turbo::Status init(const std::string &raft_nodes);
 
         /**
-         *
-         * @param verbose
-         * @return
+         * @brief init is used to initialize the MetaSender. It can be called any time.
+         * @param verbose [input] is the verbose flag.
+         * @return MetaSender itself.
          */
         MetaSender &set_verbose(bool verbose);
 
         /**
-         *
-         * @param time_ms
-         * @return
+         * @brief set_time_out is used to set the timeout for sending a request to the meta server.
+         * @param time_ms [input] is the timeout in milliseconds for sending a request to the meta server.
+         * @return MetaSender itself.
          */
         MetaSender &set_time_out(int time_ms);
 
+
         /**
-         *
-         * @param time_ms
-         * @return
+         * @brief set_connect_time_out is used to set the timeout for connecting to the meta server.
+         * @param time_ms [input] is the timeout in milliseconds for connecting to the meta server.
+         * @return MetaSender itself.
          */
         MetaSender &set_connect_time_out(int time_ms);
 
         /**
-         *
-         * @param time_ms
-         * @return
+         * @brief set_interval_time is used to set the interval time for retrying to send a request to the meta server.
+         * @param time_ms [input] is the interval time in milliseconds for retrying to send a request to the meta server.
+         * @return MetaSender itself.
          */
         MetaSender &set_interval_time(int time_ms);
 
         /**
-         *
-         * @param retry
-         * @return
+         * @brief set_retry_time is used to set the number of times to retry sending a request to the meta server.
+         * @param retry [input] is the number of times to retry sending a request to the meta server.
+         * @return MetaSender itself.
          */
         MetaSender &set_retry_time(int retry);
 
         /**
-         *
-         * @return
+         * @brief get_leader is used to get the leader address of the meta server.
+         * @return the leader address of the meta server.
          */
         std::string get_leader() const;
 
         /**
-         *
-         * @param request
-         * @param response
-         * @param retry_time
-         * @return
+         * @brief meta_manager is used to send a MetaManagerRequest to the meta server for management.
+         * @param request [input] is the MetaManagerRequest to send.
+         * @param response [output] is the MetaManagerResponse received from the meta server.
+         * @param retry_time [input] is the number of times to retry sending the request.
+         * @return Status::OK if the request was sent successfully. Otherwise, an error status is returned. 
          */
         turbo::Status meta_manager(const EA::servlet::MetaManagerRequest &request,
                                    EA::servlet::MetaManagerResponse &response, int retry_time) override;
 
         /**
-         *
-         * @param request
-         * @param response
-         * @return
+         * @brief meta_manager is used to send a MetaManagerRequest to the meta server for management.
+         * @param request [input] is the MetaManagerRequest to send.
+         * @param response [output] is the MetaManagerResponse received from the meta server.
+         * @return Status::OK if the request was sent successfully. Otherwise, an error status is returned. 
          */
         turbo::Status meta_manager(const EA::servlet::MetaManagerRequest &request,
                                    EA::servlet::MetaManagerResponse &response) override;
 
         /**
-         *
-         * @param request
-         * @param response
-         * @param retry_time
-         * @return
+         * @brief meta_query is used to send a QueryRequest to the meta server for querying.
+         * @param request [input] is the QueryRequest to send.
+         * @param response [output] is the QueryResponse received from the meta server.
+         * @param retry_time [input] is the number of times to retry sending the request.
+         * @return Status::OK if the request was sent successfully. Otherwise, an error status is returned. 
          */
         turbo::Status meta_query(const EA::servlet::QueryRequest &request,
                                  EA::servlet::QueryResponse &response, int retry_time) override;
 
-        ///
-        /// \param request
-        /// \param response
-        /// \return
+
+        /**
+         * @brief meta_query is used to send a QueryRequest to the meta server for querying.
+         * @param request [input] is the QueryRequest to send.
+         * @param response [output] is the QueryResponse received from the meta server.
+         * @return Status::OK if the request was sent successfully. Otherwise, an error status is returned. 
+         */
         turbo::Status meta_query(const EA::servlet::QueryRequest &request,
                                  EA::servlet::QueryResponse &response) override;
 
         /**
-         *
-         * @tparam Request
-         * @tparam Response
-         * @param service_name
-         * @param request
-         * @param response
-         * @param retry_times
-         * @return
+         * @brief send_request is used to send a request to the meta server.
+         * @param service_name [input] is the name of the service to send the request to.
+         * @param request [input] is the request to send.
+         * @param response [output] is the response received from the meta server.
+         * @param retry_times [input] is the number of times to retry sending the request.
+         * @return Status::OK if the request was sent successfully. Otherwise, an error status is returned. 
          */
         template<typename Request, typename Response>
         turbo::Status send_request(const std::string &service_name,

@@ -170,15 +170,15 @@ namespace EA::cli {
     turbo::Status make_servlet_create(EA::servlet::MetaManagerRequest *req) {
         EA::servlet::ServletInfo *servlet_req = req->mutable_servlet_info();
         req->set_op_type(EA::servlet::OP_CREATE_SERVLET);
-        auto rs = CheckValidNameType(ServletOptionContext::get_instance()->namespace_name);
+        auto rs = check_valid_name_type(ServletOptionContext::get_instance()->namespace_name);
         if (!rs.ok()) {
             return rs;
         }
-        rs = CheckValidNameType(ServletOptionContext::get_instance()->zone_name);
+        rs = check_valid_name_type(ServletOptionContext::get_instance()->zone_name);
         if (!rs.ok()) {
             return rs;
         }
-        rs = CheckValidNameType(ServletOptionContext::get_instance()->servlet_name);
+        rs = check_valid_name_type(ServletOptionContext::get_instance()->servlet_name);
         if (!rs.ok()) {
             return rs;
         }
@@ -191,15 +191,15 @@ namespace EA::cli {
     turbo::Status make_servlet_remove(EA::servlet::MetaManagerRequest *req) {
         EA::servlet::ServletInfo *servlet_req = req->mutable_servlet_info();
         req->set_op_type(EA::servlet::OP_DROP_SERVLET);
-        auto rs = CheckValidNameType(ServletOptionContext::get_instance()->namespace_name);
+        auto rs = check_valid_name_type(ServletOptionContext::get_instance()->namespace_name);
         if (!rs.ok()) {
             return rs;
         }
-        rs = CheckValidNameType(ServletOptionContext::get_instance()->zone_name);
+        rs = check_valid_name_type(ServletOptionContext::get_instance()->zone_name);
         if (!rs.ok()) {
             return rs;
         }
-        rs = CheckValidNameType(ServletOptionContext::get_instance()->servlet_name);
+        rs = check_valid_name_type(ServletOptionContext::get_instance()->servlet_name);
         if (!rs.ok()) {
             return rs;
         }
@@ -212,15 +212,15 @@ namespace EA::cli {
     turbo::Status make_servlet_modify(EA::servlet::MetaManagerRequest *req) {
         req->set_op_type(EA::servlet::OP_MODIFY_SERVLET);
         EA::servlet::ServletInfo *servlet_req = req->mutable_servlet_info();
-        auto rs = CheckValidNameType(ServletOptionContext::get_instance()->namespace_name);
+        auto rs = check_valid_name_type(ServletOptionContext::get_instance()->namespace_name);
         if (!rs.ok()) {
             return rs;
         }
-        rs = CheckValidNameType(ServletOptionContext::get_instance()->zone_name);
+        rs = check_valid_name_type(ServletOptionContext::get_instance()->zone_name);
         if (!rs.ok()) {
             return rs;
         }
-        rs = CheckValidNameType(ServletOptionContext::get_instance()->servlet_name);
+        rs = check_valid_name_type(ServletOptionContext::get_instance()->servlet_name);
         if (!rs.ok()) {
             return rs;
         }
@@ -237,15 +237,15 @@ namespace EA::cli {
 
     turbo::Status make_servlet_info(EA::servlet::QueryRequest *req) {
         req->set_op_type(EA::servlet::QUERY_SERVLET);
-        auto rs = CheckValidNameType(ServletOptionContext::get_instance()->namespace_name);
+        auto rs = check_valid_name_type(ServletOptionContext::get_instance()->namespace_name);
         if (!rs.ok()) {
             return rs;
         }
-        rs = CheckValidNameType(ServletOptionContext::get_instance()->zone_name);
+        rs = check_valid_name_type(ServletOptionContext::get_instance()->zone_name);
         if (!rs.ok()) {
             return rs;
         }
-        rs = CheckValidNameType(ServletOptionContext::get_instance()->servlet_name);
+        rs = check_valid_name_type(ServletOptionContext::get_instance()->servlet_name);
         if (!rs.ok()) {
             return rs;
         }

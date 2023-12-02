@@ -1,7 +1,6 @@
-PROJECT_NAME      = "ea"
+PROJECT_NAME      = "eadocs"
 XML_OUTPUT        = xml
 INPUT             = ../ea/client/loader.h \
-                    ../ea/client/meta.h   \
                     ../ea/client/dumper.h   \
                     ../ea/client/base_message_sender.h \
                     ../ea/client/config_cache.h \
@@ -10,6 +9,7 @@ INPUT             = ../ea/client/loader.h \
                     ../ea/client/meta_sender.h      \
                     ../ea/client/router_sender.h    \
                     ../ea/client/servlet_instance_builder.h \
+                    ../ea/client/meta.h   \
                     ../ea/client/utility.h
 
 

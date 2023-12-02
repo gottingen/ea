@@ -33,9 +33,10 @@ namespace EA::client {
 
     /**
      * @ingroup ea_proto_g
-     * \rst
      * @brief Loader is a helper class for proto convert from json to protobuf.
      *        do not ignore the result of function, it is recommend use like:
+     *        ..  code-block:: cpp
+     *
      *        auto json_config = "R{
      *             "name": "example",
      *             "version": {
@@ -54,7 +55,6 @@ namespace EA::client {
      *         }
      *         ...
      *         handler_success();
-     * \endrst
      */
     class Loader {
     public:

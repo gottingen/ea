@@ -36,5 +36,5 @@ see :ref:`stand_alone_section` section
 god's perspective
 -----------------------------------------
 
-step 3, A quick glance at overview and outline design, got a general impression of EA's architecture
+step 4, A quick glance at overview and outline design, got a general impression of EA's architecture
 and various components, see :ref:`overview_section` section

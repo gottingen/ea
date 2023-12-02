@@ -115,7 +115,7 @@ namespace EA::client {
 
         /**
          * @brief create_config_by_json is used to create a config by json string, it is a synchronous call.
-         * @param json_str [input] is the json string to create the config from, it contains the config name, content, version and type.
+         * @param json_path [input] is the path of the json file to read the config from.
          * @param retry_time [input] is the retry times of the create config.
          * @return Status::OK if the config was created successfully. Otherwise, an error status is returned. 
          */
@@ -211,6 +211,7 @@ namespace EA::client {
          * @brief get_config is used to get the latest version of a config from the meta server, it is a synchronous call.
          * @param config_name [input] is the name of the config to get the latest version for.
          * @param config [output] is the config received from the meta server.
+         * @param version [output] is the version of the config received from the meta server.
          * @param retry_time [input] is the retry times of the get config.
          * @return Status::OK if the config was received successfully. Otherwise, an error status is returned. 
          */
@@ -223,6 +224,7 @@ namespace EA::client {
          * @param config_name [input] is the name of the config to get the latest version for.
          * @param version [output] is the version of the config received from the meta server.
          * @param config [output] is the config received from the meta server.
+         * @param type [output] is the type of the config received from the meta server.
          * @param retry_time [input] is the retry times of the get config.
          * @return Status::OK if the config was received successfully. Otherwise, an error status is returned. 
          */
@@ -249,6 +251,8 @@ namespace EA::client {
          * @param version [output] is the version of the config received from the meta server.
          * @param type [output] is the type of the config received from the meta server.
          * @param retry_time [input] is the retry times of the get config.
+         * @return Status::OK if the config was received successfully. Otherwise, an error status is returned.
+         */
         turbo::Status
         get_config_latest(const std::string &config_name, std::string &config, turbo::ModuleVersion &version,
                           std::string &type,
@@ -265,9 +269,9 @@ namespace EA::client {
         get_config_latest(const std::string &config_name, std::string &config, int *retry_time = nullptr);
 
         /**
-         * @brief get_config is used to get the latest version of a config from the meta server, it is a synchronous call.
+         * @brief remove_config is used to remove a config from the meta server, it is a synchronous call.
          * @param config_name [input] is the name of the config to get the latest version for.
-         * @param Version [output] is the version of the config received from the meta server.
+         * @param version [input] is the version of the config to remove.
          * @param retry_time [input] is the retry times of the get config.
          * @return Status::OK if the config was received successfully. Otherwise, an error status is returned. 
          */
@@ -337,7 +341,7 @@ namespace EA::client {
 
         /**
          * @brief modify_namespace is used to modify a namespace by parameters, it is a synchronous call.
-         * @param ns_name [input] is the name of the namespace to modify.
+         * @param ns_info [input] is the NameSpaceInfo to modify.
          * @param retry_time [input] is the retry times of the modify namespace.
          * @return Status::OK if the namespace was modified successfully. Otherwise, an error status is returned. 
          */
@@ -415,7 +419,8 @@ namespace EA::client {
          * @param ns_name [input] is the name of the namespace to save.
          * @param json_path [input] is the path of the file to save the namespace to.
          * @param retry_time [input] is the retry times of the save namespace.
-         * 
+         * @return Status::OK if the namespace was saved successfully. Otherwise, an error status is returned.
+         */
         turbo::Status
         save_namespace_json(const std::string &ns_name, const std::string &json_path, int *retry_time = nullptr);
 
@@ -465,7 +470,7 @@ namespace EA::client {
 
         /**
          * @brief modify_zone is used to modify a zone by parameters, it is a synchronous call.
-         * @param zone_name [input] is the name of the zone to modify.
+         * @param zone_info [input] is the ZoneInfo to modify.
          * @param retry_time [input] is the retry times of the modify zone.
          * @return Status::OK if the zone was modified successfully. Otherwise, an error status is returned. 
          */

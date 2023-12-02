@@ -1,10 +1,10 @@
 .. Copyright 2023 The Elastic AI Search Authors.
 
-.. _api_proto_section:
+.. _protocol_section:
 
-EA proto
+protocol
 =========================
 
-.. doxygengroup:: ea_proto_g
+.. doxygengroup:: ea_proto
    :project: eadocs
    :members:

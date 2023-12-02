@@ -1,12 +1,10 @@
 .. Copyright 2023 The Elastic AI Search Authors.
 
-.. _meta_client_section:
+.. _ea_rpc_section:
 
-
-meta client
+rpc sender
 =========================
 
-
-.. doxygengroup:: meta_client
+.. doxygengroup:: ea_rpc
    :project: eadocs
    :members:

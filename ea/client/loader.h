@@ -25,14 +25,16 @@
 #include "eapi/servlet/servlet.interface.pb.h"
 
 /**
- * @defgroup ea_proto_g proto  proto operators
- *
+ * @defgroup ea_proto proto  proto operators
+ * @defgroup meta_client meta_client meta_client operators
+ * @defgroup ea_rpc rpc rpc operators
+ * @defgroup config_client config_client config_client operators
  */
 
 namespace EA::client {
 
     /**
-     * @ingroup ea_proto_g
+     * @ingroup ea_proto
      * @brief Loader is a helper class for proto convert from json to protobuf.
      *        do not ignore the result of function, it is recommend use like:
      * @code

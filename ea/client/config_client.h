@@ -32,7 +32,7 @@
 namespace EA::client {
 
     /**
-     * @ingroup meta_client
+     * @ingroup config_client
      * @brief ConfigCallbackData is used to pass data to the ConfigCallback.
      */
     struct ConfigCallbackData {

@@ -19,9 +19,6 @@
 #include "turbo/base/status.h"
 #include "eapi/servlet/servlet.interface.pb.h"
 
-/**
- * * @defgroup meta_client
- */
 namespace EA::client {
 
     /**
@@ -54,10 +51,10 @@ namespace EA::client {
 
         /**
          * @brief meta_query is used to send a QueryRequest to the meta server.
-         * @param [input] request is the QueryRequest to send.
+         * @param request [input] is the QueryRequest to send.
          * @param response [output] is the QueryResponse received from the meta server.
          * @param retry_times [input] is the number of times to retry sending the request.
-         * @return Status::OK if the request was sent successfully. Otherwise, an error status is returned. 
+         * @return Status::OK if the request was sent successfully. Otherwise, an error status is returned.
          */
         virtual turbo::Status meta_query(const EA::servlet::QueryRequest &request,
                                                     EA::servlet::QueryResponse &response, int retry_times) = 0;

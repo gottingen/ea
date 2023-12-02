@@ -28,7 +28,7 @@
 namespace EA::client {
 
     /**
-     * @ingroup meta_client
+     * @ingroup ea_rpc
      * @brief MetaSender is used to send messages to the meta server.
      */
     class MetaSender : public BaseMessageSender {
@@ -73,7 +73,6 @@ namespace EA::client {
         /**
          * @brief init is used to initialize the MetaSender. It can be called any time.
          * @param verbose [input] is the verbose flag.
-         * @param meta_raft_group [input] is the raft group of the meta server.
          * @return MetaSender itself.
          */
         MetaSender &set_verbose(bool verbose);

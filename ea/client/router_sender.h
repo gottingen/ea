@@ -30,7 +30,7 @@
 namespace EA::client {
 
     /**
-     * @ingroup meta_client
+     * @ingroup ea_rpc
      */
     class RouterSender : public BaseMessageSender {
     public:

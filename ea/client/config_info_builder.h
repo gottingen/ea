@@ -23,7 +23,7 @@
 namespace EA::client {
 
     /**
-     * @ingroup ea_proto_g
+     * @ingroup ea_proto
      * @brief ConfigInfoBuilder is helper class for build ConfigInfo object,
      *        it does not hold the ConfigInfo object memory, and not thread safe. user should guard
      *        that the object is usable and make sure it is thread safe call. eg.

@@ -27,7 +27,7 @@
 namespace EA::client {
 
     /**
-     * @ingroup meta_client
+     * @ingroup config_client
      * @brief ConfigCache is used to cache the config files downloaded from the meta server.
      *        It is used by the MetaClient to cache the config files downloaded from the meta server.
      */
@@ -86,8 +86,9 @@ namespace EA::client {
         get_config_version_list(const std::string &config_name, std::vector<turbo::ModuleVersion> &versions);
 
         /**
-         * @brief get_config_list is used to get a list of config names from the ConfigCache.
-         * @param name [input] is the name of the config to remove from the ConfigCache.
+         * @brief remove_config is used to remove a config from the ConfigCache.
+         * @param config_name [input] is the name of the config to remove.
+         * @param version [input] is the version of the config to remove.
          * @return Status::OK if the config names were received successfully. Otherwise, an error status is returned. 
          */
         turbo::Status remove_config(const std::string &config_name, const turbo::ModuleVersion &version);

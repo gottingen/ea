@@ -24,11 +24,9 @@
 #include "turbo/module/module_version.h"
 
 namespace EA::client {
-    /**
-     * @ingroup ea_proto_g
-     */
 
     /**
+     * @ingroup ea_proto
      * @brief config_type_to_string is used to convert a ConfigType to a string.
      * @param type [input] is the ConfigType to convert.
      * @return a string representation of the ConfigType.
@@ -36,6 +34,7 @@ namespace EA::client {
     std::string config_type_to_string(EA::servlet::ConfigType type);
 
     /**
+     * @ingroup ea_proto
      * @brief string_to_config_type is used to convert a string to a ConfigType.
      * @param str [input] is the string to convert.
      * @return a ConfigType if the string is valid. Otherwise, an error status is returned.
@@ -43,6 +42,7 @@ namespace EA::client {
     turbo::ResultStatus<EA::servlet::ConfigType> string_to_config_type(const std::string &str);
 
     /**
+     * @ingroup ea_proto
      * @brief string_to_version is used to convert a string to a Version.
      * @param str [input] is the string to convert.
      * @param v [output] is the Version received from the string.
@@ -51,6 +51,7 @@ namespace EA::client {
     turbo::Status string_to_version(const std::string &str, EA::servlet::Version*v);
 
     /**
+     * @ingroup ea_proto
      * @brief string_to_module_version is used to convert a string to a ModuleVersion.
      * @param str [input] is the string to convert.
      * @param v [output] is the ModuleVersion received from the string.
@@ -59,6 +60,7 @@ namespace EA::client {
     turbo::Status string_to_module_version(const std::string &str, turbo::ModuleVersion *v);
 
     /**
+     * @ingroup ea_proto
      * @brief version_to_string is used to convert a Version to a string.
      * @param v [input] is the Version to convert.
      * @return a string representation of the Version.
@@ -66,6 +68,7 @@ namespace EA::client {
     std::string version_to_string(const EA::servlet::Version &v);
 
     /**
+     * @ingroup ea_proto
      * @brief module_version_to_string is used to convert a ModuleVersion to a string.
      * @param v [input] is the ModuleVersion to convert.
      * @return a string representation of the ModuleVersion.
@@ -74,11 +77,12 @@ namespace EA::client {
 
 
     /**
-     * @brief config_info_to_string is used to convert a ConfigInfo to a string.
-     * @param config [input] is the ConfigInfo to convert.
-     * @return a status with a string representation of the ConfigInfo if the ConfigInfo was converted successfully.
+     * @ingroup ea_proto
+     * @brief string_to_config_info is used to convert a string to a ConfigInfo.
+     * @param name [input] is the name of the ConfigInfo to convert.
+     * @return a ConfigInfo if the string is valid. Otherwise, an error status is returned.
      */
-    [[nodiscard]] turbo::Status CheckValidNameType(std::string_view ns);
+    [[nodiscard]] turbo::Status CheckValidNameType(std::string_view name);
 
 }  // namespace EA::client
 

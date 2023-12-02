@@ -67,7 +67,9 @@ Contents
     :caption: API REFERENCE
 
     en/api/proto
+    en/api/rpc
     en/api/meta
+    en/api/config
 
 .. toctree::
     :caption: FAQ

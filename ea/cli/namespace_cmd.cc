@@ -178,7 +178,7 @@ namespace EA::cli {
     turbo::Status
     make_namespace_create(EA::servlet::MetaManagerRequest *req) {
         EA::servlet::NameSpaceInfo *ns_req = req->mutable_namespace_info();
-        auto rs = CheckValidNameType(NameSpaceOptionContext::get_instance()->namespace_name);
+        auto rs = check_valid_name_type(NameSpaceOptionContext::get_instance()->namespace_name);
         if (!rs.ok()) {
             return rs;
         }
@@ -191,7 +191,7 @@ namespace EA::cli {
     turbo::Status
     make_namespace_remove(EA::servlet::MetaManagerRequest *req) {
         EA::servlet::NameSpaceInfo *ns_req = req->mutable_namespace_info();
-        auto rs = CheckValidNameType(NameSpaceOptionContext::get_instance()->namespace_name);
+        auto rs = check_valid_name_type(NameSpaceOptionContext::get_instance()->namespace_name);
         if (!rs.ok()) {
             return rs;
         }
@@ -203,7 +203,7 @@ namespace EA::cli {
     turbo::Status
     make_namespace_modify(EA::servlet::MetaManagerRequest *req) {
         EA::servlet::NameSpaceInfo *ns_req = req->mutable_namespace_info();
-        auto rs = CheckValidNameType(NameSpaceOptionContext::get_instance()->namespace_name);
+        auto rs = check_valid_name_type(NameSpaceOptionContext::get_instance()->namespace_name);
         if (!rs.ok()) {
             return rs;
         }
@@ -217,7 +217,7 @@ namespace EA::cli {
         req->set_op_type(EA::servlet::QUERY_NAMESPACE);
         if (!NameSpaceOptionContext::get_instance()->namespace_name.empty()) {
             req->set_namespace_name(NameSpaceOptionContext::get_instance()->namespace_name);
-            auto rs = CheckValidNameType(NameSpaceOptionContext::get_instance()->namespace_name);
+            auto rs = check_valid_name_type(NameSpaceOptionContext::get_instance()->namespace_name);
             if (!rs.ok()) {
                 return rs;
             }

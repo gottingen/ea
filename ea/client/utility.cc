@@ -120,7 +120,7 @@ namespace EA::client {
                                                 'U', 'V', 'Q', 'X', 'Y', 'Z',
     };
 
-    turbo::Status CheckValidNameType(std::string_view ns) {
+    turbo::Status check_valid_name_type(std::string_view ns) {
         int i = 0;
         for (auto c: ns) {
             if (AllowChar.find(c) == AllowChar.end()) {

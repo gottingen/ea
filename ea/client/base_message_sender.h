@@ -22,7 +22,7 @@
 namespace EA::client {
 
     /**
-     * @ingroup meta_client
+     * @ingroup ea_rpc
      * @brief BaseMessageSender is the interface for sending messages to the meta server.
      *        It is used by the MetaClient to send messages to the meta server. The MetaClient will
      *        implement this interface. 

@@ -21,7 +21,7 @@
 
 namespace EA::cli {
 
-    [[nodiscard]] turbo::Status CheckValidNameType(std::string_view ns);
+    [[nodiscard]] turbo::Status check_valid_name_type(std::string_view ns);
 
 }  // namespace EA::cli
 #endif  // EA_CLI_VALIDATOR_H_

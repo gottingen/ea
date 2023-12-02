@@ -468,7 +468,7 @@ namespace EA::client {
         request.set_op_type(EA::servlet::OP_CREATE_NAMESPACE);
 
         EA::servlet::NameSpaceInfo *ns_req = request.mutable_namespace_info();
-        auto rs = CheckValidNameType(ns);
+        auto rs = check_valid_name_type(ns);
         if (!rs.ok()) {
             return rs;
         }
@@ -519,7 +519,7 @@ namespace EA::client {
         request.set_op_type(EA::servlet::OP_DROP_NAMESPACE);
 
         EA::servlet::NameSpaceInfo *ns_req = request.mutable_namespace_info();
-        auto rs = CheckValidNameType(ns);
+        auto rs = check_valid_name_type(ns);
         if (!rs.ok()) {
             return rs;
         }

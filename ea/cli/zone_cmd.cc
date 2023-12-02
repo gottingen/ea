@@ -169,11 +169,11 @@ namespace EA::cli {
     turbo::Status make_zone_create(EA::servlet::MetaManagerRequest *req) {
         EA::servlet::ZoneInfo *zone_req = req->mutable_zone_info();
         req->set_op_type(EA::servlet::OP_CREATE_ZONE);
-        auto rs = CheckValidNameType(ZoneOptionContext::get_instance()->namespace_name);
+        auto rs = check_valid_name_type(ZoneOptionContext::get_instance()->namespace_name);
         if (!rs.ok()) {
             return rs;
         }
-        rs = CheckValidNameType(ZoneOptionContext::get_instance()->zone_name);
+        rs = check_valid_name_type(ZoneOptionContext::get_instance()->zone_name);
         if (!rs.ok()) {
             return rs;
         }
@@ -185,11 +185,11 @@ namespace EA::cli {
     turbo::Status make_zone_remove(EA::servlet::MetaManagerRequest *req) {
         EA::servlet::ZoneInfo *zone_req = req->mutable_zone_info();
         req->set_op_type(EA::servlet::OP_DROP_ZONE);
-        auto rs = CheckValidNameType(ZoneOptionContext::get_instance()->namespace_name);
+        auto rs = check_valid_name_type(ZoneOptionContext::get_instance()->namespace_name);
         if (!rs.ok()) {
             return rs;
         }
-        rs = CheckValidNameType(ZoneOptionContext::get_instance()->zone_name);
+        rs = check_valid_name_type(ZoneOptionContext::get_instance()->zone_name);
         if (!rs.ok()) {
             return rs;
         }
@@ -201,11 +201,11 @@ namespace EA::cli {
     turbo::Status make_zone_modify(EA::servlet::MetaManagerRequest *req) {
         req->set_op_type(EA::servlet::OP_MODIFY_ZONE);
         EA::servlet::ZoneInfo *zone_req = req->mutable_zone_info();
-        auto rs = CheckValidNameType(ZoneOptionContext::get_instance()->namespace_name);
+        auto rs = check_valid_name_type(ZoneOptionContext::get_instance()->namespace_name);
         if (!rs.ok()) {
             return rs;
         }
-        rs = CheckValidNameType(ZoneOptionContext::get_instance()->zone_name);
+        rs = check_valid_name_type(ZoneOptionContext::get_instance()->zone_name);
         if (!rs.ok()) {
             return rs;
         }
@@ -221,11 +221,11 @@ namespace EA::cli {
 
     turbo::Status make_zone_info(EA::servlet::QueryRequest *req) {
         req->set_op_type(EA::servlet::QUERY_ZONE);
-        auto rs = CheckValidNameType(ZoneOptionContext::get_instance()->namespace_name);
+        auto rs = check_valid_name_type(ZoneOptionContext::get_instance()->namespace_name);
         if (!rs.ok()) {
             return rs;
         }
-        rs = CheckValidNameType(ZoneOptionContext::get_instance()->zone_name);
+        rs = check_valid_name_type(ZoneOptionContext::get_instance()->zone_name);
         if (!rs.ok()) {
             return rs;
         }

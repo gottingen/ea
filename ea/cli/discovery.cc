@@ -201,15 +201,15 @@ namespace EA::cli {
                                                                *instance_req);
             return rs;
         }
-        auto rs = CheckValidNameType(DiscoveryOptionContext::get_instance()->namespace_name);
+        auto rs = check_valid_name_type(DiscoveryOptionContext::get_instance()->namespace_name);
         if (!rs.ok()) {
             return rs;
         }
-        rs = CheckValidNameType(DiscoveryOptionContext::get_instance()->zone_name);
+        rs = check_valid_name_type(DiscoveryOptionContext::get_instance()->zone_name);
         if (!rs.ok()) {
             return rs;
         }
-        rs = CheckValidNameType(DiscoveryOptionContext::get_instance()->servlet_name);
+        rs = check_valid_name_type(DiscoveryOptionContext::get_instance()->servlet_name);
         if (!rs.ok()) {
             return rs;
         }
@@ -240,15 +240,15 @@ namespace EA::cli {
                                                                *instance_req);
             return rs;
         }
-        auto rs = CheckValidNameType(DiscoveryOptionContext::get_instance()->namespace_name);
+        auto rs = check_valid_name_type(DiscoveryOptionContext::get_instance()->namespace_name);
         if (!rs.ok()) {
             return rs;
         }
-        rs = CheckValidNameType(DiscoveryOptionContext::get_instance()->zone_name);
+        rs = check_valid_name_type(DiscoveryOptionContext::get_instance()->zone_name);
         if (!rs.ok()) {
             return rs;
         }
-        rs = CheckValidNameType(DiscoveryOptionContext::get_instance()->servlet_name);
+        rs = check_valid_name_type(DiscoveryOptionContext::get_instance()->servlet_name);
         if (!rs.ok()) {
             return rs;
         }
@@ -270,15 +270,15 @@ namespace EA::cli {
                                                                *instance_req);
             return rs;
         }
-        auto rs = CheckValidNameType(DiscoveryOptionContext::get_instance()->namespace_name);
+        auto rs = check_valid_name_type(DiscoveryOptionContext::get_instance()->namespace_name);
         if (!rs.ok()) {
             return rs;
         }
-        rs = CheckValidNameType(DiscoveryOptionContext::get_instance()->zone_name);
+        rs = check_valid_name_type(DiscoveryOptionContext::get_instance()->zone_name);
         if (!rs.ok()) {
             return rs;
         }
-        rs = CheckValidNameType(DiscoveryOptionContext::get_instance()->servlet_name);
+        rs = check_valid_name_type(DiscoveryOptionContext::get_instance()->servlet_name);
         if (!rs.ok()) {
             return rs;
         }

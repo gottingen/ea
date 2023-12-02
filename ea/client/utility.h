@@ -82,7 +82,7 @@ namespace EA::client {
      * @param name [input] is the name of the ConfigInfo to convert.
      * @return a ConfigInfo if the string is valid. Otherwise, an error status is returned.
      */
-    [[nodiscard]] turbo::Status CheckValidNameType(std::string_view name);
+    [[nodiscard]] turbo::Status check_valid_name_type(std::string_view name);
 
 }  // namespace EA::client
 

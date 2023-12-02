@@ -1040,7 +1040,7 @@ namespace EA::client {
         return turbo::OkStatus();
     }
 
-    turbo::Status MetaClient::modify_servlet(EA::servlet::ServletInfo &servlet_info, int *retry_time) {
+    turbo::Status MetaClient::modify_servlet(const EA::servlet::ServletInfo &servlet_info, int *retry_time) {
         EA::servlet::MetaManagerRequest request;
         EA::servlet::MetaManagerResponse response;
         request.set_op_type(EA::servlet::OP_CREATE_SERVLET);

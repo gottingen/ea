@@ -1,4 +1,4 @@
-Elastic AI
+Elastic Architecture Infrastructure
 ==========
 
 ..  image:: image/ea_big.png

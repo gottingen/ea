@@ -25,7 +25,21 @@
 namespace EA::client {
 
     /**
-     * @ingroup meta_client
+     * @ingroup ea_proto_g
+     * @brief ConfigInfoBuilder is helper class for build ConfigInfo object,
+     *        it does not hold the ConfigInfo object memory, and not thread safe. user should guard
+     *        that the object is usable and make sure it is thread safe call. eg.
+     * @code
+     *        EA::servlet::ConfigInfo info;
+     *        ServletInstanceBuilder builder(&info);
+     *        std::string json_str = "{}"
+     *        auto status = builder.build_from_json(json_str);
+     *        if(!status.ok) {
+     *          handler_error();
+     *         }
+     *         ...
+     *         handler_success();
+     * @endcode
      */
     class ServletInstanceBuilder {
     public:

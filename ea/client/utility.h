@@ -25,7 +25,7 @@
 
 namespace EA::client {
     /**
-     * @ingroup meta_client
+     * @ingroup ea_proto_g
      */
 
     /**

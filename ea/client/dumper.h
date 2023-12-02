@@ -27,7 +27,7 @@
 namespace EA::client {
 
     /**
-     * @ingroup meta_client
+     * @ingroup ea_proto_g
      * @details Dumper is a helper class for protobuf object convert to json string.
      *        do not ignore the result of function, it is recommend use like:
      * @code

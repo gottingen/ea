@@ -79,11 +79,11 @@ carbin_cc_library(
 )
 
 
-file(GLOB META_SERVER meta_server/*.cc)
+file(GLOB META_SERVER discovery/*.cc)
 
 carbin_cc_binary(
         NAMESPACE ea
-        NAME eameta
+        NAME eadiscovery
         SOURCES
         ${META_SERVER}
         COPTS

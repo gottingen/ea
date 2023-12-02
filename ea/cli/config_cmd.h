@@ -17,7 +17,7 @@
 #define EA_CLI_CONFIG_CMD_H_
 
 #include "turbo/flags/flags.h"
-#include "eapi/servlet/servlet.interface.pb.h"
+#include "eapi/discovery/discovery.interface.pb.h"
 #include "turbo/base/status.h"
 #include "turbo/format/table.h"
 #include <string>
@@ -41,7 +41,7 @@ namespace EA::cli {
         std::vector<std::string> config_watch_list;
         std::string config_watch_dir;
         bool clean_local;
-        EA::servlet::ConfigInfo config_request;
+        EA::discovery::ConfigInfo config_request;
     };
 
     struct ConfigCmd {
@@ -66,29 +66,29 @@ namespace EA::cli {
         static void run_config_watch_cmd();
 
         [[nodiscard]] static turbo::Status
-        make_example_config_dump(EA::servlet::ConfigInfo *req);
+        make_example_config_dump(EA::discovery::ConfigInfo *req);
 
         [[nodiscard]] static turbo::Status
-        make_config_list(EA::servlet::QueryRequest *req);
+        make_config_list(EA::discovery::DiscoveryQueryRequest *req);
 
         [[nodiscard]] static turbo::Status
-        make_config_list_version(EA::servlet::QueryRequest *req);
+        make_config_list_version(EA::discovery::DiscoveryQueryRequest *req);
 
         [[nodiscard]] static turbo::Status
-        make_config_get(EA::servlet::QueryRequest *req);
+        make_config_get(EA::discovery::DiscoveryQueryRequest *req);
 
         [[nodiscard]] static turbo::Status
-        make_config_remove(EA::servlet::MetaManagerRequest *req);
+        make_config_remove(EA::discovery::DiscoveryManagerRequest *req);
 
 
-        static turbo::Table show_query_ops_config_list_response(const EA::servlet::QueryResponse &res);
+        static turbo::Table show_query_ops_config_list_response(const EA::discovery::DiscoveryQueryResponse &res);
 
-        static turbo::Table show_query_ops_config_list_version_response(const EA::servlet::QueryResponse &res);
+        static turbo::Table show_query_ops_config_list_version_response(const EA::discovery::DiscoveryQueryResponse &res);
 
         static turbo::Table
-        show_query_ops_config_get_response(const EA::servlet::QueryResponse &res, const turbo::Status &save_status);
+        show_query_ops_config_get_response(const EA::discovery::DiscoveryQueryResponse &res, const turbo::Status &save_status);
 
-        static turbo::Status save_config_to_file(const std::string &path, const EA::servlet::QueryResponse &res);
+        static turbo::Status save_config_to_file(const std::string &path, const EA::discovery::DiscoveryQueryResponse &res);
 
         static turbo::Status save_config_to_file(const std::string &basedir, const EA::client::ConfigCallbackData &data);
     };

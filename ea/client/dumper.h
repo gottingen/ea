@@ -22,7 +22,7 @@
 #include "turbo/base/status.h"
 #include <string>
 #include <google/protobuf/descriptor.h>
-#include "eapi/servlet/servlet.interface.pb.h"
+#include "eapi/discovery/discovery.interface.pb.h"
 
 namespace EA::client {
 
@@ -45,14 +45,14 @@ namespace EA::client {
      *             "time": 1701477509
      *           }"
      *
-     *        EA::servlet::ConfigInfo info;
+     *        EA::discovery::ConfigInfo info;
      *        info.set_name("example");
      *        info.mutable_version()->set_major(1);
      *        info.mutable_version()->set_minor(2);
      *        info.mutable_version()->set_path(3);
      *        info.set_content("{\"servlet\":\"sug\",\"zone\":{\"instance\":[\"192.168.1.2\","
      *                          "\"192.168.1.3\",\"192.168.1.3\"],\"name\":\"ea_search\",\"user\":\"jeff\"}}");
-     *        info.set_type(EA::servlet::CF_JSON);
+     *        info.set_type(EA::discovery::CF_JSON);
      *        info.set_time(1701477509);
      *        std::string parsed_string;
      *        auto status = Loader::dump_proto(info, parsed_string);

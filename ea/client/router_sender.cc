@@ -69,24 +69,24 @@ namespace EA::client {
         return *this;
     }
 
-    turbo::Status RouterSender::meta_manager(const EA::servlet::MetaManagerRequest &request,
-                                             EA::servlet::MetaManagerResponse &response, int retry_times) {
-        return send_request("meta_manager", request, response, retry_times);
+    turbo::Status RouterSender::discovery_manager(const EA::discovery::DiscoveryManagerRequest &request,
+                                             EA::discovery::DiscoveryManagerResponse &response, int retry_times) {
+        return send_request("discovery_manager", request, response, retry_times);
     }
 
-    turbo::Status RouterSender::meta_manager(const EA::servlet::MetaManagerRequest &request,
-                                             EA::servlet::MetaManagerResponse &response) {
-        return send_request("meta_manager", request, response, _retry_times);
+    turbo::Status RouterSender::discovery_manager(const EA::discovery::DiscoveryManagerRequest &request,
+                                             EA::discovery::DiscoveryManagerResponse &response) {
+        return send_request("discovery_manager", request, response, _retry_times);
     }
 
-    turbo::Status RouterSender::meta_query(const EA::servlet::QueryRequest &request,
-                                           EA::servlet::QueryResponse &response, int retry_times) {
-        return send_request("meta_query", request, response, retry_times);
+    turbo::Status RouterSender::discovery_query(const EA::discovery::DiscoveryQueryRequest &request,
+                                           EA::discovery::DiscoveryQueryResponse &response, int retry_times) {
+        return send_request("discovery_query", request, response, retry_times);
     }
 
-    turbo::Status RouterSender::meta_query(const EA::servlet::QueryRequest &request,
-                                           EA::servlet::QueryResponse &response) {
-        return send_request("meta_query", request, response, _retry_times);
+    turbo::Status RouterSender::discovery_query(const EA::discovery::DiscoveryQueryRequest &request,
+                                           EA::discovery::DiscoveryQueryResponse &response) {
+        return send_request("discovery_query", request, response, _retry_times);
     }
 
 

@@ -39,7 +39,7 @@ gottingen/eapi@dev
 # rapidjson
 Tencent/rapidjson@master -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DRAPIDJSON_BUILD_DOC=OFF -DRAPIDJSON_BUILD_EXAMPLES=OFF -DRAPIDJSON_BUILD_TESTS=OFF -DRAPIDJSON_BUILD_THIRDPARTY_GTEST=OFF
 
-gottingen/eaproto@v0.4.0
+gottingen/eapi@dev
 ##############
 # json
 nlohmann/json@v3.11.2 -DJSON_BuildTests=OFF

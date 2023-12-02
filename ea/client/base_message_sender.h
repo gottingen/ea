@@ -17,14 +17,14 @@
 #define EA_CLIENT_BASE_MESSAGE_SENDER_H_
 
 #include "turbo/base/status.h"
-#include "eapi/servlet/servlet.interface.pb.h"
+#include "eapi/discovery/discovery.interface.pb.h"
 
 namespace EA::client {
 
     /**
      * @ingroup ea_rpc
      * @brief BaseMessageSender is the interface for sending messages to the meta server.
-     *        It is used by the MetaClient to send messages to the meta server. The MetaClient will
+     *        It is used by the DiscoveryClient to send messages to the meta server. The DiscoveryClient will
      *        implement this interface. 
      */
     class BaseMessageSender {
@@ -32,40 +32,40 @@ namespace EA::client {
         virtual ~BaseMessageSender() = default;
 
         /**
-         * @brief meta_manager is used to send a MetaManagerRequest to the meta server.
-         * @param request [input] is the MetaManagerRequest to send.
+         * @brief discovery_manager is used to send a DiscoveryManagerRequest to the meta server.
+         * @param request [input] is the DiscoveryManagerRequest to send.
          * @param response [output] is the MetaManagerResponse received from the meta server.
          * @param retry_times [input] is the number of times to retry sending the request.
          * @return Status::OK if the request was sent successfully. Otherwise, an error status is returned. 
          */
-        virtual turbo::Status meta_manager(const EA::servlet::MetaManagerRequest &request,
-                                                                     EA::servlet::MetaManagerResponse &response, int retry_times) = 0;
+        virtual turbo::Status discovery_manager(const EA::discovery::DiscoveryManagerRequest &request,
+                                                                     EA::discovery::DiscoveryManagerResponse &response, int retry_times) = 0;
         /**
-         * @brief meta_manager is used to send a MetaManagerRequest to the meta server.
-         * @param request [input] is the MetaManagerRequest to send.
+         * @brief discovery_manager is used to send a DiscoveryManagerRequest to the meta server.
+         * @param request [input] is the DiscoveryManagerRequest to send.
          * @param response [output] is the MetaManagerResponse received from the meta server.
          * @return Status::OK if the request was sent successfully. Otherwise, an error status is returned. 
          */        
-        virtual turbo::Status meta_manager(const EA::servlet::MetaManagerRequest &request,
-                                           EA::servlet::MetaManagerResponse &response) = 0;
+        virtual turbo::Status discovery_manager(const EA::discovery::DiscoveryManagerRequest &request,
+                                           EA::discovery::DiscoveryManagerResponse &response) = 0;
 
         /**
-         * @brief meta_query is used to send a QueryRequest to the meta server.
-         * @param request [input] is the QueryRequest to send.
-         * @param response [output] is the QueryResponse received from the meta server.
+         * @brief discovery_query is used to send a DiscoveryQueryRequest to the meta server.
+         * @param request [input] is the DiscoveryQueryRequest to send.
+         * @param response [output] is the DiscoveryQueryResponse received from the meta server.
          * @param retry_times [input] is the number of times to retry sending the request.
          * @return Status::OK if the request was sent successfully. Otherwise, an error status is returned.
          */
-        virtual turbo::Status meta_query(const EA::servlet::QueryRequest &request,
-                                                    EA::servlet::QueryResponse &response, int retry_times) = 0;
+        virtual turbo::Status discovery_query(const EA::discovery::DiscoveryQueryRequest &request,
+                                                    EA::discovery::DiscoveryQueryResponse &response, int retry_times) = 0;
         /**
-         * @brief meta_query is used to send a QueryRequest to the meta server.
-         * @param request [input] is the QueryRequest to send.
-         * @param response [output] is the QueryResponse received from the meta server.
+         * @brief discovery_query is used to send a DiscoveryQueryRequest to the meta server.
+         * @param request [input] is the DiscoveryQueryRequest to send.
+         * @param response [output] is the DiscoveryQueryResponse received from the meta server.
          * @return Status::OK if the request was sent successfully. Otherwise, an error status is returned. 
          */
-        virtual turbo::Status meta_query(const EA::servlet::QueryRequest &request,
-                                         EA::servlet::QueryResponse &response) = 0;
+        virtual turbo::Status discovery_query(const EA::discovery::DiscoveryQueryRequest &request,
+                                         EA::discovery::DiscoveryQueryResponse &response) = 0;
     };
 }  // namespace EA::client
 

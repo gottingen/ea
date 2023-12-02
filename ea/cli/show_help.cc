@@ -19,7 +19,7 @@
 #include "turbo/times/civil_time.h"
 #include "ea/cli/option_context.h"
 #include "turbo/times/time.h"
-#include "ea/client/meta_sender.h"
+#include "ea/client/discovery_sender.h"
 
 namespace EA::cli {
     using Row_t = turbo::Table::Row_t;
@@ -27,11 +27,10 @@ namespace EA::cli {
     ShowHelper::~ShowHelper() {
         std::cout << pre_send_result << std::endl;
         std::cout << rpc_result << std::endl;
-        std::cout << meta_response_result << std::endl;
         std::cout << result_table << std::endl;
     }
 
-    turbo::Table ShowHelper::show_response_impl(const std::string_view &server, EA::servlet::ErrCode code, int qt, const std::string &qts, const std::string &msg) {
+    turbo::Table ShowHelper::show_response_impl(const std::string_view &server, EA::discovery::ErrCode code, int qt, const std::string &qts, const std::string &msg) {
         turbo::Table response_result;
         std::string server_role;
         std::string server_addr;
@@ -40,11 +39,11 @@ namespace EA::cli {
             server_role = "router";
             server_addr = opt->router_server;
         } else {
-            server_role = "meta leader";
-            server_addr = opt->meta_leader;
+            server_role = "discovery leader";
+            server_addr = opt->discovery_leader;
         }
         response_result.add_row(Row_t{"status", server_role, "op code", "op string", "error code", "error message"});
-        if (code != EA::servlet::SUCCESS) {
+        if (code != EA::discovery::SUCCESS) {
             response_result.add_row(
                     Row_t{"fail", server_addr, turbo::Format(qt),qts,turbo::Format("{}", static_cast<int>(code)), msg});
         } else {
@@ -54,7 +53,7 @@ namespace EA::cli {
         auto last = response_result.size() - 1;
         response_result[last][0].format().font_color(turbo::Color::green).font_style({turbo::FontStyle::bold});
 
-        if (code == EA::servlet::SUCCESS) {
+        if (code == EA::discovery::SUCCESS) {
             response_result[last][1].format().font_color(turbo::Color::yellow);
         } else {
             response_result[last][1].format().font_color(turbo::Color::red);
@@ -62,7 +61,7 @@ namespace EA::cli {
         return response_result;
     }
 
-    turbo::Table ShowHelper::show_response_impl(EA::servlet::ErrCode code, int qt, const std::string &qts, const std::string &msg) {
+    turbo::Table ShowHelper::show_response_impl(EA::discovery::ErrCode code, int qt, const std::string &qts, const std::string &msg) {
         turbo::Table response_result;
         std::string server_role;
         std::string server_addr;
@@ -71,11 +70,11 @@ namespace EA::cli {
             server_role = "router";
             server_addr = opt->router_server;
         } else {
-            server_role = "meta leader";
-            server_addr = EA::client::MetaSender::get_instance()->get_leader();
+            server_role = "discovery leader";
+            server_addr = EA::client::DiscoverySender::get_instance()->get_leader();
         }
         response_result.add_row(Row_t{"status", server_role, "op code", "op string", "error code", "error message"});
-        if (code != EA::servlet::SUCCESS) {
+        if (code != EA::discovery::SUCCESS) {
             response_result.add_row(
                     Row_t{"fail", server_addr, turbo::Format(qt),qts,turbo::Format("{}", static_cast<int>(code)), msg});
         } else {
@@ -85,7 +84,7 @@ namespace EA::cli {
         auto last = response_result.size() - 1;
         response_result[last][0].format().font_color(turbo::Color::green).font_style({turbo::FontStyle::bold});
 
-        if (code == EA::servlet::SUCCESS) {
+        if (code == EA::discovery::SUCCESS) {
             response_result[last][1].format().font_color(turbo::Color::yellow);
         } else {
             response_result[last][1].format().font_color(turbo::Color::red);
@@ -122,7 +121,7 @@ namespace EA::cli {
         return result;
     }
 
-    turbo::Table ShowHelper::pre_send_error(const turbo::Status &s, const EA::servlet::MetaManagerRequest &req) {
+    turbo::Table ShowHelper::pre_send_error(const turbo::Status &s, const EA::discovery::DiscoveryManagerRequest &req) {
         turbo::Table result;
         result.add_row(Row_t{"status", "op code", "op string", "error message"});
         result[0].format().font_color(turbo::Color::green).font_style({turbo::FontStyle::bold}).font_align(
@@ -153,7 +152,7 @@ namespace EA::cli {
         return result;
     }
 
-    turbo::Table ShowHelper::pre_send_error(const turbo::Status &s, const EA::servlet::QueryRequest &req) {
+    turbo::Table ShowHelper::pre_send_error(const turbo::Status &s, const EA::discovery::DiscoveryQueryRequest &req) {
         turbo::Table result;
         result.add_row(Row_t{"status", "op code", "op string", "error message"});
         result[0].format().font_color(turbo::Color::green).font_style({turbo::FontStyle::bold}).font_align(
@@ -186,7 +185,7 @@ namespace EA::cli {
         return result;
     }
 
-    turbo::Table ShowHelper::pre_send_error(const turbo::Status &s, const EA::servlet::RaftControlRequest &req) {
+    turbo::Table ShowHelper::pre_send_error(const turbo::Status &s, const EA::discovery::RaftControlRequest &req) {
         turbo::Table result;
         result.add_row(Row_t{"status", "op code", "op string", "error message"});
         result[0].format().font_color(turbo::Color::green).font_style({turbo::FontStyle::bold}).font_align(

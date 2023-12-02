@@ -30,43 +30,43 @@ namespace EA::cli {
         auto *ns = app.add_subcommand("raft", "raft control operations");
         ns->callback([ns]() { run_raft_cmd(ns); });
 
-        ns->add_option("-m,--meta_server", opt->meta_server, "server address default(\"127.0.0.1:8010\")")->default_val(
+        ns->add_option("-m,--discovery_server", opt->discovery_server, "server address default(\"127.0.0.1:8010\")")->default_val(
                 "127.0.0.1:8010");
 
         auto cg = ns->add_subcommand("status", "cluster status");
-        cg->add_option("-c,--cluster", opt->cluster, "cluster [meta|tso|atomic]")->required();
+        cg->add_option("-c,--cluster", opt->cluster, "cluster [discovery|tso|atomic]")->required();
         cg->callback([]() { run_status_cmd(); });
 
         auto cs = ns->add_subcommand("snapshot", "cluster snapshot");
-        cs->add_option("-c,--cluster", opt->cluster, "cluster [meta|tso|atomic]")->required();
+        cs->add_option("-c,--cluster", opt->cluster, "cluster [discovery|tso|atomic]")->required();
         cs->callback([]() { run_snapshot_cmd(); });
 
         auto cv = ns->add_subcommand("vote", "cluster vote");
-        cv->add_option("-c,--cluster", opt->cluster, "cluster [meta|tso|atomic]")->required();
+        cv->add_option("-c,--cluster", opt->cluster, "cluster [discovery|tso|atomic]")->required();
         cv->add_option("-t,--time", opt->vote_time_ms, "election time ms")->required();
         cv->callback([]() { run_vote_cmd(); });
 
         auto cd = ns->add_subcommand("shutdown", "cluster shutdown");
-        cd->add_option("-c,--cluster", opt->cluster, "cluster [meta|tso|atomic]")->required();
+        cd->add_option("-c,--cluster", opt->cluster, "cluster [discovery|tso|atomic]")->required();
         cd->callback([]() { run_shutdown_cmd(); });
 
         auto cset = ns->add_subcommand("set", "cluster set peer");
-        cset->add_option("-c,--cluster", opt->cluster, "cluster [meta|tso|atomic]")->required();
+        cset->add_option("-c,--cluster", opt->cluster, "cluster [discovery|tso|atomic]")->required();
         cset->add_option("-o,--old", opt->old_peers, "old peers")->required();
         cset->add_option("-n,--new", opt->new_peers, "new peers")->required();
         cset->add_option("-f,--force", opt->force, "new peers")->default_val(false);
         cset->callback([]() { run_set_cmd(); });
 
         auto ct = ns->add_subcommand("trans", "cluster trans leader");
-        ct->add_option("-c,--cluster", opt->cluster, "cluster [meta|tso|atomic]")->required();
+        ct->add_option("-c,--cluster", opt->cluster, "cluster [discovery|tso|atomic]")->required();
         ct->add_option("-n,--new-leader", opt->new_leader, "cluster new leader")->required();
         ct->callback([]() { run_trans_cmd(); });
 
         auto func = []() {
             auto opt = RaftOptionContext::get_instance();
-            auto r = opt->sender.init(opt->meta_server);
+            auto r = opt->sender.init(opt->discovery_server);
             if(!r.ok()) {
-                turbo::Println(turbo::color::red, "init error:{}", opt->meta_server);
+                turbo::Println(turbo::color::red, "init error:{}", opt->discovery_server);
                 exit(0);
             }
         };
@@ -80,10 +80,10 @@ namespace EA::cli {
     }
 
     void RaftCmd::run_status_cmd() {
-        EA::servlet::RaftControlRequest request;
-        EA::servlet::RaftControlResponse response;
+        EA::discovery::RaftControlRequest request;
+        EA::discovery::RaftControlResponse response;
         ScopeShower ss;
-        request.set_op_type(EA::servlet::ListPeer);
+        request.set_op_type(EA::discovery::ListPeer);
         auto id = to_region_id();
         if(!id.ok()) {
             turbo::Println("unknown cluster");
@@ -95,18 +95,18 @@ namespace EA::cli {
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(response.errcode(), request.op_type(),
                                                response.errmsg());
-        ss.add_table("result", std::move(table), response.errcode() == EA::servlet::SUCCESS);
-        if (response.errcode() == EA::servlet::SUCCESS) {
+        ss.add_table("result", std::move(table), response.errcode() == EA::discovery::SUCCESS);
+        if (response.errcode() == EA::discovery::SUCCESS) {
             table = show_raft_result(response);
             ss.add_table("summary", std::move(table), true);
         }
     }
 
     void RaftCmd::run_snapshot_cmd() {
-        EA::servlet::RaftControlRequest request;
-        EA::servlet::RaftControlResponse response;
+        EA::discovery::RaftControlRequest request;
+        EA::discovery::RaftControlResponse response;
         ScopeShower ss;
-        request.set_op_type(EA::servlet::SnapShot);
+        request.set_op_type(EA::discovery::SnapShot);
         auto id = to_region_id();
         if(!id.ok()) {
             turbo::Println("unknown cluster");
@@ -118,14 +118,14 @@ namespace EA::cli {
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(response.errcode(), request.op_type(),
                                                response.errmsg());
-        ss.add_table("result", std::move(table), response.errcode() == EA::servlet::SUCCESS);
+        ss.add_table("result", std::move(table), response.errcode() == EA::discovery::SUCCESS);
     }
 
     void RaftCmd::run_vote_cmd() {
-        EA::servlet::RaftControlRequest request;
-        EA::servlet::RaftControlResponse response;
+        EA::discovery::RaftControlRequest request;
+        EA::discovery::RaftControlResponse response;
         ScopeShower ss;
-        request.set_op_type(EA::servlet::ResetVoteTime);
+        request.set_op_type(EA::discovery::ResetVoteTime);
         auto id = to_region_id();
         if(!id.ok()) {
             turbo::Println("unknown cluster");
@@ -137,14 +137,14 @@ namespace EA::cli {
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(response.errcode(), request.op_type(),
                                                response.errmsg());
-        ss.add_table("result", std::move(table), response.errcode() == EA::servlet::SUCCESS);
+        ss.add_table("result", std::move(table), response.errcode() == EA::discovery::SUCCESS);
     }
 
     void RaftCmd::run_shutdown_cmd() {
-        EA::servlet::RaftControlRequest request;
-        EA::servlet::RaftControlResponse response;
+        EA::discovery::RaftControlRequest request;
+        EA::discovery::RaftControlResponse response;
         ScopeShower ss;
-        request.set_op_type(EA::servlet::ShutDown);
+        request.set_op_type(EA::discovery::ShutDown);
         auto id = to_region_id();
         if(!id.ok()) {
             turbo::Println("unknown cluster");
@@ -156,14 +156,14 @@ namespace EA::cli {
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(response.errcode(), request.op_type(),
                                                response.errmsg());
-        ss.add_table("result", std::move(table), response.errcode() == EA::servlet::SUCCESS);
+        ss.add_table("result", std::move(table), response.errcode() == EA::discovery::SUCCESS);
     }
 
     void RaftCmd::run_set_cmd() {
-        EA::servlet::RaftControlRequest request;
-        EA::servlet::RaftControlResponse response;
+        EA::discovery::RaftControlRequest request;
+        EA::discovery::RaftControlResponse response;
         ScopeShower ss;
-        request.set_op_type(EA::servlet::SetPeer);
+        request.set_op_type(EA::discovery::SetPeer);
         auto id = to_region_id();
         if(!id.ok()) {
             turbo::Println("unknown cluster");
@@ -185,18 +185,18 @@ namespace EA::cli {
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(response.errcode(), request.op_type(),
                                                response.errmsg());
-        ss.add_table("result", std::move(table), response.errcode() == EA::servlet::SUCCESS);
-        if (response.errcode() == EA::servlet::SUCCESS) {
+        ss.add_table("result", std::move(table), response.errcode() == EA::discovery::SUCCESS);
+        if (response.errcode() == EA::discovery::SUCCESS) {
             table = show_raft_result(response);
             ss.add_table("summary", std::move(table), true);
         }
     }
 
     void RaftCmd::run_trans_cmd() {
-        EA::servlet::RaftControlRequest request;
-        EA::servlet::RaftControlResponse response;
+        EA::discovery::RaftControlRequest request;
+        EA::discovery::RaftControlResponse response;
         ScopeShower ss;
-        request.set_op_type(EA::servlet::TransLeader);
+        request.set_op_type(EA::discovery::TransLeader);
         auto id = to_region_id();
         if(!id.ok()) {
             turbo::Println("unknown cluster");
@@ -210,8 +210,8 @@ namespace EA::cli {
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(response.errcode(), request.op_type(),
                                                response.errmsg());
-        ss.add_table("result", std::move(table), response.errcode() == EA::servlet::SUCCESS);
-        if (response.errcode() == EA::servlet::SUCCESS) {
+        ss.add_table("result", std::move(table), response.errcode() == EA::discovery::SUCCESS);
+        if (response.errcode() == EA::discovery::SUCCESS) {
             table = show_raft_result(response);
             ss.add_table("summary", std::move(table), true);
         }
@@ -219,7 +219,7 @@ namespace EA::cli {
 
     turbo::ResultStatus<int> RaftCmd::to_region_id() {
         auto opt = RaftOptionContext::get_instance();
-        if(opt->cluster == "meta") {
+        if(opt->cluster == "discovery") {
             return 0;
         }
         if(opt->cluster == "tso") {
@@ -231,7 +231,7 @@ namespace EA::cli {
         return turbo::InvalidArgumentError("unknown");
     }
 
-    turbo::Table RaftCmd::show_raft_result(EA::servlet::RaftControlResponse &res) {
+    turbo::Table RaftCmd::show_raft_result(EA::discovery::RaftControlResponse &res) {
         turbo::Table summary;
         summary.add_row({"leader","peers"});
         turbo::Table peers;

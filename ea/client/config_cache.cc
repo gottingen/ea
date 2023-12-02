@@ -47,7 +47,7 @@ namespace EA::client {
                 continue;
             }
             auto file_path = dir_itr->path().string();
-            EA::servlet::ConfigInfo info;
+            EA::discovery::ConfigInfo info;
             auto rs = Loader::load_proto_from_file(file_path, info);
             if(!rs.ok()) {
                 return rs;
@@ -58,11 +58,11 @@ namespace EA::client {
         _init = true;
         return turbo::OkStatus();
     }
-    turbo::Status ConfigCache::add_config(const EA::servlet::ConfigInfo &config) {
+    turbo::Status ConfigCache::add_config(const EA::discovery::ConfigInfo &config) {
         {
             std::unique_lock lock(_cache_mutex);
             if (_cache_map.find(config.name()) == _cache_map.end()) {
-                _cache_map[config.name()] = std::map<turbo::ModuleVersion, EA::servlet::ConfigInfo>();
+                _cache_map[config.name()] = std::map<turbo::ModuleVersion, EA::discovery::ConfigInfo>();
             }
             auto it = _cache_map.find(config.name());
             auto version = turbo::ModuleVersion(config.version().major(), config.version().minor(),
@@ -75,9 +75,9 @@ namespace EA::client {
         return write_config_file(_cache_dir, config);
     }
 
-    void ConfigCache::do_add_config(const EA::servlet::ConfigInfo &config) {
+    void ConfigCache::do_add_config(const EA::discovery::ConfigInfo &config) {
             if (_cache_map.find(config.name()) == _cache_map.end()) {
-                _cache_map[config.name()] = std::map<turbo::ModuleVersion, EA::servlet::ConfigInfo>();
+                _cache_map[config.name()] = std::map<turbo::ModuleVersion, EA::discovery::ConfigInfo>();
             }
             auto it = _cache_map.find(config.name());
             auto version = turbo::ModuleVersion(config.version().major(), config.version().minor(),
@@ -86,7 +86,7 @@ namespace EA::client {
     }
 
     turbo::Status ConfigCache::get_config(const std::string &name, const turbo::ModuleVersion &version,
-                                          EA::servlet::ConfigInfo &config) {
+                                          EA::discovery::ConfigInfo &config) {
         std::unique_lock lock(_cache_mutex);
         auto it = _cache_map.find(config.name());
         if (it != _cache_map.end()) {
@@ -104,7 +104,7 @@ namespace EA::client {
     /// \param name
     /// \param config
     /// \return
-    turbo::Status ConfigCache::get_config(const std::string &name, EA::servlet::ConfigInfo &config) {
+    turbo::Status ConfigCache::get_config(const std::string &name, EA::discovery::ConfigInfo &config) {
         std::unique_lock lock(_cache_mutex);
         auto it = _cache_map.find(config.name());
         if (it != _cache_map.end()) {
@@ -235,7 +235,7 @@ namespace EA::client {
         return turbo::NotFoundError("");
     }
 
-    turbo::Status ConfigCache::write_config_file(const std::string &dir, const EA::servlet::ConfigInfo &config) {
+    turbo::Status ConfigCache::write_config_file(const std::string &dir, const EA::discovery::ConfigInfo &config) {
         if (dir.empty()) {
             return turbo::OkStatus();
         }
@@ -243,7 +243,7 @@ namespace EA::client {
         return EA::client::Dumper::dump_proto_to_file(file_path, config);
     }
 
-    turbo::Status ConfigCache::remove_config_file(const std::string &dir, const EA::servlet::ConfigInfo &config) {
+    turbo::Status ConfigCache::remove_config_file(const std::string &dir, const EA::discovery::ConfigInfo &config) {
         if (dir.empty()) {
             return turbo::OkStatus();
         }
@@ -252,7 +252,7 @@ namespace EA::client {
         return turbo::OkStatus();
     }
 
-    std::string ConfigCache::make_cache_file_path(const std::string &dir, const EA::servlet::ConfigInfo &config) {
+    std::string ConfigCache::make_cache_file_path(const std::string &dir, const EA::discovery::ConfigInfo &config) {
         return turbo::Format("{}/{}-{}.{}.{}.{}", dir,
                              config.name(),
                              config.version().minor(),

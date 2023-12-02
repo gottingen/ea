@@ -23,11 +23,11 @@
 
 namespace EA::client {
 
-    ServletInstanceBuilder::ServletInstanceBuilder(EA::servlet::ServletInstance *ins) :_instance(ins) {
+    ServletInstanceBuilder::ServletInstanceBuilder(EA::discovery::ServletInstance *ins) :_instance(ins) {
         _instance->Clear();
     }
 
-    void ServletInstanceBuilder::set(EA::servlet::ServletInstance *ins) {
+    void ServletInstanceBuilder::set(EA::discovery::ServletInstance *ins) {
         _instance = ins;
         _instance->Clear();
     }
@@ -115,11 +115,11 @@ namespace EA::client {
     }
 
     ServletInstanceBuilder &ServletInstanceBuilder::set_status(const std::string &s) {
-        EA::servlet::Status status;
-        if(EA::servlet::Status_Parse(s, &status)) {
+        EA::discovery::Status status;
+        if(EA::discovery::Status_Parse(s, &status)) {
             _instance->set_status(status);
         } else {
-            _instance->set_status(EA::servlet::NORMAL);
+            _instance->set_status(EA::discovery::NORMAL);
         }
         return *this;
     }
@@ -129,8 +129,8 @@ namespace EA::client {
         return *this;
     }
 
-    ServletInstanceBuilder &ServletInstanceBuilder::set_status(const EA::servlet::Status &s) {
-        _instance->set_status(EA::servlet::NORMAL);
+    ServletInstanceBuilder &ServletInstanceBuilder::set_status(const EA::discovery::Status &s) {
+        _instance->set_status(EA::discovery::NORMAL);
         return *this;
     }
 

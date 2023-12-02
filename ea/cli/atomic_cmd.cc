@@ -26,7 +26,7 @@
 #include "turbo/times/clock.h"
 #include "json2pb/pb_to_json.h"
 #include "json2pb/json_to_pb.h"
-#include "ea/client/meta.h"
+#include "ea/client/discovery.h"
 #include "ea/client/config_info_builder.h"
 #include "nlohmann/json.hpp"
 
@@ -73,20 +73,20 @@ namespace EA::cli {
     }
 
     void AtomicCmd::run_atomic_create_cmd() {
-        EA::servlet::MetaManagerRequest request;
-        EA::servlet::MetaManagerResponse response;
+        EA::discovery::DiscoveryManagerRequest request;
+        EA::discovery::DiscoveryManagerResponse response;
         ScopeShower ss;
-        request.set_op_type(EA::servlet::OP_ADD_ID_FOR_AUTO_INCREMENT);
+        request.set_op_type(EA::discovery::OP_ADD_ID_FOR_AUTO_INCREMENT);
         auto opt = AtomicOptionContext::get_instance();
         auto atomic_info = request.mutable_auto_increment();
         atomic_info->set_servlet_id(opt->servlet_id);
         atomic_info->set_start_id(opt->start_id);
-        auto rs = EA::client::MetaClient::get_instance()->meta_manager(request, response, nullptr);
+        auto rs = EA::client::DiscoveryClient::get_instance()->discovery_manager(request, response, nullptr);
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(response.errcode(), response.op_type(),
                                                response.errmsg());
-        ss.add_table("result", std::move(table), response.errcode() == EA::servlet::SUCCESS);
-        if (response.errcode() == EA::servlet::SUCCESS) {
+        ss.add_table("result", std::move(table), response.errcode() == EA::discovery::SUCCESS);
+        if (response.errcode() == EA::discovery::SUCCESS) {
             turbo::Table summary;
             summary.add_row({"servlet id", "start id", "end id"});
             summary.add_row({turbo::Format(opt->servlet_id), turbo::Format(response.start_id()),
@@ -96,25 +96,25 @@ namespace EA::cli {
     }
 
     void AtomicCmd::run_atomic_remove_cmd() {
-        EA::servlet::MetaManagerRequest request;
-        EA::servlet::MetaManagerResponse response;
+        EA::discovery::DiscoveryManagerRequest request;
+        EA::discovery::DiscoveryManagerResponse response;
         ScopeShower ss;
-        request.set_op_type(EA::servlet::OP_DROP_ID_FOR_AUTO_INCREMENT);
+        request.set_op_type(EA::discovery::OP_DROP_ID_FOR_AUTO_INCREMENT);
         auto opt = AtomicOptionContext::get_instance();
         auto atomic_info = request.mutable_auto_increment();
         atomic_info->set_servlet_id(opt->servlet_id);
-        auto rs = EA::client::MetaClient::get_instance()->meta_manager(request, response, nullptr);
+        auto rs = EA::client::DiscoveryClient::get_instance()->discovery_manager(request, response, nullptr);
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(response.errcode(), response.op_type(),
                                                response.errmsg());
-        ss.add_table("result", std::move(table), response.errcode() == EA::servlet::SUCCESS);
+        ss.add_table("result", std::move(table), response.errcode() == EA::discovery::SUCCESS);
     };
 
     void AtomicCmd::run_atomic_gen_cmd() {
-        EA::servlet::MetaManagerRequest request;
-        EA::servlet::MetaManagerResponse response;
+        EA::discovery::DiscoveryManagerRequest request;
+        EA::discovery::DiscoveryManagerResponse response;
         ScopeShower ss;
-        request.set_op_type(EA::servlet::OP_GEN_ID_FOR_AUTO_INCREMENT);
+        request.set_op_type(EA::discovery::OP_GEN_ID_FOR_AUTO_INCREMENT);
         auto opt = AtomicOptionContext::get_instance();
         auto atomic_info = request.mutable_auto_increment();
         atomic_info->set_servlet_id(opt->servlet_id);
@@ -123,12 +123,12 @@ namespace EA::cli {
         }
         turbo::Println("{}", opt->count);
         atomic_info->set_count(opt->count);
-        auto rs = EA::client::MetaClient::get_instance()->meta_manager(request, response, nullptr);
+        auto rs = EA::client::DiscoveryClient::get_instance()->discovery_manager(request, response, nullptr);
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(response.errcode(), response.op_type(),
                                                response.errmsg());
-        ss.add_table("result", std::move(table), response.errcode() == EA::servlet::SUCCESS);
-        if (response.errcode() == EA::servlet::SUCCESS) {
+        ss.add_table("result", std::move(table), response.errcode() == EA::discovery::SUCCESS);
+        if (response.errcode() == EA::discovery::SUCCESS) {
             turbo::Table summary;
             summary.add_row({"servlet id", "start id", "end id"});
             summary.add_row({turbo::Format(opt->servlet_id), turbo::Format(response.start_id()),
@@ -138,10 +138,10 @@ namespace EA::cli {
     }
 
     void AtomicCmd::run_atomic_update_cmd() {
-        EA::servlet::MetaManagerRequest request;
-        EA::servlet::MetaManagerResponse response;
+        EA::discovery::DiscoveryManagerRequest request;
+        EA::discovery::DiscoveryManagerResponse response;
         ScopeShower ss;
-        request.set_op_type(EA::servlet::OP_UPDATE_FOR_AUTO_INCREMENT);
+        request.set_op_type(EA::discovery::OP_UPDATE_FOR_AUTO_INCREMENT);
         auto opt = AtomicOptionContext::get_instance();
         auto atomic_info = request.mutable_auto_increment();
         atomic_info->set_servlet_id(opt->servlet_id);
@@ -154,12 +154,12 @@ namespace EA::cli {
         if (opt->force) {
             atomic_info->set_force(opt->force);
         }
-        auto rs = EA::client::MetaClient::get_instance()->meta_manager(request, response, nullptr);
+        auto rs = EA::client::DiscoveryClient::get_instance()->discovery_manager(request, response, nullptr);
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(response.errcode(), response.op_type(),
                                                response.errmsg());
-        ss.add_table("result", std::move(table), response.errcode() == EA::servlet::SUCCESS);
-        if (response.errcode() == EA::servlet::SUCCESS) {
+        ss.add_table("result", std::move(table), response.errcode() == EA::discovery::SUCCESS);
+        if (response.errcode() == EA::discovery::SUCCESS) {
             turbo::Table summary;
             summary.add_row({"servlet id", "start id"});
             summary.add_row({turbo::Format(opt->servlet_id), turbo::Format(response.start_id())});

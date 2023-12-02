@@ -20,10 +20,10 @@
 #define EA_CLI_RAFT_CMD_H_
 
 #include "turbo/flags/flags.h"
-#include "eapi/servlet/servlet.interface.pb.h"
+#include "eapi/discovery/discovery.interface.pb.h"
 #include "turbo/format/table.h"
 #include "turbo/base/result_status.h"
-#include "ea/client/meta_sender.h"
+#include "ea/client/discovery_sender.h"
 #include <string>
 
 namespace EA::cli {
@@ -41,8 +41,8 @@ namespace EA::cli {
         int64_t     vote_time_ms;
         std::vector<std::string> old_peers;
         std::vector<std::string> new_peers;
-        EA::client::MetaSender sender;
-        std::string  meta_server;
+        EA::client::DiscoverySender sender;
+        std::string  discovery_server;
         bool force{false};
     };
 
@@ -66,7 +66,7 @@ namespace EA::cli {
 
         static turbo::ResultStatus<int> to_region_id();
 
-        static turbo::Table show_raft_result(EA::servlet::RaftControlResponse &res);
+        static turbo::Table show_raft_result(EA::discovery::RaftControlResponse &res);
     };
 
     }  // namespace EA::cli

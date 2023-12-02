@@ -19,7 +19,7 @@
 #ifndef EA_CLIENT_SERVLET_INSTANCE_BUILDER_H_
 #define EA_CLIENT_SERVLET_INSTANCE_BUILDER_H_
 
-#include "eapi/servlet/servlet.struct.pb.h"
+#include "eapi/discovery/discovery.struct.pb.h"
 #include "turbo/base/status.h"
 
 namespace EA::client {
@@ -30,7 +30,7 @@ namespace EA::client {
      *        it does not hold the ConfigInfo object memory, and not thread safe. user should guard
      *        that the object is usable and make sure it is thread safe call. eg.
      * @code
-     *        EA::servlet::ConfigInfo info;
+     *        EA::discovery::ConfigInfo info;
      *        ServletInstanceBuilder builder(&info);
      *        std::string json_str = "{}"
      *        auto status = builder.build_from_json(json_str);
@@ -45,7 +45,7 @@ namespace EA::client {
     public:
         ServletInstanceBuilder() = default;
 
-        explicit ServletInstanceBuilder(EA::servlet::ServletInstance *ins);
+        explicit ServletInstanceBuilder(EA::discovery::ServletInstance *ins);
 
         ~ServletInstanceBuilder() = default;
 
@@ -55,7 +55,7 @@ namespace EA::client {
          *
          * @param ins the ConfigInfo object to build
          */
-        void set(EA::servlet::ServletInstance *ins);
+        void set(EA::discovery::ServletInstance *ins);
 
         /**
          *
@@ -141,7 +141,7 @@ namespace EA::client {
          * @param status [input] the status to set.
          * @return the ServletInstanceBuilder.
          */        
-        ServletInstanceBuilder &set_status(const EA::servlet::Status &status);
+        ServletInstanceBuilder &set_status(const EA::discovery::Status &status);
 
         /**
          *
@@ -158,7 +158,7 @@ namespace EA::client {
         ServletInstanceBuilder &set_time(int time);
 
     private:
-        EA::servlet::ServletInstance *_instance;
+        EA::discovery::ServletInstance *_instance;
     };
 }  // namespace EA::client
 

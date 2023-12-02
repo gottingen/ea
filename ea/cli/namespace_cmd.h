@@ -16,7 +16,7 @@
 #define EA_CLI_NAMESPACE_CMD_H_
 
 #include "turbo/flags/flags.h"
-#include "eapi/servlet/servlet.interface.pb.h"
+#include "eapi/discovery/discovery.interface.pb.h"
 #include "turbo/format/table.h"
 #include "turbo/base/status.h"
 #include <string>
@@ -52,18 +52,18 @@ namespace EA::cli {
     void run_ns_info_cmd();
 
     [[nodiscard]] turbo::Status
-    make_namespace_create(EA::servlet::MetaManagerRequest *req);
+    make_namespace_create(EA::discovery::DiscoveryManagerRequest *req);
 
     [[nodiscard]] turbo::Status
-    make_namespace_remove(EA::servlet::MetaManagerRequest *req);
+    make_namespace_remove(EA::discovery::DiscoveryManagerRequest *req);
 
     [[nodiscard]] turbo::Status
-    make_namespace_modify(EA::servlet::MetaManagerRequest *req);
+    make_namespace_modify(EA::discovery::DiscoveryManagerRequest *req);
 
     [[nodiscard]] turbo::Status
-    make_namespace_query(EA::servlet::QueryRequest *req);
+    make_namespace_query(EA::discovery::DiscoveryQueryRequest *req);
 
-    turbo::Table show_meta_query_ns_response(const EA::servlet::QueryResponse &res);
+    turbo::Table show_discovery_query_ns_response(const EA::discovery::DiscoveryQueryResponse &res);
 }  // namespace EA::cli
 
 #endif  // EA_CLI_NAMESPACE_CMD_H_

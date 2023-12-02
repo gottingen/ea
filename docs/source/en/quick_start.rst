@@ -25,12 +25,12 @@ step 1, download and install EA. the install guide see :ref:`build_and_install_s
 try a stand-alone deployment
 -----------------------------------------
 
-step 2, try deploy EA meta stand alone and using `eacli` to manage `eameta` see :ref:`stand_alone_section` section
+step 2, try deploy eadiscovery stand alone and using `eacli` to manage `eadiscovery` see :ref:`stand_alone_section` section
 
 try a cluster stand-alone
 -----------------------------------------
 
-step 3, try deploy EA meta stand alone cluster using `eacli` to manage `eameta`
+step 3, try deploy eadiscovery stand alone cluster using `eacli` to manage `eadiscovery`
 see :ref:`stand_alone_section` section
 
 god's perspective

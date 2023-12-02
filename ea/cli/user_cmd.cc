@@ -16,7 +16,7 @@
 #include "ea/cli/option_context.h"
 #include "ea/base/tlog.h"
 #include "ea/cli/router_interact.h"
-#include "eapi/servlet/servlet.interface.pb.h"
+#include "eapi/discovery/discovery.interface.pb.h"
 #include "ea/cli/show_help.h"
 #include "turbo/format/print.h"
 #include "ea/cli/validator.h"
@@ -108,12 +108,12 @@ namespace EA::cli {
 
     void run_user_create_cmd() {
         turbo::Println(turbo::color::green, "start to create user: {}", UserOptionContext::get_instance()->user_name);
-        EA::servlet::MetaManagerRequest request;
-        EA::servlet::MetaManagerResponse response;
+        EA::discovery::DiscoveryManagerRequest request;
+        EA::discovery::DiscoveryManagerResponse response;
         ScopeShower ss;
         auto rs = make_user_create(&request);
         PREPARE_ERROR_RETURN_OR_OK(ss, rs, request);
-        rs = RouterInteract::get_instance()->send_request("meta_manager", request, response);
+        rs = RouterInteract::get_instance()->send_request("discovery_manager", request, response);
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(OptionContext::get_instance()->router_server, response.errcode(),
                                                request.op_type(),
@@ -124,12 +124,12 @@ namespace EA::cli {
     void run_user_remove_cmd() {
         turbo::Println(turbo::color::green, "start to remove namespace: {}",
                        UserOptionContext::get_instance()->namespace_name);
-        EA::servlet::MetaManagerRequest request;
-        EA::servlet::MetaManagerResponse response;
+        EA::discovery::DiscoveryManagerRequest request;
+        EA::discovery::DiscoveryManagerResponse response;
         ScopeShower ss;
         auto rs = make_user_remove(&request);
         PREPARE_ERROR_RETURN_OR_OK(ss, rs, request);
-        rs = RouterInteract::get_instance()->send_request("meta_manager", request, response);
+        rs = RouterInteract::get_instance()->send_request("discovery_manager", request, response);
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(OptionContext::get_instance()->router_server, response.errcode(),
                                                request.op_type(),
@@ -140,12 +140,12 @@ namespace EA::cli {
     void run_user_add_privilege_cmd() {
         turbo::Println(turbo::color::green, "start to add user privilege: {}",
                        UserOptionContext::get_instance()->user_name);
-        EA::servlet::MetaManagerRequest request;
-        EA::servlet::MetaManagerResponse response;
+        EA::discovery::DiscoveryManagerRequest request;
+        EA::discovery::DiscoveryManagerResponse response;
         ScopeShower ss;
         auto rs = make_user_add_privilege(&request);
         PREPARE_ERROR_RETURN_OR_OK(ss, rs, request);
-        rs = RouterInteract::get_instance()->send_request("meta_manager", request, response);
+        rs = RouterInteract::get_instance()->send_request("discovery_manager", request, response);
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(OptionContext::get_instance()->router_server, response.errcode(),
                                                request.op_type(),
@@ -156,12 +156,12 @@ namespace EA::cli {
     void run_user_remove_privilege_cmd() {
         turbo::Println(turbo::color::green, "start to remove user privilege: {}",
                        UserOptionContext::get_instance()->user_name);
-        EA::servlet::MetaManagerRequest request;
-        EA::servlet::MetaManagerResponse response;
+        EA::discovery::DiscoveryManagerRequest request;
+        EA::discovery::DiscoveryManagerResponse response;
         ScopeShower ss;
         auto rs = make_user_remove_privilege(&request);
         PREPARE_ERROR_RETURN_OR_OK(ss, rs, request);
-        rs = RouterInteract::get_instance()->send_request("meta_manager", request, response);
+        rs = RouterInteract::get_instance()->send_request("discovery_manager", request, response);
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(OptionContext::get_instance()->router_server, response.errcode(),
                                                request.op_type(),
@@ -171,65 +171,65 @@ namespace EA::cli {
 
     void run_user_list_cmd() {
         turbo::Println(turbo::color::green, "start to get user list");
-        EA::servlet::QueryRequest request;
-        EA::servlet::QueryResponse response;
+        EA::discovery::DiscoveryQueryRequest request;
+        EA::discovery::DiscoveryQueryResponse response;
         ScopeShower ss;
         auto rs = make_user_list(&request);
         PREPARE_ERROR_RETURN_OR_OK(ss, rs, request);
-        rs = RouterInteract::get_instance()->send_request("meta_query", request, response);
+        rs = RouterInteract::get_instance()->send_request("discovery_query", request, response);
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(OptionContext::get_instance()->router_server, response.errcode(),
                                                request.op_type(),
                                                response.errmsg());
         ss.add_table("result", std::move(table));
-        if (response.errcode() != EA::servlet::SUCCESS) {
+        if (response.errcode() != EA::discovery::SUCCESS) {
             return;
         }
-        table = show_meta_query_user_response(response);
+        table = show_discovery_query_user_response(response);
         ss.add_table("summary", std::move(table));
     }
 
     void run_user_flat_cmd() {
         turbo::Println(turbo::color::green, "start to get user list flatten");
-        EA::servlet::QueryRequest request;
-        EA::servlet::QueryResponse response;
+        EA::discovery::DiscoveryQueryRequest request;
+        EA::discovery::DiscoveryQueryResponse response;
         ScopeShower ss;
         auto rs = make_user_flat(&request);
         PREPARE_ERROR_RETURN_OR_OK(ss, rs, request);
-        rs = RouterInteract::get_instance()->send_request("meta_query", request, response);
+        rs = RouterInteract::get_instance()->send_request("discovery_query", request, response);
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(OptionContext::get_instance()->router_server, response.errcode(),
                                                request.op_type(),
                                                response.errmsg());
         ss.add_table("result", std::move(table));
-        if (response.errcode() != EA::servlet::SUCCESS) {
+        if (response.errcode() != EA::discovery::SUCCESS) {
             return;
         }
-        table = show_meta_query_user_flat_response(response);
+        table = show_discovery_query_user_flat_response(response);
         ss.add_table("summary", std::move(table));
     }
 
     void run_user_info_cmd() {
         turbo::Println(turbo::color::green, "start to get user info");
-        EA::servlet::QueryRequest request;
-        EA::servlet::QueryResponse response;
+        EA::discovery::DiscoveryQueryRequest request;
+        EA::discovery::DiscoveryQueryResponse response;
         ScopeShower ss;
         auto rs = make_user_info(&request);
         PREPARE_ERROR_RETURN_OR_OK(ss, rs, request);
-        rs = RouterInteract::get_instance()->send_request("meta_query", request, response);
+        rs = RouterInteract::get_instance()->send_request("discovery_query", request, response);
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(OptionContext::get_instance()->router_server, response.errcode(),
                                                request.op_type(),
                                                response.errmsg());
         ss.add_table("result", std::move(table));
-        if (response.errcode() != EA::servlet::SUCCESS) {
+        if (response.errcode() != EA::discovery::SUCCESS) {
             return;
         }
-        table = show_meta_query_user_response(response);
+        table = show_discovery_query_user_response(response);
         ss.add_table("summary", std::move(table));
     }
 
-    turbo::Table show_meta_query_user_response(const EA::servlet::QueryResponse &res) {
+    turbo::Table show_discovery_query_user_response(const EA::discovery::DiscoveryQueryResponse &res) {
 
         auto &users = res.user_privilege();
         turbo::Table summary;
@@ -243,13 +243,13 @@ namespace EA::cli {
             turbo::Table zone_table;
             for (auto zp: user.privilege_zone()) {
                 zone_table.add_row(
-                        {turbo::Format("{}:{} {}", zp.zone(), EA::servlet::RW_Name(zp.zone_rw()), zp.force())});
+                        {turbo::Format("{}:{} {}", zp.zone(), EA::discovery::RW_Name(zp.zone_rw()), zp.force())});
             }
 
             turbo::Table servlet_table;
             for (auto sp: user.privilege_servlet()) {
                 servlet_table.add_row({turbo::Format("{}.{}:{} {}", sp.zone(), sp.servlet_name(),
-                                                     EA::servlet::RW_Name(sp.servlet_rw()), sp.force())});
+                                                     EA::discovery::RW_Name(sp.servlet_rw()), sp.force())});
             }
 
             if (UserOptionContext::get_instance()->show_pwd) {
@@ -267,7 +267,7 @@ namespace EA::cli {
         return summary;
     }
 
-    turbo::Table show_meta_query_user_flat_response(const EA::servlet::QueryResponse &res) {
+    turbo::Table show_discovery_query_user_flat_response(const EA::discovery::DiscoveryQueryResponse &res) {
         turbo::Table summary;
         auto &users = res.flatten_privileges();
 
@@ -275,7 +275,7 @@ namespace EA::cli {
         for (auto &user: users) {
             summary.add_row(
                     turbo::Table::Row_t{user.namespace_name(), user.username(), user.privilege(),
-                                        EA::servlet::RW_Name(user.servlet_rw()), "******"});
+                                        EA::discovery::RW_Name(user.servlet_rw()), "******"});
             auto last = summary.size() - 1;
             summary[last].format().font_color(turbo::Color::green);
         }
@@ -283,9 +283,9 @@ namespace EA::cli {
         return summary;
     }
 
-    turbo::Status make_user_create(EA::servlet::MetaManagerRequest *req) {
-        EA::servlet::UserPrivilege *user_req = req->mutable_user_privilege();
-        req->set_op_type(EA::servlet::OP_CREATE_USER);
+    turbo::Status make_user_create(EA::discovery::DiscoveryManagerRequest *req) {
+        EA::discovery::UserPrivilege *user_req = req->mutable_user_privilege();
+        req->set_op_type(EA::discovery::OP_CREATE_USER);
         auto rs = check_valid_name_type(UserOptionContext::get_instance()->namespace_name);
         if (!rs.ok()) {
             return rs;
@@ -300,9 +300,9 @@ namespace EA::cli {
         return turbo::OkStatus();
     }
 
-    turbo::Status make_user_remove(EA::servlet::MetaManagerRequest *req) {
-        EA::servlet::UserPrivilege *user_req = req->mutable_user_privilege();
-        req->set_op_type(EA::servlet::OP_DROP_USER);
+    turbo::Status make_user_remove(EA::discovery::DiscoveryManagerRequest *req) {
+        EA::discovery::UserPrivilege *user_req = req->mutable_user_privilege();
+        req->set_op_type(EA::discovery::OP_DROP_USER);
         auto rs = check_valid_name_type(UserOptionContext::get_instance()->namespace_name);
         if (!rs.ok()) {
             return rs;
@@ -317,10 +317,10 @@ namespace EA::cli {
         return turbo::OkStatus();
     }
 
-    turbo::Status make_user_add_privilege(EA::servlet::MetaManagerRequest *req) {
-        req->set_op_type(EA::servlet::OP_ADD_PRIVILEGE);
+    turbo::Status make_user_add_privilege(EA::discovery::DiscoveryManagerRequest *req) {
+        req->set_op_type(EA::discovery::OP_ADD_PRIVILEGE);
         auto opt = UserOptionContext::get_instance();
-        EA::servlet::UserPrivilege *pri_req = req->mutable_user_privilege();
+        EA::discovery::UserPrivilege *pri_req = req->mutable_user_privilege();
         auto rs = check_valid_name_type(opt->namespace_name);
         if (!rs.ok()) {
             return rs;
@@ -344,17 +344,17 @@ namespace EA::cli {
 
         for (auto &write_zone: opt->user_wz) {
             read_set.erase(write_zone);
-            EA::servlet::PrivilegeZone pz;
+            EA::discovery::PrivilegeZone pz;
             pz.set_zone(write_zone);
-            pz.set_zone_rw(EA::servlet::WRITE);
+            pz.set_zone_rw(EA::discovery::WRITE);
             pz.set_force(opt->force);
             *pri_req->add_privilege_zone() = pz;
         }
 
         for (auto &read_zone: read_set) {
-            EA::servlet::PrivilegeZone pz;
+            EA::discovery::PrivilegeZone pz;
             pz.set_zone(read_zone);
-            pz.set_zone_rw(EA::servlet::READ);
+            pz.set_zone_rw(EA::discovery::READ);
             pz.set_force(opt->force);
             *pri_req->add_privilege_zone() = pz;
         }
@@ -366,37 +366,37 @@ namespace EA::cli {
 
         for (auto &write_servlet: opt->user_ws) {
             read_set.erase(write_servlet);
-            EA::servlet::PrivilegeServlet ps;
+            EA::discovery::PrivilegeServlet ps;
             std::vector<std::string> names = turbo::StrSplit(write_servlet, ".", turbo::SkipEmpty());
             if (names.size() != 2) {
                 return turbo::InvalidArgumentError("bad format of {} should be zone.servlet", write_servlet);
             }
             ps.set_zone(names[0]);
             ps.set_servlet_name(names[1]);
-            ps.set_servlet_rw(EA::servlet::WRITE);
+            ps.set_servlet_rw(EA::discovery::WRITE);
             ps.set_force(opt->force);
             *pri_req->add_privilege_servlet() = ps;
         }
 
         for (auto &read_servlet: read_set) {
-            EA::servlet::PrivilegeServlet ps;
+            EA::discovery::PrivilegeServlet ps;
             std::vector<std::string> names = turbo::StrSplit(read_servlet, ".", turbo::SkipEmpty());
             if (names.size() != 2) {
                 return turbo::InvalidArgumentError("bad format of {} should be zone.servlet", read_servlet);
             }
             ps.set_zone(names[0]);
             ps.set_servlet_name(names[1]);
-            ps.set_servlet_rw(EA::servlet::READ);
+            ps.set_servlet_rw(EA::discovery::READ);
             ps.set_force(opt->force);
             *pri_req->add_privilege_servlet() = ps;
         }
         return turbo::OkStatus();
     }
 
-    turbo::Status make_user_remove_privilege(EA::servlet::MetaManagerRequest *req) {
-        req->set_op_type(EA::servlet::OP_DROP_PRIVILEGE);
+    turbo::Status make_user_remove_privilege(EA::discovery::DiscoveryManagerRequest *req) {
+        req->set_op_type(EA::discovery::OP_DROP_PRIVILEGE);
         auto opt = UserOptionContext::get_instance();
-        EA::servlet::UserPrivilege *pri_req = req->mutable_user_privilege();
+        EA::discovery::UserPrivilege *pri_req = req->mutable_user_privilege();
         auto rs = check_valid_name_type(opt->namespace_name);
         if (!rs.ok()) {
             return rs;
@@ -420,17 +420,17 @@ namespace EA::cli {
 
         for (auto &write_zone: opt->user_wz) {
             read_set.erase(write_zone);
-            EA::servlet::PrivilegeZone pz;
+            EA::discovery::PrivilegeZone pz;
             pz.set_zone(write_zone);
-            pz.set_zone_rw(EA::servlet::WRITE);
+            pz.set_zone_rw(EA::discovery::WRITE);
             pz.set_force(opt->force);
             *pri_req->add_privilege_zone() = pz;
         }
 
         for (auto &read_zone: read_set) {
-            EA::servlet::PrivilegeZone pz;
+            EA::discovery::PrivilegeZone pz;
             pz.set_zone(read_zone);
-            pz.set_zone_rw(EA::servlet::READ);
+            pz.set_zone_rw(EA::discovery::READ);
             pz.set_force(opt->force);
             *pri_req->add_privilege_zone() = pz;
         }
@@ -442,27 +442,27 @@ namespace EA::cli {
 
         for (auto &write_servlet: opt->user_ws) {
             read_set.erase(write_servlet);
-            EA::servlet::PrivilegeServlet ps;
+            EA::discovery::PrivilegeServlet ps;
             std::vector<std::string> names = turbo::StrSplit(write_servlet, ".", turbo::SkipEmpty());
             if (names.size() != 2) {
                 return turbo::InvalidArgumentError("bad format of {} should be zone.servlet", write_servlet);
             }
             ps.set_zone(names[0]);
             ps.set_servlet_name(names[1]);
-            ps.set_servlet_rw(EA::servlet::WRITE);
+            ps.set_servlet_rw(EA::discovery::WRITE);
             ps.set_force(opt->force);
             *pri_req->add_privilege_servlet() = ps;
         }
 
         for (auto &read_servlet: read_set) {
-            EA::servlet::PrivilegeServlet ps;
+            EA::discovery::PrivilegeServlet ps;
             std::vector<std::string> names = turbo::StrSplit(read_servlet, ".", turbo::SkipEmpty());
             if (names.size() != 2) {
                 return turbo::InvalidArgumentError("bad format of {} should be zone.servlet", read_servlet);
             }
             ps.set_zone(names[0]);
             ps.set_servlet_name(names[1]);
-            ps.set_servlet_rw(EA::servlet::READ);
+            ps.set_servlet_rw(EA::discovery::READ);
             ps.set_force(opt->force);
             *pri_req->add_privilege_servlet() = ps;
         }
@@ -470,19 +470,19 @@ namespace EA::cli {
         return turbo::OkStatus();
     }
 
-    turbo::Status make_user_list(EA::servlet::QueryRequest *req) {
-        req->set_op_type(EA::servlet::QUERY_USER_PRIVILEGE);
+    turbo::Status make_user_list(EA::discovery::DiscoveryQueryRequest *req) {
+        req->set_op_type(EA::discovery::QUERY_USER_PRIVILEGE);
         return turbo::OkStatus();
     }
 
-    turbo::Status make_user_flat(EA::servlet::QueryRequest *req) {
-            req->set_op_type(EA::servlet::QUERY_PRIVILEGE_FLATTEN);
+    turbo::Status make_user_flat(EA::discovery::DiscoveryQueryRequest *req) {
+            req->set_op_type(EA::discovery::QUERY_PRIVILEGE_FLATTEN);
 
         return turbo::OkStatus();
     }
 
-    turbo::Status make_user_info(EA::servlet::QueryRequest *req) {
-        req->set_op_type(EA::servlet::QUERY_USER_PRIVILEGE);
+    turbo::Status make_user_info(EA::discovery::DiscoveryQueryRequest *req) {
+        req->set_op_type(EA::discovery::QUERY_USER_PRIVILEGE);
         auto rs = check_valid_name_type(UserOptionContext::get_instance()->namespace_name);
         if (!rs.ok()) {
             return rs;

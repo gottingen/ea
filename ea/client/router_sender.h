@@ -24,7 +24,7 @@
 #include <brpc/controller.h>
 #include <google/protobuf/descriptor.h>
 #include "ea/cli/option_context.h"
-#include "eapi/servlet/servlet.interface.pb.h"
+#include "eapi/discovery/discovery.interface.pb.h"
 #include "ea/client/base_message_sender.h"
 
 namespace EA::client {
@@ -32,7 +32,7 @@ namespace EA::client {
     /**
      * @ingroup ea_rpc
      * @brief RouterSender is used to send messages to the meta server.
-     *        It is used by the MetaClient to send messages to the router server.
+     *        It is used by the DiscoveryClient to send messages to the router server.
      *        It do not need to be judge the leader, because the router server will
      *        do it.
      * @code
@@ -42,9 +42,9 @@ namespace EA::client {
      *          TLOG_ERROR("init router sender fail, error:{}", rs.message());
      *          return -1;
      *       }
-     *       EA::servlet::MetaManagerRequest request;
-     *       EA::servlet::MetaManagerResponse response;
-     *       auto status = router_sender->meta_manager(request, response);
+     *       EA::discovery::DiscoveryManagerRequest request;
+     *       EA::discovery::DiscoveryManagerResponse response;
+     *       auto status = router_sender->discovery_manager(request, response);
      *       if(!status.ok()) {
      *          TLOG_ERROR("send meta manager request fail, error:{}", status.message());
      *          return -1;
@@ -133,42 +133,42 @@ namespace EA::client {
                                    Response &response, int retry_times);
 
         /**
-         * @brief meta_manager is used to send a MetaManagerRequest to the meta server.
-         * @param request [input] is the MetaManagerRequest to send.
+         * @brief discovery_manager is used to send a DiscoveryManagerRequest to the meta server.
+         * @param request [input] is the DiscoveryManagerRequest to send.
          * @param response [output] is the MetaManagerResponse received from the meta server.
          * @param retry_time [input] is the number of times to retry sending the request.
          * @return Status::OK if the request was sent successfully. Otherwise, an error status is returned. 
          */
-        turbo::Status meta_manager(const EA::servlet::MetaManagerRequest &request,
-                                   EA::servlet::MetaManagerResponse &response, int retry_time) override;
+        turbo::Status discovery_manager(const EA::discovery::DiscoveryManagerRequest &request,
+                                   EA::discovery::DiscoveryManagerResponse &response, int retry_time) override;
 
         /**
-         * @brief meta_manager is used to send a MetaManagerRequest to the meta server.
-         * @param request [input] is the MetaManagerRequest to send.
+         * @brief discovery_manager is used to send a DiscoveryManagerRequest to the meta server.
+         * @param request [input] is the DiscoveryManagerRequest to send.
          * @param response [output] is the MetaManagerResponse received from the meta server.
          * @return Status::OK if the request was sent successfully. Otherwise, an error status is returned. 
          */
-        turbo::Status meta_manager(const EA::servlet::MetaManagerRequest &request,
-                                   EA::servlet::MetaManagerResponse &response) override;
+        turbo::Status discovery_manager(const EA::discovery::DiscoveryManagerRequest &request,
+                                   EA::discovery::DiscoveryManagerResponse &response) override;
 
         /**
-         * @brief meta_query is used to send a QueryRequest to the meta server.
-         * @param request [input] is the QueryRequest to send.
-         * @param response [output] is the QueryResponse received from the meta server.
+         * @brief discovery_query is used to send a DiscoveryQueryRequest to the meta server.
+         * @param request [input] is the DiscoveryQueryRequest to send.
+         * @param response [output] is the DiscoveryQueryResponse received from the meta server.
          * @param retry_time [input] is the number of times to retry sending the request.
          * @return Status::OK if the request was sent successfully. Otherwise, an error status is returned. 
          */
-        turbo::Status meta_query(const EA::servlet::QueryRequest &request,
-                                 EA::servlet::QueryResponse &response, int retry_time) override;
+        turbo::Status discovery_query(const EA::discovery::DiscoveryQueryRequest &request,
+                                 EA::discovery::DiscoveryQueryResponse &response, int retry_time) override;
 
         /**
-         * @brief meta_query is used to send a QueryRequest to the meta server.
-         * @param request [input] is the QueryRequest to send.
-         * @param response [output] is the QueryResponse received from the meta server.
+         * @brief discovery_query is used to send a DiscoveryQueryRequest to the meta server.
+         * @param request [input] is the DiscoveryQueryRequest to send.
+         * @param response [output] is the DiscoveryQueryResponse received from the meta server.
          * @return Status::OK if the request was sent successfully. Otherwise, an error status is returned. 
          */
-        turbo::Status meta_query(const EA::servlet::QueryRequest &request,
-                                 EA::servlet::QueryResponse &response) override;
+        turbo::Status discovery_query(const EA::discovery::DiscoveryQueryRequest &request,
+                                 EA::discovery::DiscoveryQueryResponse &response) override;
 
     private:
         std::mutex _server_mutex;
@@ -184,7 +184,7 @@ namespace EA::client {
     turbo::Status RouterSender::send_request(const std::string &service_name,
                                              const Request &request,
                                              Response &response, int retry_times) {
-        const ::google::protobuf::ServiceDescriptor *service_desc = EA::servlet::RouterService::descriptor();
+        const ::google::protobuf::ServiceDescriptor *service_desc = EA::discovery::DiscoveryRouterService::descriptor();
         const ::google::protobuf::MethodDescriptor *method =
                 service_desc->FindMethodByName(service_name);
         if (method == nullptr) {
@@ -221,7 +221,7 @@ namespace EA::client {
             }
             return turbo::OkStatus();
             /*
-            if (response.errcode() != EA::servlet::SUCCESS) {
+            if (response.errcode() != EA::discovery::SUCCESS) {
                 TLOG_WARN_IF(_verbose, "send meta server fail, log_id:{}, response:{}", cntl.log_id(),
                              response.ShortDebugString());
                 //return turbo::UnavailableError("send meta server fail, log_id:{}, response:{}", cntl.log_id(),

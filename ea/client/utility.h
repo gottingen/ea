@@ -29,53 +29,54 @@ namespace EA::client {
      */
 
     /**
-     *
-     * @param type
-     * @return
+     * @brief config_type_to_string is used to convert a ConfigType to a string.
+     * @param type [input] is the ConfigType to convert.
+     * @return a string representation of the ConfigType.
      */
     std::string config_type_to_string(EA::servlet::ConfigType type);
 
     /**
-     *
-     * @param str
-     * @return
+     * @brief string_to_config_type is used to convert a string to a ConfigType.
+     * @param str [input] is the string to convert.
+     * @return a ConfigType if the string is valid. Otherwise, an error status is returned.
      */
     turbo::ResultStatus<EA::servlet::ConfigType> string_to_config_type(const std::string &str);
 
     /**
-     *
-     * @param str
-     * @param v
-     * @return
+     * @brief string_to_version is used to convert a string to a Version.
+     * @param str [input] is the string to convert.
+     * @param v [output] is the Version received from the string.
+     * @return Status::OK if the string was converted successfully. Otherwise, an error status is returned.
      */
     turbo::Status string_to_version(const std::string &str, EA::servlet::Version*v);
 
     /**
-     *
-     * @param str
-     * @param v
-     * @return
+     * @brief string_to_module_version is used to convert a string to a ModuleVersion.
+     * @param str [input] is the string to convert.
+     * @param v [output] is the ModuleVersion received from the string.
+     * @return Status::OK if the string was converted successfully. Otherwise, an error status is returned.
      */
     turbo::Status string_to_module_version(const std::string &str, turbo::ModuleVersion *v);
 
     /**
-     *
-     * @param v
-     * @return
+     * @brief version_to_string is used to convert a Version to a string.
+     * @param v [input] is the Version to convert.
+     * @return a string representation of the Version.
      */
     std::string version_to_string(const EA::servlet::Version &v);
 
     /**
-     *
-     * @param v
-     * @return
+     * @brief module_version_to_string is used to convert a ModuleVersion to a string.
+     * @param v [input] is the ModuleVersion to convert.
+     * @return a string representation of the ModuleVersion.
      */
     std::string module_version_to_string(const turbo::ModuleVersion &v);
 
+
     /**
-     *
-     * @param ns
-     * @return
+     * @brief config_info_to_string is used to convert a ConfigInfo to a string.
+     * @param config [input] is the ConfigInfo to convert.
+     * @return a status with a string representation of the ConfigInfo if the ConfigInfo was converted successfully.
      */
     [[nodiscard]] turbo::Status CheckValidNameType(std::string_view ns);
 

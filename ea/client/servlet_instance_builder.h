@@ -53,105 +53,107 @@ namespace EA::client {
 
         /**
          *
-         * @param ins
+         * @param ins the ConfigInfo object to build
          */
         void set(EA::servlet::ServletInstance *ins);
 
         /**
          *
-         * @param json_str
-         * @return
+         * @param json_str [input] the json string to build ConfigInfo object.
+         * @return Status::OK if the ConfigInfo object was built successfully. Otherwise, an error status is returned.
          */
         turbo::Status build_from_json(const std::string &json_str);
 
         /**
          *
-         * @param json_path
-         * @return
+         * @param json_path [input] the json file path to build ConfigInfo object.
+         * @return Status::OK if the ConfigInfo object was built successfully. Otherwise, an error status is returned.
          */
         turbo::Status build_from_json_file(const std::string &json_path);
 
         /**
          *
-         * @param namespace_name
-         * @return
+         * @param namespace_name [input] the namespace name to set.
+         * @return the ServletInstanceBuilder.
          */
         ServletInstanceBuilder &set_namespace(const std::string &namespace_name);
 
         /**
          *
-         * @param zone
-         * @return
+         * @param zone [input] the zone to set.
+         * @return the ServletInstanceBuilder.
          */
         ServletInstanceBuilder &set_zone(const std::string &zone);
 
         /**
          *
-         * @param servlet
-         * @return
+         * @param servlet [input] the servlet to set.
+         * @return the ServletInstanceBuilder.
          */
         ServletInstanceBuilder &set_servlet(const std::string &servlet);
 
+
         /**
          *
-         * @param color
-         * @return
+         * @param color [input] the color to set.
+         * @return the ServletInstanceBuilder.
          */
         ServletInstanceBuilder &set_color(const std::string &color);
 
         /**
          *
-         * @param env
-         * @return
+         * @param env [input] the env to set.
+         * @return the ServletInstanceBuilder.
          */
         ServletInstanceBuilder &set_env(const std::string &env);
 
         /**
          *
-         * @param user
-         * @return
+         * @param user [input] the user to set.
+         * @return the ServletInstanceBuilder.
          */
         ServletInstanceBuilder &set_user(const std::string &user);
 
         /**
          *
-         * @param passwd
-         * @return
+         * @param passwd [input] the passwd to set.
+         * @return the ServletInstanceBuilder.
          */
         ServletInstanceBuilder &set_passwd(const std::string &passwd);
 
         /**
          *
-         * @param s
-         * @return
+         * @param status [input] the status to set.
+         * @return the ServletInstanceBuilder.
          */
-        ServletInstanceBuilder &set_status(const std::string &s);
+        ServletInstanceBuilder &set_status(const std::string &status);
+
 
         /**
          *
-         * @param address
-         * @return
+         * @param address [input] the address to set.
+         * @return the ServletInstanceBuilder.
          */
         ServletInstanceBuilder &set_address(const std::string &address);
 
         /**
          *
-         * @param s
-         * @return
-         */
-        ServletInstanceBuilder &set_status(const EA::servlet::Status &s);
+         * @param status [input] the status to set.
+         * @return the ServletInstanceBuilder.
+         */        
+        ServletInstanceBuilder &set_status(const EA::servlet::Status &status);
 
         /**
          *
-         * @param weight
-         * @return
+         * @param weight [input] the weight to set.
+         * @return the ServletInstanceBuilder.
          */
         ServletInstanceBuilder &set_weight(int weight);
 
         /**
          *
-         * @param time
-         * @return
+         * @param time [input] the time to set.
+         * @return the ServletInstanceBuilder.
          */
         ServletInstanceBuilder &set_time(int time);
 

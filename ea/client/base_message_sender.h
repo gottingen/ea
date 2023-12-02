@@ -26,43 +26,46 @@ namespace EA::client {
 
     /**
      * @ingroup meta_client
+     * @brief BaseMessageSender is the interface for sending messages to the meta server.
+     *        It is used by the MetaClient to send messages to the meta server. The MetaClient will
+     *        implement this interface. 
      */
     class BaseMessageSender {
     public:
         virtual ~BaseMessageSender() = default;
 
         /**
-         *
-         * @param request
-         * @param response
-         * @param retry_times
-         * @return
+         * @brief meta_manager is used to send a MetaManagerRequest to the meta server.
+         * @param request [input] is the MetaManagerRequest to send.
+         * @param response [output] is the MetaManagerResponse received from the meta server.
+         * @param retry_times [input] is the number of times to retry sending the request.
+         * @return Status::OK if the request was sent successfully. Otherwise, an error status is returned. 
          */
         virtual turbo::Status meta_manager(const EA::servlet::MetaManagerRequest &request,
                                                                      EA::servlet::MetaManagerResponse &response, int retry_times) = 0;
         /**
-         *
-         * @param request
-         * @param response
-         * @return
-         */
+         * @brief meta_manager is used to send a MetaManagerRequest to the meta server.
+         * @param request [input] is the MetaManagerRequest to send.
+         * @param response [output] is the MetaManagerResponse received from the meta server.
+         * @return Status::OK if the request was sent successfully. Otherwise, an error status is returned. 
+         */        
         virtual turbo::Status meta_manager(const EA::servlet::MetaManagerRequest &request,
                                            EA::servlet::MetaManagerResponse &response) = 0;
 
         /**
-         *
-         * @param request
-         * @param response
-         * @param retry_times
-         * @return
+         * @brief meta_query is used to send a QueryRequest to the meta server.
+         * @param [input] request is the QueryRequest to send.
+         * @param response [output] is the QueryResponse received from the meta server.
+         * @param retry_times [input] is the number of times to retry sending the request.
+         * @return Status::OK if the request was sent successfully. Otherwise, an error status is returned. 
          */
         virtual turbo::Status meta_query(const EA::servlet::QueryRequest &request,
                                                     EA::servlet::QueryResponse &response, int retry_times) = 0;
         /**
-         *
-         * @param request
-         * @param response
-         * @return
+         * @brief meta_query is used to send a QueryRequest to the meta server.
+         * @param request [input] is the QueryRequest to send.
+         * @param response [output] is the QueryResponse received from the meta server.
+         * @return Status::OK if the request was sent successfully. Otherwise, an error status is returned. 
          */
         virtual turbo::Status meta_query(const EA::servlet::QueryRequest &request,
                                          EA::servlet::QueryResponse &response) = 0;

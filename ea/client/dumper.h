@@ -28,6 +28,7 @@ namespace EA::client {
 
     /**
      * @ingroup meta_client
+     * <pre>
      * @brief Dumper is a helper class for protobuf object convert to json string.
      *        do not ignore the result of function, it is recommend use like:
      *        const std::string json_content = "R{
@@ -57,7 +58,7 @@ namespace EA::client {
      *         }
      *         ...
      *         handler_success();
-     *
+     * </pre>
      */
     class Dumper {
     public:

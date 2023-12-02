@@ -25,8 +25,12 @@ step 1, download and install EA. the install guide see :ref:`build_and_install_s
 Try a stand-alone deployment
 -----------------------------------------
 
-step 1, try deploy EA meta stand alone and using `eacli` to manage `eameta` see :ref:`stand_alone_section` section
+step 2, try deploy EA meta stand alone and using `eacli` to manage `eameta` see :ref:`stand_alone_section` section
 
 Try a cluster stand-alone
 -----------------------------------------
 
+step 3, try deploy EA meta stand alone cluster using `eacli` to manage `eameta` see :ref:`stand_alone_section` section
+
+Try a cluster stand-alone
+-----------------------------------------

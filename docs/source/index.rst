@@ -46,6 +46,8 @@ Contents
 
     en/administrate
 
+.. _develop_section:
+
 .. toctree::
     :caption: DEVELOP
 

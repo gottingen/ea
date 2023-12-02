@@ -1,3 +1,5 @@
+.. Copyright 2023 The Elastic AI Search Authors.
+
 Elastic Architecture Infrastructure
 ================================================
 
@@ -20,11 +22,6 @@ sorting, etc., but also includes configuration systems, statistics, etc. that se
 Contents
 -------------
 
-.. toctree::
-    :caption: QUICK START
-
-    en/overview
-
 ..  toctree::
     :maxdepth: 2
 
@@ -39,6 +36,13 @@ Contents
     :maxdepth: 2
 
     en/stand_alone
+
+.. _overview_section:
+
+.. toctree::
+    :caption: OVERVIEW
+
+    en/overview
 
 .. _administrate_section:
 

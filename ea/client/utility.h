@@ -1,5 +1,4 @@
-// Copyright 2023 The Elastic-AI Authors.
-// part of Elastic AI Search
+// Copyright 2023 The Elastic Architecture Infrastructure Authors.
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -12,6 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
+
 
 
 #ifndef EA_CLIENT_UTILITY_H_
@@ -48,7 +48,7 @@ namespace EA::client {
      * @param v [output] is the Version received from the string.
      * @return Status::OK if the string was converted successfully. Otherwise, an error status is returned.
      */
-    turbo::Status string_to_version(const std::string &str, EA::servlet::Version*v);
+    turbo::Status string_to_version(const std::string &str, EA::servlet::Version *v);
 
     /**
      * @ingroup ea_proto

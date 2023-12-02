@@ -8,7 +8,7 @@ Elastic Architecture Infrastructure
     :align: center
     :alt: EA
 
-Elastic AI abbreviated as `EA`, In future documents, we will all call it `EA`.
+Elastic Architecture Infrastructure abbreviated as `EA`, In future documents, we will all call it `EA`.
 
 `EA` is a fast, typo-tolerant search engine for building delightful search experiences based on AI and IR.
 and so EA is open source `github <https://github.com/gottingen/ea>`_.

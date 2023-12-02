@@ -19,6 +19,9 @@
 #include "turbo/base/status.h"
 #include "eapi/servlet/servlet.interface.pb.h"
 
+/**
+ * * @defgroup meta_client
+ */
 namespace EA::client {
 
     /**

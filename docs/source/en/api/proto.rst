@@ -1,13 +1,10 @@
 .. Copyright 2023 The Elastic AI Search Authors.
 
-.. _api_meta_section:
+.. _api_proto_section:
 
-
-Meta Client Api
+EA proto
 =========================
 
-``MetaClient::check_config_file``
-
-.. doxygengroup:: meta_client
+.. doxygengroup:: ea_proto_g
    :project: eadocs
    :members:

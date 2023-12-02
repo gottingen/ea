@@ -25,14 +25,34 @@
 #include "eapi/servlet/servlet.interface.pb.h"
 
         /**
-         * @defgroup meta_client meta client operators
+         * @defgroup ea_proto_g proto  proto operators
          *
          */
 
 namespace EA {
     namespace client {
         /**
-         * @ingroup meta_client
+         * @ingroup ea_proto_g
+         * @brief Loader is a helper class for proto convert from json to protobuf.
+         *        do not ignore the result of function, it is recommend use like:
+         *        auto json_config = "R{
+         *             "name": "example",
+         *             "version": {
+         *               "major": 1,
+         *               "minor": 2,
+         *               "patch": 3
+         *             },
+         *             "content": "{\"servlet\":\"sug\",\"zone\":{\"instance\":[\"192.168.1.2\",\"192.168.1.3\",\"192.168.1.3\"],\"name\":\"ea_search\",\"user\":\"jeff\"}}",
+         *             "type": "CF_JSON",
+         *             "time": 1701477509
+         *           }"
+         *        EA::servlet::ConfigInfo info;
+         *        auto status = Loader::load_proto(json_config, info);
+         *        if(!status.ok) {
+         *          handler_error();
+         *         }
+         *         ...
+         *         handler_success();
          *
          */
         class Loader {

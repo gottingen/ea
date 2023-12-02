@@ -55,9 +55,12 @@ Contents
     en/meta/config
     en/meta/atomic
 
+.. _api_section:
+
 .. toctree::
     :caption: API REFERENCE
 
+    en/api/proto
     en/api/meta
 
 .. toctree::

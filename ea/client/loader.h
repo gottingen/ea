@@ -39,12 +39,18 @@ namespace EA {
         public:
 
             /**
-             * @brief  MetaClient in group  meta_client
+             * @brief load a json format string to the message
+             * @param content [input] json format string.
+             * @param message [output] result of parse the json format string.
+             * @return status.ok() if success else return the reason of parse fail.
              */
             static turbo::Status load_proto(const std::string &content, google::protobuf::Message &message);
 
             /**
-             * @brief  MetaClient in group  meta_client
+             *
+             * @param path [input]file path, the file content must be json format.
+             * @param message [output] result of parse the json format string.
+             * @return status.ok() if success else return the reason of parse fail.
              */
             static turbo::Status load_proto_from_file(const std::string &path, google::protobuf::Message &message);
         };

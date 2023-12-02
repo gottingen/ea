@@ -36,15 +36,15 @@ namespace EA::client {
          *
          * @param path
          * @param message
-         * @return
+         * @return status.ok() if success else return the reason of format fail.
          */
         static turbo::Status dump_proto_to_file(const std::string &path, const google::protobuf::Message &message);
 
         /**
-         *
-         * @param message
-         * @param content
-         * @return
+         * @brief dump a pb object message to json format string
+         * @param message [input] a pb object message
+         * @param content [output] string to store json format result
+         * @return status.ok() if success else return the reason of format fail.
          */
         static turbo::Status dump_proto(const google::protobuf::Message &message, std::string &content);
     };

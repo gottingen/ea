@@ -29,7 +29,6 @@ namespace EA::client {
     /**
      * @ingroup meta_client
      * @details Dumper is a helper class for protobuf object convert to json string.
-     *
      *        do not ignore the result of function, it is recommend use like:
      * @code
      *        const std::string json_content = "R{
@@ -39,7 +38,9 @@ namespace EA::client {
      *               "minor": 2,
      *               "patch": 3
      *             },
-     *             "content": "{\"servlet\":\"sug\",\"zone\":{\"instance\":[\"192.168.1.2\",\"192.168.1.3\",\"192.168.1.3\"],\"name\":\"ea_search\",\"user\":\"jeff\"}}",
+     *             "content": "{\"servlet\":\"sug\",\"zone\":{\"instance\":"
+     *                        "[\"192.168.1.2\",\"192.168.1.3\",\"192.168.1.3\"]"
+     *                        ",\"name\":\"ea_search\",\"user\":\"jeff\"}}",
      *             "type": "CF_JSON",
      *             "time": 1701477509
      *           }"
@@ -49,7 +50,8 @@ namespace EA::client {
      *        info.mutable_version()->set_major(1);
      *        info.mutable_version()->set_minor(2);
      *        info.mutable_version()->set_path(3);
-     *        info.set_content("{\"servlet\":\"sug\",\"zone\":{\"instance\":[\"192.168.1.2\",\"192.168.1.3\",\"192.168.1.3\"],\"name\":\"ea_search\",\"user\":\"jeff\"}}");
+     *        info.set_content("{\"servlet\":\"sug\",\"zone\":{\"instance\":[\"192.168.1.2\","
+     *                          "\"192.168.1.3\",\"192.168.1.3\"],\"name\":\"ea_search\",\"user\":\"jeff\"}}");
      *        info.set_type(EA::servlet::CF_JSON);
      *        info.set_time(1701477509);
      *        std::string parsed_string;

@@ -34,7 +34,6 @@ namespace EA::client {
     /**
      * @ingroup ea_proto_g
      * @brief Loader is a helper class for proto convert from json to protobuf.
-     *
      *        do not ignore the result of function, it is recommend use like:
      * @code
      *        auto json_config = "R{
@@ -44,7 +43,8 @@ namespace EA::client {
      *               "minor": 2,
      *               "patch": 3
      *             },
-     *             "content": "{\"servlet\":\"sug\",\"zone\":{\"instance\":[\"192.168.1.2\",\"192.168.1.3\",\"192.168.1.3\"],\"name\":\"ea_search\",\"user\":\"jeff\"}}",
+     *             "content": "{\"servlet\":\"sug\",\"zone\":{\"instance\":[\"192.168.1.2\",\"192.168.1.3\","
+     *                          "\"192.168.1.3\"],\"name\":\"ea_search\",\"user\":\"jeff\"}}",
      *             "type": "CF_JSON",
      *             "time": 1701477509
      *           }"

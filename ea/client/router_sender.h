@@ -31,6 +31,28 @@ namespace EA::client {
 
     /**
      * @ingroup ea_rpc
+     * @brief RouterSender is used to send messages to the meta server.
+     *        It is used by the MetaClient to send messages to the router server.
+     *        It do not need to be judge the leader, because the router server will
+     *        do it.
+     * @code
+     *       auto router_sender = RouterSender::get_instance();
+     *       auto rs = router_sender->init("127.0.0.1:8888");
+     *       if(!rs.ok()) {
+     *          TLOG_ERROR("init router sender fail, error:{}", rs.message());
+     *          return -1;
+     *       }
+     *       EA::servlet::MetaManagerRequest request;
+     *       EA::servlet::MetaManagerResponse response;
+     *       auto status = router_sender->meta_manager(request, response);
+     *       if(!status.ok()) {
+     *          TLOG_ERROR("send meta manager request fail, error:{}", status.message());
+     *          return -1;
+     *       }
+     *       ...
+     *       return 0;
+     *@endcode
+     *
      */
     class RouterSender : public BaseMessageSender {
     public:

@@ -38,6 +38,34 @@ namespace EA::client {
      *       It does not support asynchronous calls. run it in a bthread by yourself. farther more, it is not thread safe.
      *       It does not hold the ownership of the sender. The sender must be valid during the lifetime of the MetaClient.
      *       It is a proxy interface of the meta server.
+     * @attention before using the MetaClient, you must call init to initialize it
+     * @code
+     *      BaseMessageSender *sender = new RouterSender();
+     *      MetaClient::get_instance()->init(sender);
+     *      auto rs = MetaClient::get_instance()->create_config("test", "test", "1.0.0");
+     *      if (!rs.ok()) {
+     *          TLOG_ERROR("create config error:{}", rs.message());
+     *          return -1;
+     *      }
+     *      std::vector<std::string> configs;
+     *      rs = MetaClient::get_instance()->list_config(configs);
+     *      if (!rs.ok()) {
+     *          TLOG_ERROR("list config error:{}", rs.message());
+     *          return rs;
+     *      }
+     *      for (auto &config : configs) {
+     *          TLOG_INFO("config:{}", config);
+     *          std::vector<std::string> versions;
+     *          rs = MetaClient::get_instance()->list_config_version(config, versions);
+     *          if (!rs.ok()) {
+     *               TLOG_ERROR("list config version error:{}", rs.message());
+     *               return rs;
+     *           }
+     *      }
+     *      ...
+     *      delete sender;
+     *      return 0;
+     * @endcode
      */
     class MetaClient {
     public:

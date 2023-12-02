@@ -30,6 +30,27 @@ namespace EA::client {
     /**
      * @ingroup ea_rpc
      * @brief MetaSender is used to send messages to the meta server.
+     *       It communicates with the meta server and sends messages to the meta server.
+     *       It needs to be initialized before use. It need judge the leader of meta server.
+     *       If the leader is not found, it will retry to send the request to the meta server.
+     *       If the peer is not leader, it will redirect to the leader and retry to send the
+     *       request to the meta server.
+     * @code
+     *      MetaSender::get_instance()->init("127.0.0.1:8200");
+     *      EA::servlet::MetaManagerRequest request;
+     *      EA::servlet::MetaManagerResponse response;
+     *      request.set_type(EA::servlet::MetaManagerRequest::ADD);
+     *      request.set_name("test");
+     *      request.set_version("1.0.0");
+     *      request.set_content("test");
+     *      auto rs = MetaSender::get_instance()->meta_manager(request, response);
+     *      if(!rs.ok()) {
+     *          TLOG_ERROR("meta manager error:{}", rs.message());
+     *          return;
+     *      }
+     *      TLOG_INFO("meta manager success");
+     *      return;
+     *@endcode
      */
     class MetaSender : public BaseMessageSender {
     public:

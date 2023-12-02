@@ -20,7 +20,7 @@
 #include <mutex>
 #include "turbo/base/status.h"
 #include "turbo/module/module_version.h"
-#include "eapi/servlet/servlet.struct.pb.h"
+#include "eapi/discovery/discovery.struct.pb.h"
 #include "ea/base/bthread.h"
 
 namespace EA::client {
@@ -28,7 +28,7 @@ namespace EA::client {
     /**
      * @ingroup config_client
      * @brief ConfigCache is used to cache the config files downloaded from the meta server.
-     *        It is used by the MetaClient to cache the config files downloaded from the meta server.
+     *        It is used by the DiscoveryClient to cache the config files downloaded from the meta server.
      */
     class ConfigCache {
     public:
@@ -48,7 +48,7 @@ namespace EA::client {
          * @param config [input] is the config to add to the ConfigCache.
          * @return Status::OK if the config was added successfully. Otherwise, an error status is returned. 
          */
-        turbo::Status add_config(const EA::servlet::ConfigInfo &config);
+        turbo::Status add_config(const EA::discovery::ConfigInfo &config);
 
         /**
          * @brief get_config is used to get a config that matches the name and version from the ConfigCache.
@@ -58,7 +58,7 @@ namespace EA::client {
          * @return Status::OK if the config was received successfully. Otherwise, an error status is returned. 
          */
         turbo::Status
-        get_config(const std::string &name, const turbo::ModuleVersion &version, EA::servlet::ConfigInfo &config);
+        get_config(const std::string &name, const turbo::ModuleVersion &version, EA::discovery::ConfigInfo &config);
 
         /**
          * @brief get_config is used to get the latest version of a config from the ConfigCache.
@@ -66,7 +66,7 @@ namespace EA::client {
          * @param config is the config received from the ConfigCache.
          * @return Status::OK if the config was received successfully. Otherwise, an error status is returned. 
          */
-        turbo::Status get_config(const std::string &name, EA::servlet::ConfigInfo &config);
+        turbo::Status get_config(const std::string &name, EA::discovery::ConfigInfo &config);
 
         /**
          * @brief get_config_list is used to get a list of config names from the ConfigCache.
@@ -123,7 +123,7 @@ namespace EA::client {
          * @param config
          * @return
          */
-        turbo::Status write_config_file(const std::string &dir, const EA::servlet::ConfigInfo &config);
+        turbo::Status write_config_file(const std::string &dir, const EA::discovery::ConfigInfo &config);
 
         /**
          *
@@ -131,7 +131,7 @@ namespace EA::client {
          * @param config
          * @return
          */
-        turbo::Status remove_config_file(const std::string &dir, const EA::servlet::ConfigInfo &config);
+        turbo::Status remove_config_file(const std::string &dir, const EA::discovery::ConfigInfo &config);
 
         /**
          *
@@ -139,16 +139,16 @@ namespace EA::client {
          * @param config
          * @return
          */
-        std::string make_cache_file_path(const std::string &dir, const EA::servlet::ConfigInfo &config);
+        std::string make_cache_file_path(const std::string &dir, const EA::discovery::ConfigInfo &config);
 
         /**
          *
          * @param config
          */
-        void do_add_config(const EA::servlet::ConfigInfo &config);
+        void do_add_config(const EA::discovery::ConfigInfo &config);
 
     private:
-        typedef turbo::flat_hash_map<std::string, std::map<turbo::ModuleVersion, EA::servlet::ConfigInfo>> CacheType;
+        typedef turbo::flat_hash_map<std::string, std::map<turbo::ModuleVersion, EA::discovery::ConfigInfo>> CacheType;
         std::mutex _cache_mutex;
         CacheType _cache_map;
         std::string _cache_dir;

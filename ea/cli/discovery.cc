@@ -24,14 +24,21 @@
 #include "turbo/files/filesystem.h"
 #include "turbo/files/sequential_read_file.h"
 #include "turbo/times/clock.h"
-#include "ea/client/meta.h"
+#include "ea/client/discovery.h"
 #include "nlohmann/json.hpp"
 #include "ea/cli/validator.h"
-#include "ea/client/meta_sender.h"
+#include "ea/client/discovery_sender.h"
 #include "ea/client/router_sender.h"
 #include "ea/client/dumper.h"
 #include "ea/client/loader.h"
 #include "ea/client/servlet_instance_builder.h"
+#include "ea/cli/namespace_cmd.h"
+#include "ea/cli/zone_cmd.h"
+#include "ea/cli/atomic_cmd.h"
+#include "ea/cli/servlet_cmd.h"
+#include "ea/cli/config_cmd.h"
+#include "ea/cli/user_cmd.h"
+
 
 namespace EA::cli {
     void DiscoveryCmd::setup_discovery_cmd(turbo::App &app) {
@@ -39,6 +46,12 @@ namespace EA::cli {
         auto opt = DiscoveryOptionContext::get_instance();
         auto *discovery_cmd = app.add_subcommand("discovery", "discovery operations");
         discovery_cmd->callback([discovery_cmd]() { run_discovery_cmd(discovery_cmd); });
+        setup_namespace_cmd(*discovery_cmd);
+        setup_zone_cmd(*discovery_cmd);
+        ConfigCmd::setup_config_cmd(*discovery_cmd);
+        setup_servlet_cmd(*discovery_cmd);
+        setup_user_cmd(*discovery_cmd);
+        AtomicCmd::setup_atomic_cmd(*discovery_cmd);
 
         auto dai = discovery_cmd->add_subcommand("add_instance", " create a instance");
         auto *add_parameters_inputs = dai->add_option_group("parameters_inputs", "config input from parameters");
@@ -115,12 +128,12 @@ namespace EA::cli {
     }
 
     void DiscoveryCmd::run_discovery_add_instance_cmd() {
-        EA::servlet::MetaManagerRequest request;
-        EA::servlet::MetaManagerResponse response;
+        EA::discovery::DiscoveryManagerRequest request;
+        EA::discovery::DiscoveryManagerResponse response;
         ScopeShower ss;
         auto rs = make_discovery_add_instance(&request);
         PREPARE_ERROR_RETURN_OR_OK(ss, rs, request);
-        rs = RouterInteract::get_instance()->send_request("meta_manager", request, response);
+        rs = RouterInteract::get_instance()->send_request("discovery_manager", request, response);
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(OptionContext::get_instance()->router_server, response.errcode(),
                                                request.op_type(),
@@ -129,12 +142,12 @@ namespace EA::cli {
     }
 
     void DiscoveryCmd::run_discovery_remove_instance_cmd() {
-        EA::servlet::MetaManagerRequest request;
-        EA::servlet::MetaManagerResponse response;
+        EA::discovery::DiscoveryManagerRequest request;
+        EA::discovery::DiscoveryManagerResponse response;
         ScopeShower ss;
         auto rs = make_discovery_remove_instance(&request);
         PREPARE_ERROR_RETURN_OR_OK(ss, rs, request);
-        rs = RouterInteract::get_instance()->send_request("meta_manager", request, response);
+        rs = RouterInteract::get_instance()->send_request("discovery_manager", request, response);
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(OptionContext::get_instance()->router_server, response.errcode(),
                                                request.op_type(),
@@ -143,12 +156,12 @@ namespace EA::cli {
     }
 
     void DiscoveryCmd::run_discovery_update_instance_cmd() {
-        EA::servlet::MetaManagerRequest request;
-        EA::servlet::MetaManagerResponse response;
+        EA::discovery::DiscoveryManagerRequest request;
+        EA::discovery::DiscoveryManagerResponse response;
         ScopeShower ss;
         auto rs = make_discovery_update_instance(&request);
         PREPARE_ERROR_RETURN_OR_OK(ss, rs, request);
-        rs = RouterInteract::get_instance()->send_request("meta_manager", request, response);
+        rs = RouterInteract::get_instance()->send_request("discovery_manager", request, response);
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(OptionContext::get_instance()->router_server, response.errcode(),
                                                request.op_type(),
@@ -157,45 +170,45 @@ namespace EA::cli {
     }
 
     void DiscoveryCmd::run_discovery_list_instance_cmd() {
-        EA::servlet::QueryRequest request;
-        EA::servlet::QueryResponse response;
+        EA::discovery::DiscoveryQueryRequest request;
+        EA::discovery::DiscoveryQueryResponse response;
 
         ScopeShower ss;
         auto rs = make_discovery_list_instance(&request);
         PREPARE_ERROR_RETURN_OR_OK(ss, rs, request);
-        rs = EA::client::MetaClient::get_instance()->meta_query(request, response, nullptr);
+        rs = EA::client::DiscoveryClient::get_instance()->discovery_query(request, response, nullptr);
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(response.errcode(), request.op_type(),
                                                response.errmsg());
-        ss.add_table("result", std::move(table), response.errcode() == EA::servlet::SUCCESS);
-        if (response.errcode() == EA::servlet::SUCCESS) {
+        ss.add_table("result", std::move(table), response.errcode() == EA::discovery::SUCCESS);
+        if (response.errcode() == EA::discovery::SUCCESS) {
             table = show_query_instance_list_response(response);
             ss.add_table("summary", std::move(table), true);
         }
     }
 
     void DiscoveryCmd::run_discovery_info_instance_cmd() {
-        EA::servlet::QueryRequest request;
-        EA::servlet::QueryResponse response;
+        EA::discovery::DiscoveryQueryRequest request;
+        EA::discovery::DiscoveryQueryResponse response;
 
         ScopeShower ss;
         auto rs = make_discovery_info_instance(&request);
         PREPARE_ERROR_RETURN_OR_OK(ss, rs, request);
-        rs = EA::client::MetaClient::get_instance()->meta_query(request, response, nullptr);
+        rs = EA::client::DiscoveryClient::get_instance()->discovery_query(request, response, nullptr);
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(response.errcode(), request.op_type(),
                                                response.errmsg());
-        ss.add_table("result", std::move(table), response.errcode() == EA::servlet::SUCCESS);
-        if (response.errcode() == EA::servlet::SUCCESS) {
+        ss.add_table("result", std::move(table), response.errcode() == EA::discovery::SUCCESS);
+        if (response.errcode() == EA::discovery::SUCCESS) {
             table = show_query_instance_info_response(response);
             ss.add_table("summary", std::move(table), true);
         }
     }
 
     [[nodiscard]] turbo::Status
-    DiscoveryCmd::make_discovery_add_instance(EA::servlet::MetaManagerRequest *req) {
-        EA::servlet::ServletInstance *instance_req = req->mutable_instance_info();
-        req->set_op_type(EA::servlet::OP_ADD_INSTANCE);
+    DiscoveryCmd::make_discovery_add_instance(EA::discovery::DiscoveryManagerRequest *req) {
+        EA::discovery::ServletInstance *instance_req = req->mutable_instance_info();
+        req->set_op_type(EA::discovery::OP_ADD_INSTANCE);
         if (!DiscoveryOptionContext::get_instance()->json_file.empty()) {
             auto rs = EA::client::Loader::load_proto_from_file(DiscoveryOptionContext::get_instance()->json_file,
                                                                *instance_req);
@@ -232,9 +245,9 @@ namespace EA::cli {
     }
 
     [[nodiscard]] turbo::Status
-    DiscoveryCmd::make_discovery_remove_instance(EA::servlet::MetaManagerRequest *req) {
-        EA::servlet::ServletInstance *instance_req = req->mutable_instance_info();
-        req->set_op_type(EA::servlet::OP_DROP_INSTANCE);
+    DiscoveryCmd::make_discovery_remove_instance(EA::discovery::DiscoveryManagerRequest *req) {
+        EA::discovery::ServletInstance *instance_req = req->mutable_instance_info();
+        req->set_op_type(EA::discovery::OP_DROP_INSTANCE);
         if (!DiscoveryOptionContext::get_instance()->json_file.empty()) {
             auto rs = EA::client::Loader::load_proto_from_file(DiscoveryOptionContext::get_instance()->json_file,
                                                                *instance_req);
@@ -262,9 +275,9 @@ namespace EA::cli {
     }
 
     [[nodiscard]] turbo::Status
-    DiscoveryCmd::make_discovery_update_instance(EA::servlet::MetaManagerRequest *req) {
-        EA::servlet::ServletInstance *instance_req = req->mutable_instance_info();
-        req->set_op_type(EA::servlet::OP_UPDATE_INSTANCE);
+    DiscoveryCmd::make_discovery_update_instance(EA::discovery::DiscoveryManagerRequest *req) {
+        EA::discovery::ServletInstance *instance_req = req->mutable_instance_info();
+        req->set_op_type(EA::discovery::OP_UPDATE_INSTANCE);
         if (!DiscoveryOptionContext::get_instance()->json_file.empty()) {
             auto rs = EA::client::Loader::load_proto_from_file(DiscoveryOptionContext::get_instance()->json_file,
                                                                *instance_req);
@@ -301,7 +314,7 @@ namespace EA::cli {
     }
 
     void DiscoveryCmd::run_discovery_dump_cmd() {
-        EA::servlet::ServletInstance instance;
+        EA::discovery::ServletInstance instance;
         EA::client::ServletInstanceBuilder builder(&instance);
         builder.set_namespace("ex_namespace")
                 .set_zone("ex_zone")
@@ -331,8 +344,8 @@ namespace EA::cli {
     }
 
     [[nodiscard]] turbo::Status
-    DiscoveryCmd::make_discovery_list_instance(EA::servlet::QueryRequest *req) {
-        req->set_op_type(EA::servlet::QUERY_INSTANCE_FLATTEN);
+    DiscoveryCmd::make_discovery_list_instance(EA::discovery::DiscoveryQueryRequest *req) {
+        req->set_op_type(EA::discovery::QUERY_INSTANCE_FLATTEN);
         auto opt = DiscoveryOptionContext::get_instance();
         if (opt->namespace_name.empty()) {
             return turbo::OkStatus();
@@ -350,8 +363,8 @@ namespace EA::cli {
     }
 
     [[nodiscard]] turbo::Status
-    DiscoveryCmd::make_discovery_info_instance(EA::servlet::QueryRequest *req) {
-        req->set_op_type(EA::servlet::QUERY_INSTANCE);
+    DiscoveryCmd::make_discovery_info_instance(EA::discovery::DiscoveryQueryRequest *req) {
+        req->set_op_type(EA::discovery::QUERY_INSTANCE);
         auto opt = DiscoveryOptionContext::get_instance();
         req->set_namespace_name(opt->namespace_name);
         req->set_zone(opt->zone_name);
@@ -360,15 +373,15 @@ namespace EA::cli {
         return turbo::OkStatus();
     }
 
-    [[nodiscard]] turbo::ResultStatus<EA::servlet::Status> DiscoveryCmd::string_to_status(const std::string &status) {
-        EA::servlet::Status ret;
-        if (EA::servlet::Status_Parse(status, &ret)) {
+    [[nodiscard]] turbo::ResultStatus<EA::discovery::Status> DiscoveryCmd::string_to_status(const std::string &status) {
+        EA::discovery::Status ret;
+        if (EA::discovery::Status_Parse(status, &ret)) {
             return ret;
         }
         return turbo::InvalidArgumentError("unknown status");
     }
 
-    turbo::Table DiscoveryCmd::show_query_instance_list_response(const EA::servlet::QueryResponse &res) {
+    turbo::Table DiscoveryCmd::show_query_instance_list_response(const EA::discovery::DiscoveryQueryResponse &res) {
         turbo::Table result;
         auto &instance_list = res.flatten_instances();
         result.add_row(turbo::Table::Row_t{"instance num", turbo::Format(instance_list.size())});
@@ -378,11 +391,11 @@ namespace EA::cli {
         last = result.size() - 1;
         result[last].format().font_color(turbo::Color::green);
         int i = 0;
-        std::vector<EA::servlet::QueryInstance> sorted_list;
+        std::vector<EA::discovery::QueryInstance> sorted_list;
         for (auto &ns: instance_list) {
             sorted_list.push_back(ns);
         }
-        auto less_fun = [](const EA::servlet::QueryInstance &lhs, const EA::servlet::QueryInstance &rhs) -> bool {
+        auto less_fun = [](const EA::discovery::QueryInstance &lhs, const EA::discovery::QueryInstance &rhs) -> bool {
             return std::less()(lhs.address(), rhs.address());
         };
         std::sort(sorted_list.begin(), sorted_list.end(), less_fun);
@@ -397,7 +410,7 @@ namespace EA::cli {
         return result;
     }
 
-    turbo::Table DiscoveryCmd::show_query_instance_info_response(const EA::servlet::QueryResponse &res) {
+    turbo::Table DiscoveryCmd::show_query_instance_info_response(const EA::discovery::DiscoveryQueryResponse &res) {
         turbo::Table result;
         auto &instance = res.instance(0);
         result.add_row(turbo::Table::Row_t{"uri", "address", "env", "color","create time", "version","status"});
@@ -410,7 +423,7 @@ namespace EA::cli {
                         instance.color(),
                         turbo::Format(instance.timestamp()),
                         turbo::Format(instance.version()),
-                        EA::servlet::Status_Name(instance.status())
+                        EA::discovery::Status_Name(instance.status())
                 }
         );
 

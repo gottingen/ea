@@ -57,9 +57,9 @@ Contents
 .. toctree::
     :caption: DEVELOP
 
-    en/meta/introduction
-    en/meta/config
-    en/meta/atomic
+    en/discovery/introduction
+    en/discovery/config
+    en/discovery/atomic
 
 .. _api_section:
 
@@ -68,7 +68,7 @@ Contents
 
     en/api/proto
     en/api/rpc
-    en/api/meta
+    en/api/discovery
     en/api/config
 
 .. toctree::

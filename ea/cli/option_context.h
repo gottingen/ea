@@ -29,13 +29,13 @@ namespace EA::cli {
         }
         // for global
         std::string router_server;
-        std::string meta_server;
-        std::string meta_leader;
+        std::string discovery_server;
+        std::string discovery_leader;
         std::string load_balancer;
         int32_t  timeout_ms{2000};
         int32_t  connect_timeout_ms{100};
         int32_t  max_retry{3};
-        int32_t time_between_meta_connect_error_ms{1000};
+        int32_t time_between_discovery_connect_error_ms{1000};
         bool verbose;
         bool router{false};
     };

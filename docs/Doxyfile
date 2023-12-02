@@ -6,10 +6,10 @@ INPUT             = ../ea/client/loader.h \
                     ../ea/client/config_cache.h \
                     ../ea/client/config_client.h \
                     ../ea/client/config_info_builder.h \
-                    ../ea/client/meta_sender.h      \
+                    ../ea/client/discovery_sender.h      \
                     ../ea/client/router_sender.h    \
                     ../ea/client/servlet_instance_builder.h \
-                    ../ea/client/meta.h   \
+                    ../ea/client/discovery.h   \
                     ../ea/client/utility.h
 
 

@@ -70,12 +70,12 @@ namespace EA::cli {
     void run_ns_create_cmd() {
         turbo::Println(turbo::color::green, "start to create namespace: {}",
                        NameSpaceOptionContext::get_instance()->namespace_name);
-        EA::servlet::MetaManagerRequest request;
-        EA::servlet::MetaManagerResponse response;
+        EA::discovery::DiscoveryManagerRequest request;
+        EA::discovery::DiscoveryManagerResponse response;
         auto rs = make_namespace_create(&request);
         ScopeShower ss;
         PREPARE_ERROR_RETURN_OR_OK(ss, rs, request);
-        rs = RouterInteract::get_instance()->send_request("meta_manager", request, response);
+        rs = RouterInteract::get_instance()->send_request("discovery_manager", request, response);
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(OptionContext::get_instance()->router_server, response.errcode(), response.op_type(),
                                                response.errmsg());
@@ -85,12 +85,12 @@ namespace EA::cli {
     void run_ns_remove_cmd() {
         turbo::Println(turbo::color::green, "start to remove namespace: {}",
                        NameSpaceOptionContext::get_instance()->namespace_name);
-        EA::servlet::MetaManagerRequest request;
-        EA::servlet::MetaManagerResponse response;
+        EA::discovery::DiscoveryManagerRequest request;
+        EA::discovery::DiscoveryManagerResponse response;
         ScopeShower ss;
         auto rs = make_namespace_remove(&request);
         PREPARE_ERROR_RETURN_OR_OK(ss, rs, request);
-        rs = RouterInteract::get_instance()->send_request("meta_manager", request, response);
+        rs = RouterInteract::get_instance()->send_request("discovery_manager", request, response);
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(OptionContext::get_instance()->router_server, response.errcode(), response.op_type(),
                                                response.errmsg());
@@ -100,12 +100,12 @@ namespace EA::cli {
     void run_ns_modify_cmd() {
         turbo::Println(turbo::color::green, "start to modify namespace: {}",
                        NameSpaceOptionContext::get_instance()->namespace_name);
-        EA::servlet::MetaManagerRequest request;
-        EA::servlet::MetaManagerResponse response;
+        EA::discovery::DiscoveryManagerRequest request;
+        EA::discovery::DiscoveryManagerResponse response;
         ScopeShower ss;
         auto rs = make_namespace_modify(&request);
         PREPARE_ERROR_RETURN_OR_OK(ss, rs, request);
-        rs = RouterInteract::get_instance()->send_request("meta_manager", request, response);
+        rs = RouterInteract::get_instance()->send_request("discovery_manager", request, response);
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(OptionContext::get_instance()->router_server, response.errcode(), response.op_type(),
                                                response.errmsg());
@@ -114,44 +114,44 @@ namespace EA::cli {
 
     void run_ns_list_cmd() {
         turbo::Println(turbo::color::green, "start to get namespace list");
-        EA::servlet::QueryRequest request;
-        EA::servlet::QueryResponse response;
+        EA::discovery::DiscoveryQueryRequest request;
+        EA::discovery::DiscoveryQueryResponse response;
         ScopeShower ss;
         auto rs = make_namespace_query(&request);
         PREPARE_ERROR_RETURN_OR_OK(ss, rs, request);
-        rs = RouterInteract::get_instance()->send_request("meta_query", request, response);
+        rs = RouterInteract::get_instance()->send_request("discovery_query", request, response);
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(OptionContext::get_instance()->router_server, response.errcode(), request.op_type(),
                                                response.errmsg());
         ss.add_table("result", std::move(table));
 
-        if(response.errcode() != EA::servlet::SUCCESS) {
+        if(response.errcode() != EA::discovery::SUCCESS) {
             return;
         }
-        table = show_meta_query_ns_response(response);
+        table = show_discovery_query_ns_response(response);
         ss.add_table("summary", std::move(table));
     }
 
     void run_ns_info_cmd() {
         turbo::Println(turbo::color::green, "start to get namespace info");
-        EA::servlet::QueryRequest request;
-        EA::servlet::QueryResponse response;
+        EA::discovery::DiscoveryQueryRequest request;
+        EA::discovery::DiscoveryQueryResponse response;
         ScopeShower ss;
         auto rs = make_namespace_query(&request);
         PREPARE_ERROR_RETURN_OR_OK(ss, rs, request);
-        rs = RouterInteract::get_instance()->send_request("meta_query", request, response);
+        rs = RouterInteract::get_instance()->send_request("discovery_query", request, response);
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(OptionContext::get_instance()->router_server, response.errcode(), request.op_type(),
                                                response.errmsg());
         ss.add_table("result", std::move(table));
-        if(response.errcode() != EA::servlet::SUCCESS) {
+        if(response.errcode() != EA::discovery::SUCCESS) {
             return;
         }
-        table = show_meta_query_ns_response(response);
+        table = show_discovery_query_ns_response(response);
         ss.add_table("summary", std::move(table));
     }
 
-    turbo::Table show_meta_query_ns_response(const EA::servlet::QueryResponse &res) {
+    turbo::Table show_discovery_query_ns_response(const EA::discovery::DiscoveryQueryResponse &res) {
         turbo::Table result;
         auto &nss = res.namespace_infos();
         result.add_row(
@@ -176,45 +176,45 @@ namespace EA::cli {
     }
 
     turbo::Status
-    make_namespace_create(EA::servlet::MetaManagerRequest *req) {
-        EA::servlet::NameSpaceInfo *ns_req = req->mutable_namespace_info();
+    make_namespace_create(EA::discovery::DiscoveryManagerRequest *req) {
+        EA::discovery::NameSpaceInfo *ns_req = req->mutable_namespace_info();
         auto rs = check_valid_name_type(NameSpaceOptionContext::get_instance()->namespace_name);
         if (!rs.ok()) {
             return rs;
         }
         ns_req->set_namespace_name(NameSpaceOptionContext::get_instance()->namespace_name);
         ns_req->set_quota(NameSpaceOptionContext::get_instance()->namespace_quota);
-        req->set_op_type(EA::servlet::OP_CREATE_NAMESPACE);
+        req->set_op_type(EA::discovery::OP_CREATE_NAMESPACE);
         return turbo::OkStatus();
     }
 
     turbo::Status
-    make_namespace_remove(EA::servlet::MetaManagerRequest *req) {
-        EA::servlet::NameSpaceInfo *ns_req = req->mutable_namespace_info();
+    make_namespace_remove(EA::discovery::DiscoveryManagerRequest *req) {
+        EA::discovery::NameSpaceInfo *ns_req = req->mutable_namespace_info();
         auto rs = check_valid_name_type(NameSpaceOptionContext::get_instance()->namespace_name);
         if (!rs.ok()) {
             return rs;
         }
         ns_req->set_namespace_name(NameSpaceOptionContext::get_instance()->namespace_name);
-        req->set_op_type(EA::servlet::OP_DROP_NAMESPACE);
+        req->set_op_type(EA::discovery::OP_DROP_NAMESPACE);
         return turbo::OkStatus();
     }
 
     turbo::Status
-    make_namespace_modify(EA::servlet::MetaManagerRequest *req) {
-        EA::servlet::NameSpaceInfo *ns_req = req->mutable_namespace_info();
+    make_namespace_modify(EA::discovery::DiscoveryManagerRequest *req) {
+        EA::discovery::NameSpaceInfo *ns_req = req->mutable_namespace_info();
         auto rs = check_valid_name_type(NameSpaceOptionContext::get_instance()->namespace_name);
         if (!rs.ok()) {
             return rs;
         }
         ns_req->set_namespace_name(NameSpaceOptionContext::get_instance()->namespace_name);
         ns_req->set_quota(NameSpaceOptionContext::get_instance()->namespace_quota);
-        req->set_op_type(EA::servlet::OP_MODIFY_NAMESPACE);
+        req->set_op_type(EA::discovery::OP_MODIFY_NAMESPACE);
         return turbo::OkStatus();
     }
 
-    turbo::Status make_namespace_query(EA::servlet::QueryRequest *req) {
-        req->set_op_type(EA::servlet::QUERY_NAMESPACE);
+    turbo::Status make_namespace_query(EA::discovery::DiscoveryQueryRequest *req) {
+        req->set_op_type(EA::discovery::QUERY_NAMESPACE);
         if (!NameSpaceOptionContext::get_instance()->namespace_name.empty()) {
             req->set_namespace_name(NameSpaceOptionContext::get_instance()->namespace_name);
             auto rs = check_valid_name_type(NameSpaceOptionContext::get_instance()->namespace_name);

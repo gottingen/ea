@@ -23,10 +23,10 @@
 #include <map>
 #include "turbo/base/status.h"
 #include "turbo/module/module_version.h"
-#include "eapi/servlet/servlet.interface.pb.h"
+#include "eapi/discovery/discovery.interface.pb.h"
 #include <functional>
 #include "ea/client/base_message_sender.h"
-#include "ea/client/meta.h"
+#include "ea/client/discovery.h"
 #include "ea/base/bthread.h"
 
 namespace EA::client {
@@ -67,7 +67,7 @@ namespace EA::client {
 
     /**
      * @brief ConfigClient is used to download config files from the meta server.
-     *        It is used by the MetaClient to download config files from the meta server.
+     *        It is used by the DiscoveryClient to download config files from the meta server.
      */
     class ConfigClient {
     public:

@@ -32,4 +32,5 @@ enum ErrorCode {
   INTERNAL = 12;
   UNAVAILABLE = 13;
   DATA_LOSS = 14;
+  NOT_LEADER = 15;
 }

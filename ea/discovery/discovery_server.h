@@ -52,8 +52,8 @@ namespace EA::discovery {
 
         //raft control method
         void raft_control(google::protobuf::RpcController *controller,
-                                  const EA::discovery::RaftControlRequest *request,
-                                  EA::discovery::RaftControlResponse *response,
+                                  const EA::RaftControlRequest *request,
+                                  EA::RaftControlResponse *response,
                                   google::protobuf::Closure *done) override;
 
 

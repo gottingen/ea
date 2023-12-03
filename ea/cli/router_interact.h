@@ -75,7 +75,7 @@ namespace EA::cli {
                     continue;
                 }
 
-                if (response.errcode() != EA::discovery::SUCCESS) {
+                if (response.errcode() != EA::SUCCESS) {
                     TLOG_WARN_IF(verbose, "send discovery router server fail, log_id:{}, response:{}", cntl.log_id(),
                               response.ShortDebugString());
                     //return turbo::UnavailableError("send discovery router server fail, log_id:{}, response:{}", cntl.log_id(),

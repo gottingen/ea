@@ -46,7 +46,7 @@ namespace EA::discovery {
                 TLOG_ERROR("parse from protobuf fail when on_apply");
                 if (done) {
                     if (((DiscoveryServerClosure *) done)->response) {
-                        ((DiscoveryServerClosure *) done)->response->set_errcode(EA::discovery::PARSE_FROM_PB_FAIL);
+                        ((DiscoveryServerClosure *) done)->response->set_errcode(EA::PARSE_FROM_PB_FAIL);
                         ((DiscoveryServerClosure *) done)->response->set_errmsg("parse from protobuf fail");
                     }
                     braft::run_closure_in_bthread(done_guard.release());
@@ -134,7 +134,7 @@ namespace EA::discovery {
                 }
                 default: {
                     TLOG_ERROR("unknown request type, type:{}", request.op_type());
-                    IF_DONE_SET_RESPONSE(done, EA::discovery::UNKNOWN_REQ_TYPE, "unknown request type");
+                    IF_DONE_SET_RESPONSE(done, EA::UNKNOWN_REQ_TYPE, "unknown request type");
                 }
             }
             _applied_index = iter.index();

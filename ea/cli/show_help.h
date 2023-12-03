@@ -27,45 +27,45 @@ namespace EA::cli {
         ~ShowHelper();
 
         static turbo::Table
-        show_response(const std::string_view &server, EA::discovery::ErrCode code, EA::discovery::QueryOpType qt,
+        show_response(const std::string_view &server, EA::ErrCode code, EA::discovery::QueryOpType qt,
                       const std::string &msg);
 
         static turbo::Table
-        show_response(EA::discovery::ErrCode code, EA::discovery::QueryOpType qt,
+        show_response(EA::ErrCode code, EA::discovery::QueryOpType qt,
                       const std::string &msg);
 
         static turbo::Table
-        show_response(const std::string_view &server, EA::discovery::ErrCode code, EA::discovery::OpType qt,
+        show_response(const std::string_view &server, EA::ErrCode code, EA::discovery::OpType qt,
                       const std::string &msg);
 
-        static turbo::Table show_response(EA::discovery::ErrCode code, EA::discovery::OpType qt,
+        static turbo::Table show_response(EA::ErrCode code, EA::discovery::OpType qt,
                                           const std::string &msg);
 
-        static turbo::Table show_response(EA::discovery::ErrCode code, EA::discovery::RaftControlOp qt,
+        static turbo::Table show_response(EA::ErrCode code, EA::RaftControlOp qt,
                                           const std::string &msg);
 
         static turbo::Table rpc_error_status(const turbo::Status &s, EA::discovery::OpType qt);
 
         static turbo::Table rpc_error_status(const turbo::Status &s, EA::discovery::QueryOpType qt);
 
-        static turbo::Table rpc_error_status(const turbo::Status &s, EA::discovery::RaftControlOp qt);
+        static turbo::Table rpc_error_status(const turbo::Status &s, EA::RaftControlOp qt);
 
         static turbo::Table pre_send_error(const turbo::Status &s, const EA::discovery::DiscoveryManagerRequest &req);
 
 
         static turbo::Table pre_send_error(const turbo::Status &s, const EA::discovery::DiscoveryQueryRequest &req);
 
-        static turbo::Table pre_send_error(const turbo::Status &s, const EA::discovery::RaftControlRequest &req);
+        static turbo::Table pre_send_error(const turbo::Status &s, const EA::RaftControlRequest &req);
 
         static std::string json_format(const std::string &json_str);
 
     private:
         static turbo::Table
-        show_response_impl(const std::string_view &server, EA::discovery::ErrCode code, int qt, const std::string &qts,
+        show_response_impl(const std::string_view &server, EA::ErrCode code, int qt, const std::string &qts,
                            const std::string &msg);
 
         static turbo::Table
-        show_response_impl(EA::discovery::ErrCode code, int qt, const std::string &qts, const std::string &msg);
+        show_response_impl(EA::ErrCode code, int qt, const std::string &qts, const std::string &msg);
 
         static turbo::Table rpc_error_status_impl(const turbo::Status &s, int qt, const std::string &qts);
 
@@ -82,31 +82,31 @@ namespace EA::cli {
     /// inlines
     ///
     inline turbo::Table
-    ShowHelper::show_response(const std::string_view &server, EA::discovery::ErrCode code, EA::discovery::QueryOpType qt,
+    ShowHelper::show_response(const std::string_view &server, EA::ErrCode code, EA::discovery::QueryOpType qt,
                               const std::string &msg) {
         return show_response_impl(server, code, static_cast<int>(qt), get_op_string(qt), msg);
     }
 
     inline turbo::Table
-    ShowHelper::show_response(EA::discovery::ErrCode code, EA::discovery::OpType qt,
+    ShowHelper::show_response(EA::ErrCode code, EA::discovery::OpType qt,
                               const std::string &msg) {
         return show_response_impl(code, static_cast<int>(qt), get_op_string(qt), msg);
     }
 
     inline turbo::Table
-    ShowHelper::show_response(EA::discovery::ErrCode code, EA::discovery::RaftControlOp qt,
+    ShowHelper::show_response(EA::ErrCode code, EA::RaftControlOp qt,
                               const std::string &msg) {
         return show_response_impl(code, static_cast<int>(qt), get_op_string(qt), msg);
     }
 
     inline turbo::Table
-    ShowHelper::show_response(EA::discovery::ErrCode code, EA::discovery::QueryOpType qt,
+    ShowHelper::show_response(EA::ErrCode code, EA::discovery::QueryOpType qt,
                               const std::string &msg) {
         return show_response_impl(code, static_cast<int>(qt), get_op_string(qt), msg);
     }
 
     inline turbo::Table
-    ShowHelper::show_response(const std::string_view &server, EA::discovery::ErrCode code, EA::discovery::OpType qt,
+    ShowHelper::show_response(const std::string_view &server, EA::ErrCode code, EA::discovery::OpType qt,
                               const std::string &msg) {
         return show_response_impl(server, code, static_cast<int>(qt), get_op_string(qt), msg);
     }
@@ -119,7 +119,7 @@ namespace EA::cli {
         return rpc_error_status_impl(s, static_cast<int>(qt), get_op_string(qt));
     }
 
-    inline turbo::Table ShowHelper::rpc_error_status(const turbo::Status &s, EA::discovery::RaftControlOp qt) {
+    inline turbo::Table ShowHelper::rpc_error_status(const turbo::Status &s, EA::RaftControlOp qt) {
         return rpc_error_status_impl(s, static_cast<int>(qt), get_op_string(qt));
     }
 

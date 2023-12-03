@@ -34,7 +34,7 @@ namespace EA::discovery {
                 *(response->add_zone_infos()) = manager->_zone_info_map[id];
             } else {
                 response->set_errmsg("zone not exist");
-                response->set_errcode(EA::discovery::INPUT_PARAM_ERROR);
+                response->set_errcode(EA::INPUT_PARAM_ERROR);
                 TLOG_ERROR("namespace: {} zone: {} not exist", namespace_name, zone);
             }
         }

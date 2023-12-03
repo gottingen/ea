@@ -41,7 +41,7 @@ namespace EA::discovery {
                 TLOG_ERROR("parse from protobuf fail when on_apply");
                 if (done) {
                     if (((DiscoveryServerClosure *) done)->response) {
-                        ((DiscoveryServerClosure *) done)->response->set_errcode(EA::discovery::PARSE_FROM_PB_FAIL);
+                        ((DiscoveryServerClosure *) done)->response->set_errcode(EA::PARSE_FROM_PB_FAIL);
                         ((DiscoveryServerClosure *) done)->response->set_errmsg("parse from protobuf fail");
                     }
                     braft::run_closure_in_bthread(done_guard.release());
@@ -73,7 +73,7 @@ namespace EA::discovery {
                 }
                 default: {
                     TLOG_ERROR("unsupport request type, type:{}", request.op_type());
-                    IF_DONE_SET_RESPONSE(done, EA::discovery::UNKNOWN_REQ_TYPE, "unsupport request type");
+                    IF_DONE_SET_RESPONSE(done, EA::UNKNOWN_REQ_TYPE, "unsupport request type");
                 }
             }
             if (done) {
@@ -88,13 +88,13 @@ namespace EA::discovery {
         int64_t servlet_id = increment_info.servlet_id();
         uint64_t start_id = increment_info.start_id();
         if (_auto_increment_map.find(servlet_id) != _auto_increment_map.end()) {
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INPUT_PARAM_ERROR, "servlet id has exist");
+            IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "servlet id has exist");
             TLOG_ERROR("servlet_id: {} has exist when add servlet id for auto increment", servlet_id);
             return;
         }
         _auto_increment_map[servlet_id] = start_id;
         if (done && ((DiscoveryServerClosure *) done)->response) {
-            ((DiscoveryServerClosure *) done)->response->set_errcode(EA::discovery::SUCCESS);
+            ((DiscoveryServerClosure *) done)->response->set_errcode(EA::SUCCESS);
             ((DiscoveryServerClosure *) done)->response->set_op_type(request.op_type());
             ((DiscoveryServerClosure *) done)->response->set_start_id(start_id);
             ((DiscoveryServerClosure *) done)->response->set_errmsg("SUCCESS");
@@ -108,13 +108,13 @@ namespace EA::discovery {
         auto &increment_info = request.auto_increment();
         int64_t servlet_id = increment_info.servlet_id();
         if (_auto_increment_map.find(servlet_id) == _auto_increment_map.end()) {
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INPUT_PARAM_ERROR, "servlet id not exist");
+            IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "servlet id not exist");
             TLOG_WARN("servlet id: {} not exist when drop servlet id for auto increment", servlet_id);
             return;
         }
         _auto_increment_map.erase(servlet_id);
         if (done && ((DiscoveryServerClosure *) done)->response) {
-            ((DiscoveryServerClosure *) done)->response->set_errcode(EA::discovery::SUCCESS);
+            ((DiscoveryServerClosure *) done)->response->set_errcode(EA::SUCCESS);
             ((DiscoveryServerClosure *) done)->response->set_op_type(request.op_type());
             ((DiscoveryServerClosure *) done)->response->set_errmsg("SUCCESS");
         }
@@ -128,7 +128,7 @@ namespace EA::discovery {
         int64_t servlet_id = increment_info.servlet_id();
         if (_auto_increment_map.find(servlet_id) == _auto_increment_map.end()) {
             TLOG_WARN("servlet id:{} has no auto_increment field", servlet_id);
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INPUT_PARAM_ERROR, "servlet has no auto increment");
+            IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "servlet has no auto increment");
             return;
         }
         uint64_t old_start_id = _auto_increment_map[servlet_id];
@@ -137,7 +137,7 @@ namespace EA::discovery {
         }
         _auto_increment_map[servlet_id] = old_start_id + increment_info.count();
         if (done && ((DiscoveryServerClosure *) done)->response) {
-            ((DiscoveryServerClosure *) done)->response->set_errcode(EA::discovery::SUCCESS);
+            ((DiscoveryServerClosure *) done)->response->set_errcode(EA::SUCCESS);
             ((DiscoveryServerClosure *) done)->response->set_op_type(request.op_type());
             ((DiscoveryServerClosure *) done)->response->set_start_id(old_start_id);
             ((DiscoveryServerClosure *) done)->response->set_end_id(_auto_increment_map[servlet_id]);
@@ -153,18 +153,18 @@ namespace EA::discovery {
         int64_t servlet_id = increment_info.servlet_id();
         if (_auto_increment_map.find(servlet_id) == _auto_increment_map.end()) {
             TLOG_WARN("servlet id:{} has no auto_increment field", servlet_id);
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INPUT_PARAM_ERROR, "servlet has no auto increment");
+            IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "servlet has no auto increment");
             return;
         }
         if (!increment_info.has_start_id() && !increment_info.has_increment_id()) {
             TLOG_WARN("star_id or increment_id all not exist, servlet_id:{}", servlet_id);
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INPUT_PARAM_ERROR,
+            IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR,
                                  "star_id or increment_id all not exist");
             return;
         }
         if (increment_info.has_start_id() && increment_info.has_increment_id()) {
             TLOG_WARN("star_id and increment_id all exist, servlet_id:{}", servlet_id);
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INPUT_PARAM_ERROR,
+            IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR,
                                  "star_id and increment_id all exist");
             return;
         }
@@ -174,7 +174,7 @@ namespace EA::discovery {
             && old_start_id > increment_info.start_id() + 1
             && (!increment_info.has_force() || increment_info.force() == false)) {
             TLOG_WARN("request not illegal, max_id not support back, servlet_id:{}", servlet_id);
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INPUT_PARAM_ERROR, "not support rollback");
+            IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "not support rollback");
             return;
         }
         if (increment_info.has_start_id()) {
@@ -183,7 +183,7 @@ namespace EA::discovery {
             _auto_increment_map[servlet_id] += increment_info.increment_id();
         }
         if (done && ((DiscoveryServerClosure *) done)->response) {
-            ((DiscoveryServerClosure *) done)->response->set_errcode(EA::discovery::SUCCESS);
+            ((DiscoveryServerClosure *) done)->response->set_errcode(EA::SUCCESS);
             ((DiscoveryServerClosure *) done)->response->set_op_type(request.op_type());
             ((DiscoveryServerClosure *) done)->response->set_start_id(_auto_increment_map[servlet_id]);
             ((DiscoveryServerClosure *) done)->response->set_errmsg("SUCCESS");

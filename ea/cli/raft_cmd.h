@@ -66,7 +66,7 @@ namespace EA::cli {
 
         static turbo::ResultStatus<int> to_region_id();
 
-        static turbo::Table show_raft_result(EA::discovery::RaftControlResponse &res);
+        static turbo::Table show_raft_result(EA::RaftControlResponse &res);
     };
 
     }  // namespace EA::cli

@@ -85,8 +85,8 @@ namespace EA::cli {
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(response.errcode(), response.op_type(),
                                                response.errmsg());
-        ss.add_table("result", std::move(table), response.errcode() == EA::discovery::SUCCESS);
-        if (response.errcode() == EA::discovery::SUCCESS) {
+        ss.add_table("result", std::move(table), response.errcode() == EA::SUCCESS);
+        if (response.errcode() == EA::SUCCESS) {
             turbo::Table summary;
             summary.add_row({"servlet id", "start id", "end id"});
             summary.add_row({turbo::Format(opt->servlet_id), turbo::Format(response.start_id()),
@@ -107,7 +107,7 @@ namespace EA::cli {
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(response.errcode(), response.op_type(),
                                                response.errmsg());
-        ss.add_table("result", std::move(table), response.errcode() == EA::discovery::SUCCESS);
+        ss.add_table("result", std::move(table), response.errcode() == EA::SUCCESS);
     };
 
     void AtomicCmd::run_atomic_gen_cmd() {
@@ -127,8 +127,8 @@ namespace EA::cli {
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(response.errcode(), response.op_type(),
                                                response.errmsg());
-        ss.add_table("result", std::move(table), response.errcode() == EA::discovery::SUCCESS);
-        if (response.errcode() == EA::discovery::SUCCESS) {
+        ss.add_table("result", std::move(table), response.errcode() == EA::SUCCESS);
+        if (response.errcode() == EA::SUCCESS) {
             turbo::Table summary;
             summary.add_row({"servlet id", "start id", "end id"});
             summary.add_row({turbo::Format(opt->servlet_id), turbo::Format(response.start_id()),
@@ -158,8 +158,8 @@ namespace EA::cli {
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(response.errcode(), response.op_type(),
                                                response.errmsg());
-        ss.add_table("result", std::move(table), response.errcode() == EA::discovery::SUCCESS);
-        if (response.errcode() == EA::discovery::SUCCESS) {
+        ss.add_table("result", std::move(table), response.errcode() == EA::SUCCESS);
+        if (response.errcode() == EA::SUCCESS) {
             turbo::Table summary;
             summary.add_row({"servlet id", "start id"});
             summary.add_row({turbo::Format(opt->servlet_id), turbo::Format(response.start_id())});

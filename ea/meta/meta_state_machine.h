@@ -18,48 +18,32 @@
 
 #include <braft/raft.h>
 #include "ea/raft/raft_control.h"
-#include "eapi/discovery/discovery.interface.pb.h"
+#include "ea/proto/meta.interface.pb.h"
 #include "ea/base/bthread.h"
 #include "ea/base/time_cast.h"
 
-namespace EA::discovery {
-    class BaseStateMachine;
+namespace EA::db {
 
-    struct DiscoveryServerClosure : public braft::Closure {
+    class MetaStateMachine;
+
+    struct MetaServerClosure : public braft::Closure {
         void Run() override;
 
         brpc::Controller *cntl;
-        BaseStateMachine *common_state_machine;
+        MetaStateMachine *meta_state_machine;
         google::protobuf::Closure *done;
-        EA::discovery::DiscoveryManagerResponse *response;
+        EA::db::MetaManageResponse *response;
         std::string request;
         int64_t raft_time_cost;
         int64_t total_time_cost;
         TimeCost time_cost;
     };
 
-    struct TsoClosure : public braft::Closure {
-        TsoClosure() : sync_cond(nullptr) {};
 
-        TsoClosure(BthreadCond *cond) : sync_cond(cond) {};
-
-        virtual void Run();
-
-        brpc::Controller *cntl;
-        BaseStateMachine *common_state_machine;
-        google::protobuf::Closure *done;
-        EA::discovery::TsoResponse *response;
-        int64_t raft_time_cost;
-        int64_t total_time_cost;
-        TimeCost time_cost;
-        bool is_sync = false;
-        BthreadCond *sync_cond;
-    };
-
-    class BaseStateMachine : public braft::StateMachine {
+    class MetaStateMachine : public braft::StateMachine {
     public:
 
-        BaseStateMachine(int64_t dummy_region_id,
+        MetaStateMachine(int64_t dummy_region_id,
                          const std::string &identify,
                          const std::string &file_path,
                          const braft::PeerId &peerId) :
@@ -68,7 +52,7 @@ namespace EA::discovery {
                 _dummy_region_id(dummy_region_id),
                 _file_path(file_path) {}
 
-        virtual ~BaseStateMachine() {}
+        ~MetaStateMachine() = default;
 
         virtual int init(const std::vector<braft::PeerId> &peers);
 
@@ -148,7 +132,7 @@ namespace EA::discovery {
         bool _have_data = false;
     };
 
-#define ERROR_SET_RESPONSE(response, errcode, err_message, op_type, log_id) \
+#define META_ERROR_SET_RESPONSE(response, errcode, err_message, op_type, log_id) \
     do {\
         TLOG_ERROR("request op_type:{}, {} ,log_id:{}",\
                 op_type, err_message, log_id);\
@@ -170,15 +154,15 @@ namespace EA::discovery {
         }\
     }while (0);
 
-#define IF_DONE_SET_RESPONSE(done, errcode, err_message) \
+#define META_IF_DONE_SET_RESPONSE(done, errcode, err_message) \
     do {\
-        if (done && ((DiscoveryServerClosure*)done)->response) {\
-            ((DiscoveryServerClosure*)done)->response->set_errcode(errcode);\
-            ((DiscoveryServerClosure*)done)->response->set_errmsg(err_message);\
+        if (done && ((MetaServerClosure*)done)->response) {\
+            ((MetaServerClosure*)done)->response->set_errcode(errcode);\
+            ((MetaServerClosure*)done)->response->set_errmsg(err_message);\
         }\
     }while (0);
 
-#define SET_RESPONSE(response, errcode, err_message) \
+#define META_SET_RESPONSE(response, errcode, err_message) \
     do {\
         if (response) {\
             response->set_errcode(errcode);\
@@ -186,7 +170,7 @@ namespace EA::discovery {
         }\
     }while (0);
 
-#define RETURN_IF_NOT_INIT(init, response, log_id) \
+#define META_RETURN_IF_NOT_INIT(init, response, log_id) \
     do {\
         if (!init) {\
             TLOG_WARN("have not init, log_id:{}", log_id);\
@@ -196,5 +180,5 @@ namespace EA::discovery {
         }\
     } while (0);
 
-}  // namespace EA::discovery
+}  // namespace EA::db
 

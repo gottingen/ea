@@ -63,8 +63,8 @@ namespace EA::cli {
         return EA::discovery::OpType_Name(type);
     }
 
-    std::string get_op_string(EA::discovery::RaftControlOp type) {
-        return EA::discovery::RaftControlOp_Name(type);
+    std::string get_op_string(EA::RaftControlOp type) {
+        return EA::RaftControlOp_Name(type);
     }
 
     std::string get_op_string(EA::discovery::QueryOpType type) {

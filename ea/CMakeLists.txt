@@ -61,6 +61,23 @@ carbin_cc_library(
         ${CARBIN_DEPS_LINK}
         PUBLIC
 )
+#[[
+file(GLOB EA_META meta/*.cc)
+carbin_cc_library(
+        NAMESPACE ea
+        NAME meta
+        SOURCES
+        ${EA_META}
+        COPTS
+        ${USER_CXX_FLAGS}
+        DEPS
+        eapi::eapi
+        ea::flags
+        ea::db_proto
+        ${CARBIN_DEPS_LINK}
+        PUBLIC
+)
+]]
 
 file(GLOB EA_CLIENT client/*.cc)
 

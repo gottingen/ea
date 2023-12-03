@@ -70,13 +70,13 @@ namespace EA::discovery {
         int64_t count = request->count();
         response->set_op_type(request->op_type());
         if (count == 0) {
-            response->set_errcode(EA::discovery::INPUT_PARAM_ERROR);
+            response->set_errcode(EA::INPUT_PARAM_ERROR);
             response->set_errmsg("tso count should be positive");
             return;
         }
         if (!_is_healty) {
             TLOG_ERROR("TSO has wrong status, retry later");
-            response->set_errcode(EA::discovery::RETRY_LATER);
+            response->set_errcode(EA::RETRY_LATER);
             response->set_errmsg("timestamp not ok, retry later");
             return;
         }
@@ -108,7 +108,7 @@ namespace EA::discovery {
             }
         }
         if (need_retry) {
-            response->set_errcode(EA::discovery::EXEC_FAIL);
+            response->set_errcode(EA::EXEC_FAIL);
             response->set_errmsg("gen tso failed");
             TLOG_ERROR("gen tso failed");
             return;
@@ -117,7 +117,7 @@ namespace EA::discovery {
         auto timestamp = response->mutable_start_timestamp();
         timestamp->CopyFrom(current);
         response->set_count(count);
-        response->set_errcode(EA::discovery::SUCCESS);
+        response->set_errcode(EA::SUCCESS);
     }
 
     void TSOStateMachine::process(google::protobuf::RpcController *controller,
@@ -126,7 +126,7 @@ namespace EA::discovery {
                                   google::protobuf::Closure *done) {
         brpc::ClosureGuard done_guard(done);
         if (request->op_type() == EA::discovery::OP_QUERY_TSO_INFO) {
-            response->set_errcode(EA::discovery::SUCCESS);
+            response->set_errcode(EA::SUCCESS);
             response->set_errmsg("success");
             response->set_op_type(request->op_type());
             response->set_leader(butil::endpoint2str(_node.leader_id().addr).c_str());
@@ -144,7 +144,7 @@ namespace EA::discovery {
         const auto &remote_side_tmp = butil::endpoint2str(cntl->remote_side());
         const char *remote_side = remote_side_tmp.c_str();
         if (!_is_leader) {
-            response->set_errcode(EA::discovery::NOT_LEADER);
+            response->set_errcode(EA::NOT_LEADER);
             response->set_errmsg("not leader");
             response->set_op_type(request->op_type());
             response->set_leader(butil::endpoint2str(_node.leader_id().addr).c_str());
@@ -187,7 +187,7 @@ namespace EA::discovery {
                 TLOG_ERROR("parse from protobuf fail when on_apply");
                 if (done) {
                     if (((TsoClosure *) done)->response) {
-                        ((TsoClosure *) done)->response->set_errcode(EA::discovery::PARSE_FROM_PB_FAIL);
+                        ((TsoClosure *) done)->response->set_errcode(EA::PARSE_FROM_PB_FAIL);
                         ((TsoClosure *) done)->response->set_errmsg("parse from protobuf fail");
                     }
                     braft::run_closure_in_bthread(done_guard.release());
@@ -208,7 +208,7 @@ namespace EA::discovery {
                 }
                 default: {
                     TLOG_ERROR("unsupport request type, type:{}", request.op_type());
-                    IF_DONE_SET_RESPONSE(done, EA::discovery::UNKNOWN_REQ_TYPE, "unsupport request type");
+                    IF_DONE_SET_RESPONSE(done, EA::UNKNOWN_REQ_TYPE, "unsupport request type");
                 }
             }
             if (done) {
@@ -231,7 +231,7 @@ namespace EA::discovery {
                                current.logical(), _tso_obj.current_timestamp.logical());
                     if (done && ((TsoClosure *) done)->response) {
                         EA::discovery::TsoResponse *response = ((TsoClosure *) done)->response;
-                        response->set_errcode(EA::discovery::INTERNAL_ERROR);
+                        response->set_errcode(EA::INTERNAL_ERROR);
                         response->set_errmsg("time can't fallback");
                         auto timestamp = response->mutable_start_timestamp();
                         timestamp->CopyFrom(_tso_obj.current_timestamp);
@@ -253,7 +253,7 @@ namespace EA::discovery {
                 response->set_save_physical(physical);
                 auto timestamp = response->mutable_start_timestamp();
                 timestamp->CopyFrom(current);
-                response->set_errcode(EA::discovery::SUCCESS);
+                response->set_errcode(EA::SUCCESS);
                 response->set_errmsg("SUCCESS");
             }
         }
@@ -271,7 +271,7 @@ namespace EA::discovery {
                        current.logical(), _tso_obj.current_timestamp.logical());
             if (done && ((TsoClosure *) done)->response) {
                 EA::discovery::TsoResponse *response = ((TsoClosure *) done)->response;
-                response->set_errcode(EA::discovery::INTERNAL_ERROR);
+                response->set_errcode(EA::INTERNAL_ERROR);
                 response->set_errmsg("time can't fallback");
             }
             return;
@@ -284,7 +284,7 @@ namespace EA::discovery {
 
         if (done && ((TsoClosure *) done)->response) {
             EA::discovery::TsoResponse *response = ((TsoClosure *) done)->response;
-            response->set_errcode(EA::discovery::SUCCESS);
+            response->set_errcode(EA::SUCCESS);
             response->set_errmsg("SUCCESS");
         }
     }
@@ -314,7 +314,7 @@ namespace EA::discovery {
         task.done = c;
         _node.apply(task);
         sync_cond.wait();
-        if (response.errcode() != EA::discovery::SUCCESS) {
+        if (response.errcode() != EA::SUCCESS) {
             TLOG_ERROR("sync timestamp failed, request:{} response:{}",
                      request.ShortDebugString().c_str(), response.ShortDebugString().c_str());
             return -1;

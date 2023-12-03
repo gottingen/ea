@@ -29,12 +29,12 @@ namespace EA::discovery {
         int64_t namespace_id = NamespaceManager::get_instance()->get_namespace_id(namespace_name);
         if (namespace_id == 0) {
             TLOG_WARN("request namespace:{} not exist", namespace_name);
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INPUT_PARAM_ERROR, "namespace not exist");
+            IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "namespace not exist");
             return;
         }
         if (_zone_id_map.find(zone_name) != _zone_id_map.end()) {
             TLOG_WARN("request zone:{} already exist", zone_name);
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INPUT_PARAM_ERROR, "zone already exist");
+            IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "zone already exist");
             return;
         }
 
@@ -66,7 +66,7 @@ namespace EA::discovery {
         std::string zone_value;
         if (!zone_info.SerializeToString(&zone_value)) {
             TLOG_WARN("request serializeToArray fail, request:{}", request.ShortDebugString());
-            IF_DONE_SET_RESPONSE(done, EA::discovery::PARSE_TO_PB_FAIL, "serializeToArray fail");
+            IF_DONE_SET_RESPONSE(done, EA::PARSE_TO_PB_FAIL, "serializeToArray fail");
             return;
         }
         rocksdb_keys.push_back(construct_zone_key(tmp_zone_id));
@@ -80,14 +80,14 @@ namespace EA::discovery {
 
         int ret = DiscoveryRocksdb::get_instance()->put_discovery_info(rocksdb_keys, rocksdb_values);
         if (ret < 0) {
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INTERNAL_ERROR, "write db fail");
+            IF_DONE_SET_RESPONSE(done, EA::INTERNAL_ERROR, "write db fail");
             return;
         }
         // update memory info
         set_zone_info(zone_info);
         set_max_zone_id(tmp_zone_id);
         NamespaceManager::get_instance()->add_zone_id(namespace_id, tmp_zone_id);
-        IF_DONE_SET_RESPONSE(done, EA::discovery::SUCCESS, "success");
+        IF_DONE_SET_RESPONSE(done, EA::SUCCESS, "success");
         TLOG_INFO("create zone success, request:{}", request.ShortDebugString());
     }
 
@@ -99,18 +99,18 @@ namespace EA::discovery {
         int64_t namespace_id = NamespaceManager::get_instance()->get_namespace_id(namespace_name);
         if (namespace_id == 0) {
             TLOG_WARN("request namespace: {} not exist", namespace_name);
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INPUT_PARAM_ERROR, "namespace not exist");
+            IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "namespace not exist");
             return;
         }
         if (_zone_id_map.find(zone_name) == _zone_id_map.end()) {
             TLOG_WARN("request zone: {} not exist", zone_name);
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INPUT_PARAM_ERROR, "zone not exist");
+            IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "zone not exist");
             return;
         }
         int64_t zone_id = _zone_id_map[zone_name];
         if (!_servlet_ids[zone_id].empty()) {
             TLOG_WARN("request zone:{} has servlet", zone_name);
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INPUT_PARAM_ERROR, "zone has servlet");
+            IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "zone has servlet");
             return;
         }
         // persist to rocksdb
@@ -118,14 +118,14 @@ namespace EA::discovery {
                 std::vector<std::string>{construct_zone_key(zone_id)});
         if (ret < 0) {
             TLOG_WARN("drop zone: {} to rocksdb fail", zone_name);
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INTERNAL_ERROR, "write db fail");
+            IF_DONE_SET_RESPONSE(done, EA::INTERNAL_ERROR, "write db fail");
             return;
         }
         // update zone memory info
         erase_zone_info(zone_name);
         // update namespace memory info
         NamespaceManager::get_instance()->delete_zone_id(namespace_id, zone_id);
-        IF_DONE_SET_RESPONSE(done, EA::discovery::SUCCESS, "success");
+        IF_DONE_SET_RESPONSE(done, EA::SUCCESS, "success");
         TLOG_INFO("drop zone success, request:{}", request.ShortDebugString());
     }
 
@@ -136,12 +136,12 @@ namespace EA::discovery {
         int64_t namespace_id = NamespaceManager::get_instance()->get_namespace_id(namespace_name);
         if (namespace_id == 0) {
             TLOG_WARN("request namespace:{} not exist", namespace_name);
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INPUT_PARAM_ERROR, "namespace not exist");
+            IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "namespace not exist");
             return;
         }
         if (_zone_id_map.find(zone_name) == _zone_id_map.end()) {
             TLOG_WARN("request zone:{} not exist", zone_name);
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INPUT_PARAM_ERROR, "zone not exist");
+            IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "zone not exist");
             return;
         }
         int64_t zone_id = _zone_id_map[zone_name];
@@ -166,17 +166,17 @@ namespace EA::discovery {
         std::string zone_value;
         if (!tmp_zone_info.SerializeToString(&zone_value)) {
             TLOG_WARN("request serializeToArray fail, request:{}", request.ShortDebugString());
-            IF_DONE_SET_RESPONSE(done, EA::discovery::PARSE_TO_PB_FAIL, "serializeToArray fail");
+            IF_DONE_SET_RESPONSE(done, EA::PARSE_TO_PB_FAIL, "serializeToArray fail");
             return;
         }
         int ret = DiscoveryRocksdb::get_instance()->put_discovery_info(construct_zone_key(zone_id), zone_value);
         if (ret < 0) {
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INTERNAL_ERROR, "write db fail");
+            IF_DONE_SET_RESPONSE(done, EA::INTERNAL_ERROR, "write db fail");
             return;
         }
         // update zone values in memory
         set_zone_info(tmp_zone_info);
-        IF_DONE_SET_RESPONSE(done, EA::discovery::SUCCESS, "success");
+        IF_DONE_SET_RESPONSE(done, EA::SUCCESS, "success");
         TLOG_INFO("modify zone success, request:{}", request.ShortDebugString());
     }
 

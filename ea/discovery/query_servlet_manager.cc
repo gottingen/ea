@@ -35,7 +35,7 @@ namespace EA::discovery {
                 *(response->add_servlet_infos()) = manager->_servlet_info_map[id];
             } else {
                 response->set_errmsg("servlet not exist");
-                response->set_errcode(EA::discovery::INPUT_PARAM_ERROR);
+                response->set_errcode(EA::INPUT_PARAM_ERROR);
                 TLOG_ERROR("namespace: {} zone: {} servlet: {} not exist", namespace_name, zone, servlet);
             }
         }

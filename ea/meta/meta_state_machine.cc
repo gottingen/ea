@@ -14,16 +14,16 @@
 //
 
 
-#include "ea/discovery/base_state_machine.h"
-#include "ea/flags/discovery.h"
+#include "ea/meta/meta_state_machine.h"
+#include "ea/flags/meta.h"
 
-namespace EA::discovery {
+namespace EA::db {
 
-    void DiscoveryServerClosure::Run() {
+    void MetaServerClosure::Run() {
         if (!status().ok()) {
             if (response) {
-                response->set_errcode(EA::NOT_LEADER);
-                response->set_leader(butil::endpoint2str(common_state_machine->get_leader()).c_str());
+                response->set_error_code(EA::db::NOT_LEADER);
+                response->set_leader(butil::endpoint2str(meta_state_machine->get_leader()).c_str());
             }
             TLOG_ERROR("discovery server closure fail, error_code:{}, error_mas:{}",
                      status().error_code(), status().error_cstr());
@@ -34,7 +34,7 @@ namespace EA::discovery {
             remote_side = butil::endpoint2str(cntl->remote_side()).c_str();
         }
 
-        if (response != nullptr && response->op_type() != EA::discovery::OP_GEN_ID_FOR_AUTO_INCREMENT) {
+        if (response != nullptr && response->op_type() != EA::db::OP_GEN_ID_FOR_AUTO_INCREMENT) {
             TLOG_INFO("request:{}, response:{}, raft_time_cost:[{}], total_time_cost:[{}], remote_side:[{}]",
                       request,
                       response->ShortDebugString(),
@@ -48,34 +48,16 @@ namespace EA::discovery {
         delete this;
     }
 
-    void TsoClosure::Run() {
-        if (!status().ok()) {
-            if (response) {
-                response->set_errcode(EA::NOT_LEADER);
-                response->set_leader(butil::endpoint2str(common_state_machine->get_leader()).c_str());
-            }
-            TLOG_ERROR("discovery server closure fail, error_code:{}, error_mas:{}",
-                     status().error_code(), status().error_cstr());
-        }
-        if (sync_cond) {
-            sync_cond->decrease_signal();
-        }
-        if (done != nullptr) {
-            done->Run();
-        }
-        delete this;
-    }
-
-    int BaseStateMachine::init(const std::vector<braft::PeerId> &peers) {
+    int MetaStateMachine::init(const std::vector<braft::PeerId> &peers) {
         braft::NodeOptions options;
-        options.election_timeout_ms = FLAGS_discovery_election_timeout_ms;
+        options.election_timeout_ms = FLAGS_meta_election_timeout_ms;
         options.fsm = this;
         options.initial_conf = braft::Configuration(peers);
-        options.snapshot_interval_s = FLAGS_discovery_snapshot_interval_s;
-        options.log_uri = FLAGS_discovery_log_uri + std::to_string(_dummy_region_id);
-        //options.stable_uri = FLAGS_discovery_stable_uri + "/discovery_server";
-        options.raft_meta_uri = FLAGS_discovery_stable_uri + _file_path;
-        options.snapshot_uri = FLAGS_discovery_snapshot_uri + _file_path;
+        options.snapshot_interval_s = FLAGS_meta_snapshot_interval_s;
+        options.log_uri = FLAGS_meta_log_uri + std::to_string(_dummy_region_id);
+        //options.stable_uri = FLAGS_meta_stable_uri + "/meta_server";
+        options.raft_meta_uri = FLAGS_meta_stable_uri + _file_path;
+        options.snapshot_uri = FLAGS_meta_snapshot_uri + _file_path;
         int ret = _node.init(options);
         if (ret < 0) {
             TLOG_ERROR("raft node init fail");
@@ -85,14 +67,14 @@ namespace EA::discovery {
         return 0;
     }
 
-    void BaseStateMachine::process(google::protobuf::RpcController *controller,
-                                     const EA::discovery::DiscoveryManagerRequest *request,
-                                     EA::discovery::DiscoveryManagerResponse *response,
+    void MetaStateMachine::process(google::protobuf::RpcController *controller,
+                                     const EA::db::MetaManageRequest *request,
+                                     EA::db::MetaManageResponse *response,
                                      google::protobuf::Closure *done) {
         brpc::ClosureGuard done_guard(done);
         if (!_is_leader) {
             if (response) {
-                response->set_errcode(EA::NOT_LEADER);
+                response->set_errcode(EA::db::NOT_LEADER);
                 response->set_errmsg("not leader");
                 response->set_leader(butil::endpoint2str(_node.leader_id().addr).c_str());
             }
@@ -107,7 +89,7 @@ namespace EA::discovery {
             cntl->SetFailed(brpc::EREQUEST, "Fail to serialize request");
             return;
         }
-        DiscoveryServerClosure *closure = new DiscoveryServerClosure;
+        MetaServerClosure *closure = new MetaServerClosure;
         closure->request = request->ShortDebugString();
         closure->cntl = cntl;
         closure->response = response;
@@ -119,32 +101,32 @@ namespace EA::discovery {
         _node.apply(task);
     }
 
-    void BaseStateMachine::on_leader_start() {
+    void MetaStateMachine::on_leader_start() {
         _is_leader.store(true);
     }
 
-    void BaseStateMachine::on_leader_start(int64_t term) {
+    void MetaStateMachine::on_leader_start(int64_t term) {
         TLOG_INFO("leader start at term: {}", term);
         on_leader_start();
     }
 
-    void BaseStateMachine::on_leader_stop() {
+    void MetaStateMachine::on_leader_stop() {
         _is_leader.store(false);
         TLOG_INFO("leader stop");
     }
 
-    void BaseStateMachine::on_leader_stop(const butil::Status &status) {
+    void MetaStateMachine::on_leader_stop(const butil::Status &status) {
         TLOG_INFO("leader stop, error_code:%d, error_des:{}",
                    status.error_code(), status.error_cstr());
         on_leader_stop();
     }
 
-    void BaseStateMachine::on_error(const ::braft::Error &e) {
+    void MetaStateMachine::on_error(const ::braft::Error &e) {
         TLOG_ERROR("discovery state machine error, error_type:{}, error_code:{}, error_des:{}",
                  static_cast<int>(e.type()), e.status().error_code(), e.status().error_cstr());
     }
 
-    void BaseStateMachine::on_configuration_committed(const ::braft::Configuration &conf) {
+    void MetaStateMachine::on_configuration_committed(const ::braft::Configuration &conf) {
         std::string new_peer;
         for (auto iter = conf.begin(); iter != conf.end(); ++iter) {
             new_peer += iter->to_string() + ",";
@@ -152,4 +134,4 @@ namespace EA::discovery {
         TLOG_INFO("new conf committed, new peer: {}", new_peer.c_str());
     }
 
-}  // namespace EA::discovery
+}  // namespace EA::db

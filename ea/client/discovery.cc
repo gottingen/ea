@@ -89,7 +89,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        if (response.errcode() != EA::discovery::SUCCESS) {
+        if (response.errcode() != EA::SUCCESS) {
             return turbo::UnavailableError(response.errmsg());
         }
         return turbo::OkStatus();
@@ -106,7 +106,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        if (response.errcode() != EA::discovery::SUCCESS) {
+        if (response.errcode() != EA::SUCCESS) {
             return turbo::UnavailableError(response.errmsg());
         }
         return turbo::OkStatus();
@@ -127,7 +127,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        if (response.errcode() != EA::discovery::SUCCESS) {
+        if (response.errcode() != EA::SUCCESS) {
             return turbo::UnavailableError(response.errmsg());
         }
         return turbo::OkStatus();
@@ -145,7 +145,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        if (response.errcode() != EA::discovery::SUCCESS) {
+        if (response.errcode() != EA::SUCCESS) {
             return turbo::UnavailableError(response.errmsg());
         }
         return turbo::OkStatus();
@@ -159,7 +159,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        if (response.errcode() != EA::discovery::SUCCESS) {
+        if (response.errcode() != EA::SUCCESS) {
             return turbo::UnknownError(response.errmsg());
         }
         auto res_configs = response.config_infos();
@@ -179,7 +179,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        if (response.errcode() != EA::discovery::SUCCESS) {
+        if (response.errcode() != EA::SUCCESS) {
             return turbo::UnknownError(response.errmsg());
         }
         auto res_configs = response.config_infos();
@@ -200,7 +200,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        if (response.errcode() != EA::discovery::SUCCESS) {
+        if (response.errcode() != EA::SUCCESS) {
             return turbo::UnknownError(response.errmsg());
         }
         auto res_configs = response.config_infos();
@@ -226,7 +226,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        if (response.errcode() != EA::discovery::SUCCESS) {
+        if (response.errcode() != EA::SUCCESS) {
             return turbo::UnknownError(response.errmsg());
         }
         if (response.config_infos_size() != 1) {
@@ -308,7 +308,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        if (response.errcode() != EA::discovery::SUCCESS) {
+        if (response.errcode() != EA::SUCCESS) {
             return turbo::UnknownError(response.errmsg());
         }
         if (response.config_infos_size() != 1) {
@@ -404,7 +404,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        if (response.errcode() != EA::discovery::SUCCESS) {
+        if (response.errcode() != EA::SUCCESS) {
             return turbo::UnknownError(response.errmsg());
         }
         return turbo::OkStatus();
@@ -425,7 +425,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        if (response.errcode() != EA::discovery::SUCCESS) {
+        if (response.errcode() != EA::SUCCESS) {
             return turbo::UnknownError(response.errmsg());
         }
         return turbo::OkStatus();
@@ -443,7 +443,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        if (response.errcode() != EA::discovery::SUCCESS) {
+        if (response.errcode() != EA::SUCCESS) {
             return turbo::UnknownError(response.errmsg());
         }
         return turbo::OkStatus();
@@ -594,7 +594,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        if (response.errcode() != EA::discovery::SUCCESS) {
+        if (response.errcode() != EA::SUCCESS) {
             return turbo::UnknownError(response.errmsg());
         }
         for (auto &ns: response.namespace_infos()) {
@@ -655,7 +655,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        if (response.errcode() != EA::discovery::SUCCESS) {
+        if (response.errcode() != EA::SUCCESS) {
             return turbo::UnknownError(response.errmsg());
         }
         if (response.namespace_infos_size() != 1) {
@@ -807,7 +807,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        if (response.errcode() != EA::discovery::SUCCESS) {
+        if (response.errcode() != EA::SUCCESS) {
             return turbo::UnknownError(response.errmsg());
         }
         for (auto &zone: response.zone_infos()) {
@@ -950,7 +950,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        if (response.errcode() != EA::discovery::SUCCESS) {
+        if (response.errcode() != EA::SUCCESS) {
             return turbo::UnknownError(response.errmsg());
         }
         if (response.zone_infos_size() != 1) {
@@ -1081,7 +1081,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        if (response.errcode() != EA::discovery::SUCCESS) {
+        if (response.errcode() != EA::SUCCESS) {
             return turbo::UnknownError(response.errmsg());
         }
         for (auto &servlet: response.servlet_infos()) {
@@ -1302,7 +1302,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        if (response.errcode() != EA::discovery::SUCCESS) {
+        if (response.errcode() != EA::SUCCESS) {
             return turbo::UnknownError(response.errmsg());
         }
         if (response.servlet_infos_size() != 1) {

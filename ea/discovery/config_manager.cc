@@ -29,7 +29,7 @@ namespace EA::discovery {
         brpc::ClosureGuard done_guard(done);
         if (!_discovery_state_machine->is_leader()) {
             if (response) {
-                response->set_errcode(EA::discovery::NOT_LEADER);
+                response->set_errcode(EA::NOT_LEADER);
                 response->set_errmsg("not leader");
                 response->set_leader(butil::endpoint2str(_discovery_state_machine->get_leader()).c_str());
             }
@@ -45,7 +45,7 @@ namespace EA::discovery {
             }
         }
         ON_SCOPE_EXIT(([cntl, log_id, response]() {
-            if (response != nullptr && response->errcode() != EA::discovery::SUCCESS) {
+            if (response != nullptr && response->errcode() != EA::SUCCESS) {
                 const auto &remote_side_tmp = butil::endpoint2str(cntl->remote_side());
                 const char *remote_side = remote_side_tmp.c_str();
                 TLOG_WARN("response error, remote_side:{}, log_id:{}", remote_side, log_id);
@@ -56,14 +56,14 @@ namespace EA::discovery {
             case EA::discovery::OP_CREATE_CONFIG:
             case EA::discovery::OP_REMOVE_CONFIG:
                 if(!request->has_config_info()) {
-                    ERROR_SET_RESPONSE(response, EA::discovery::INPUT_PARAM_ERROR,
+                    ERROR_SET_RESPONSE(response, EA::INPUT_PARAM_ERROR,
                                        "no config_info", request->op_type(), log_id);
                     return;
                 }
                 _discovery_state_machine->process(controller, request, response, done_guard.release());
                 return;
             default:
-                ERROR_SET_RESPONSE(response, EA::discovery::INPUT_PARAM_ERROR,
+                ERROR_SET_RESPONSE(response, EA::INPUT_PARAM_ERROR,
                                    "invalid op_type", request->op_type(), log_id);
                 return;
         }
@@ -89,30 +89,30 @@ namespace EA::discovery {
         if (it->second.find(version) != it->second.end()) {
             /// already exists
             TLOG_INFO("config :{} version: {} exist", name, version.to_string());
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INPUT_PARAM_ERROR, "config already exist");
+            IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "config already exist");
             return;
         }
         if(!it->second.empty() && it->second.rbegin()->first >= version) {
             /// Version numbers must increase monotonically
             TLOG_INFO("config :{} version: {} must be larger than current:{}", name, version.to_string(), it->second.rbegin()->first.to_string());
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INPUT_PARAM_ERROR, "Version numbers must increase monotonically");
+            IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "Version numbers must increase monotonically");
             return;
         }
         std::string rocks_key = make_config_key(name, version);
         std::string rocks_value;
         if (!create_request.SerializeToString(&rocks_value)) {
-            IF_DONE_SET_RESPONSE(done, EA::discovery::PARSE_TO_PB_FAIL, "serializeToArray fail");
+            IF_DONE_SET_RESPONSE(done, EA::PARSE_TO_PB_FAIL, "serializeToArray fail");
             return;
         }
 
         int ret = DiscoveryRocksdb::get_instance()->put_discovery_info(rocks_key, rocks_value);
         if (ret < 0) {
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INTERNAL_ERROR, "write db fail");
+            IF_DONE_SET_RESPONSE(done, EA::INTERNAL_ERROR, "write db fail");
             return;
         }
         it->second[version] = create_request;
         TLOG_INFO("config :{} version: {} create", name, version.to_string());
-        IF_DONE_SET_RESPONSE(done, EA::discovery::SUCCESS, "success");
+        IF_DONE_SET_RESPONSE(done, EA::SUCCESS, "success");
     }
 
 
@@ -127,7 +127,7 @@ namespace EA::discovery {
         }
         auto it = _configs.find(name);
         if (it == _configs.end()) {
-            IF_DONE_SET_RESPONSE(done, EA::discovery::PARSE_TO_PB_FAIL, "config not exist");
+            IF_DONE_SET_RESPONSE(done, EA::PARSE_TO_PB_FAIL, "config not exist");
             return;
         }
         turbo::ModuleVersion version(remove_request.version().major(), remove_request.version().minor(),
@@ -136,20 +136,20 @@ namespace EA::discovery {
         if (it->second.find(version) == it->second.end()) {
             /// not exists
             TLOG_INFO("config :{} version: {} not exist", name, version.to_string());
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INPUT_PARAM_ERROR, "config not exist");
+            IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "config not exist");
         }
 
         std::string rocks_key = make_config_key(name, version);
         int ret = DiscoveryRocksdb::get_instance()->remove_discovery_info(std::vector{rocks_key});
         if (ret < 0) {
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INTERNAL_ERROR, "delete from db fail");
+            IF_DONE_SET_RESPONSE(done, EA::INTERNAL_ERROR, "delete from db fail");
             return;
         }
         it->second.erase(version);
         if(it->second.empty()) {
             _configs.erase(name);
         }
-        IF_DONE_SET_RESPONSE(done, EA::discovery::SUCCESS, "success");
+        IF_DONE_SET_RESPONSE(done, EA::SUCCESS, "success");
     }
 
     void ConfigManager::remove_config_all(const ::EA::discovery::DiscoveryManagerRequest &request, braft::Closure *done) {
@@ -157,7 +157,7 @@ namespace EA::discovery {
         auto &name = remove_request.name();
         auto it = _configs.find(name);
         if (it == _configs.end()) {
-            IF_DONE_SET_RESPONSE(done, EA::discovery::PARSE_TO_PB_FAIL, "config not exist");
+            IF_DONE_SET_RESPONSE(done, EA::PARSE_TO_PB_FAIL, "config not exist");
             return;
         }
         std::vector<std::string> del_keys;
@@ -169,11 +169,11 @@ namespace EA::discovery {
 
         int ret = DiscoveryRocksdb::get_instance()->remove_discovery_info(del_keys);
         if (ret < 0) {
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INTERNAL_ERROR, "delete from db fail");
+            IF_DONE_SET_RESPONSE(done, EA::INTERNAL_ERROR, "delete from db fail");
             return;
         }
         _configs.erase(name);
-        IF_DONE_SET_RESPONSE(done, EA::discovery::SUCCESS, "success");
+        IF_DONE_SET_RESPONSE(done, EA::SUCCESS, "success");
     }
 
     int ConfigManager::load_snapshot() {

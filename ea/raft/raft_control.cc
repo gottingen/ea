@@ -25,8 +25,8 @@ namespace EA {
     class RaftControlDone : public braft::Closure {
     public:
         RaftControlDone(google::protobuf::RpcController *controller,
-                        const EA::discovery::RaftControlRequest *request,
-                        EA::discovery::RaftControlResponse *response,
+                        const EA::RaftControlRequest *request,
+                        EA::RaftControlResponse *response,
                         google::protobuf::Closure *done,
                         braft::Node *node)
                 : _controller(controller),
@@ -47,7 +47,7 @@ namespace EA {
                 TLOG_INFO("raft control success, type:{}, region_id:{}, remote_side: {}, log_id:{}",
                           _request->op_type(), _request->region_id(),
                           butil::endpoint2str(cntl->remote_side()).c_str(), log_id);
-                _response->set_errcode(EA::discovery::SUCCESS);
+                _response->set_errcode(EA::SUCCESS);
             } else {
                 TLOG_WARN("raft control failed, type:{}, region_id:{},"
                            " status:{}:{}, remote_side: {}, log_id:{}",
@@ -55,7 +55,7 @@ namespace EA {
                            status().error_code(), status().error_cstr(),
                            butil::endpoint2str(cntl->remote_side()).c_str(),
                            log_id);
-                _response->set_errcode(EA::discovery::INTERNAL_ERROR);
+                _response->set_errcode(EA::INTERNAL_ERROR);
                 _response->set_errmsg(status().error_cstr());
                 _response->set_leader(butil::endpoint2str(_node->leader_id().addr).c_str());
             }
@@ -66,15 +66,15 @@ namespace EA {
 
     private:
         google::protobuf::RpcController *_controller;
-        const EA::discovery::RaftControlRequest *_request;
-        EA::discovery::RaftControlResponse *_response;
+        const EA::RaftControlRequest *_request;
+        EA::RaftControlResponse *_response;
         google::protobuf::Closure *_done;
         braft::Node *_node;
     };
 
     void _set_peer(google::protobuf::RpcController *controller,
-                   const EA::discovery::RaftControlRequest *request,
-                   EA::discovery::RaftControlResponse *response,
+                   const EA::RaftControlRequest *request,
+                   EA::RaftControlResponse *response,
                    google::protobuf::Closure *done,
                    braft::Node *node);
 
@@ -82,14 +82,14 @@ namespace EA {
                     const std::vector<braft::PeerId> &new_peers, braft::PeerId *peer);
 
     void _trans_leader(google::protobuf::RpcController *controller,
-                       const EA::discovery::RaftControlRequest *request,
-                       EA::discovery::RaftControlResponse *response,
+                       const EA::RaftControlRequest *request,
+                       EA::RaftControlResponse *response,
                        google::protobuf::Closure *done,
                        braft::Node *node);
 
     void common_raft_control(google::protobuf::RpcController *controller,
-                             const EA::discovery::RaftControlRequest *request,
-                             EA::discovery::RaftControlResponse *response,
+                             const EA::RaftControlRequest *request,
+                             EA::RaftControlResponse *response,
                              google::protobuf::Closure *done,
                              braft::Node *node) {
         auto cntl = static_cast<brpc::Controller *>(controller);
@@ -102,42 +102,42 @@ namespace EA {
 
 
         switch (request->op_type()) {
-            case EA::discovery::SetPeer : {
+            case EA::SetPeer : {
                 _set_peer(controller, request, response, done_guard.release(), node);
                 return;
             }
-            case EA::discovery::SnapShot : {
+            case EA::SnapShot : {
                 RaftControlDone *snapshot_done =
                         new RaftControlDone(cntl, request, response, done_guard.release(), node);
                 node->snapshot(snapshot_done);
                 return;
             }
-            case EA::discovery::ShutDown : {
+            case EA::ShutDown : {
                 RaftControlDone *shutdown_done =
                         new RaftControlDone(cntl, request, response, done_guard.release(), node);
                 node->shutdown(shutdown_done);
                 return;
             }
-            case EA::discovery::TransLeader : {
+            case EA::TransLeader : {
                 _trans_leader(controller, request, response, done_guard.release(), node);
                 return;
             }
-            case EA::discovery::GetLeader : {
+            case EA::GetLeader : {
                 butil::EndPoint leader_addr = node->leader_id().addr;
                 if (leader_addr != butil::EndPoint()) {
-                    response->set_errcode(EA::discovery::SUCCESS);
+                    response->set_errcode(EA::SUCCESS);
                     response->set_leader(butil::endpoint2str(leader_addr).c_str());
                 } else {
                     TLOG_ERROR("node:{} {} get leader fail, log_id:{}",
                              node->node_id().group_id.c_str(),
                              node->node_id().peer_id.to_string().c_str(),
                              log_id);
-                    response->set_errcode(EA::discovery::INTERNAL_ERROR);
+                    response->set_errcode(EA::INTERNAL_ERROR);
                     response->set_errmsg("get leader fail");
                 }
                 return;
             }
-            case EA::discovery::ListPeer: {
+            case EA::ListPeer: {
                 butil::EndPoint leader_addr = node->leader_id().addr;
                 if (leader_addr != butil::EndPoint()) {
                     response->set_leader(butil::endpoint2str(leader_addr).c_str());
@@ -148,28 +148,28 @@ namespace EA {
                                    node->node_id().group_id.c_str(),
                                    node->node_id().peer_id.to_string().c_str(),
                                    log_id);
-                        response->set_errcode(EA::discovery::INTERNAL_ERROR);
+                        response->set_errcode(EA::INTERNAL_ERROR);
                         response->set_errmsg("list peers fail");
                         return;
                     }
                     for(auto &peer : peers) {
                         response->add_peers(butil::endpoint2str(peer.addr).c_str());
                     }
-                    response->set_errcode(EA::discovery::SUCCESS);
+                    response->set_errcode(EA::SUCCESS);
                     return;
                 } else {
                     TLOG_ERROR("node:{} {} get leader fail, log_id:{}",
                                node->node_id().group_id.c_str(),
                                node->node_id().peer_id.to_string().c_str(),
                                log_id);
-                    response->set_errcode(EA::discovery::INTERNAL_ERROR);
+                    response->set_errcode(EA::INTERNAL_ERROR);
                     response->set_errmsg("get leader fail");
                 }
                 return;
             }
-            case EA::discovery::ResetVoteTime : {
+            case EA::ResetVoteTime : {
                 node->reset_election_timeout_ms(request->election_time());
-                response->set_errcode(EA::discovery::SUCCESS);
+                response->set_errcode(EA::SUCCESS);
                 return;
             }
             default:
@@ -182,8 +182,8 @@ namespace EA {
     }
 
     void _set_peer(google::protobuf::RpcController *controller,
-                   const EA::discovery::RaftControlRequest *request,
-                   EA::discovery::RaftControlResponse *response,
+                   const EA::RaftControlRequest *request,
+                   EA::RaftControlResponse *response,
                    google::protobuf::Closure *done,
                    braft::Node *node) {
         auto cntl =
@@ -199,7 +199,7 @@ namespace EA {
         for (int i = 0; i < request->old_peers_size(); i++) {
             braft::PeerId peer;
             if (peer.parse(request->old_peers(i)) != 0) {
-                response->set_errcode(EA::discovery::INPUT_PARAM_ERROR);
+                response->set_errcode(EA::INPUT_PARAM_ERROR);
                 response->set_errmsg("old peer parse fail");
                 return;
             }
@@ -208,7 +208,7 @@ namespace EA {
         for (int i = 0; i < request->new_peers_size(); i++) {
             braft::PeerId peer;
             if (peer.parse(request->new_peers(i)) != 0) {
-                response->set_errcode(EA::discovery::INPUT_PARAM_ERROR);
+                response->set_errcode(EA::INPUT_PARAM_ERROR);
                 response->set_errmsg("new peer parse fail");
                 return;
             }
@@ -223,10 +223,10 @@ namespace EA {
                          node->node_id().peer_id.to_string().c_str(),
                          status.error_code(), status.error_cstr(),
                          status.error_cstr());
-                response->set_errcode(EA::discovery::INTERNAL_ERROR);
+                response->set_errcode(EA::INTERNAL_ERROR);
                 response->set_errmsg("force set peer fail");
             } else {
-                response->set_errcode(EA::discovery::SUCCESS);
+                response->set_errcode(EA::SUCCESS);
                 response->set_errmsg("force set peer success");
             }
             return;
@@ -234,7 +234,7 @@ namespace EA {
         std::vector<braft::PeerId> inner_peers;
         auto status = node->list_peers(&inner_peers);
         if (!status.ok() && status.error_code() == 1) {
-            response->set_errcode(EA::discovery::NOT_LEADER);
+            response->set_errcode(EA::NOT_LEADER);
             response->set_leader(butil::endpoint2str(node->leader_id().addr).c_str());
             TLOG_WARN("node:{} {} list peers fail, not leader, status:{} {}, log_id: {}",
                        node->node_id().group_id.c_str(),
@@ -244,7 +244,7 @@ namespace EA {
             return;
         }
         if (!status.ok()) {
-            response->set_errcode(EA::discovery::PEER_NOT_EQUAL);
+            response->set_errcode(EA::PEER_NOT_EQUAL);
             response->set_errmsg("node list peer fail");
             TLOG_WARN("node:{} {} list peers fail, status:{} {}, log_id: {}",
                        node->node_id().group_id.c_str(),
@@ -262,7 +262,7 @@ namespace EA {
                        old_peers.size(),
                        butil::endpoint2str(cntl->remote_side()).c_str(),
                        log_id);
-            response->set_errcode(EA::discovery::PEER_NOT_EQUAL);
+            response->set_errcode(EA::PEER_NOT_EQUAL);
             response->set_errmsg("peer size not equal");
             return;
         }
@@ -274,7 +274,7 @@ namespace EA {
                            node->node_id().peer_id.to_string().c_str(),
                            butil::endpoint2str(inner_peer.addr).c_str(),
                            log_id);
-                response->set_errcode(EA::discovery::PEER_NOT_EQUAL);
+                response->set_errcode(EA::PEER_NOT_EQUAL);
                 response->set_errmsg("peer not equal");
                 return;
             }
@@ -287,7 +287,7 @@ namespace EA {
                         new RaftControlDone(cntl, request, response, done_guard.release(), node);
                 node->add_peer(peer, set_peer_done);
             } else {
-                response->set_errcode(EA::discovery::INPUT_PARAM_ERROR);
+                response->set_errcode(EA::INPUT_PARAM_ERROR);
                 response->set_errmsg("diff peer fail when add peer");
                 TLOG_ERROR("node:{} {} set peer fail, log_id:{}",
                          node->node_id().group_id.c_str(),
@@ -323,7 +323,7 @@ namespace EA {
                             new RaftControlDone(cntl, request, response, done_guard.release(), node);
                     node->remove_peer(peer, set_peer_done);
                 } else {
-                    response->set_errcode(EA::discovery::INPUT_PARAM_ERROR);
+                    response->set_errcode(EA::INPUT_PARAM_ERROR);
                     response->set_errmsg("other peer is faulty");
                     TLOG_ERROR("node:{} {} set peer fail,log_id:{}",
                              node->node_id().group_id.c_str(),
@@ -332,7 +332,7 @@ namespace EA {
                     return;
                 }
             } else {
-                response->set_errcode(EA::discovery::INPUT_PARAM_ERROR);
+                response->set_errcode(EA::INPUT_PARAM_ERROR);
                 response->set_errmsg("diff peer fail when remove peer");
                 TLOG_ERROR("node:{} {} set peer fail,log_id:{}",
                          node->node_id().group_id.c_str(),
@@ -341,7 +341,7 @@ namespace EA {
                 return;
             }
         } else {
-            response->set_errcode(EA::discovery::INPUT_PARAM_ERROR);
+            response->set_errcode(EA::INPUT_PARAM_ERROR);
             response->set_errmsg("set peer fail");
             TLOG_INFO("node:{} {}, set_peer argument failed, log_id:{}",
                       node->node_id().group_id.c_str(),
@@ -351,8 +351,8 @@ namespace EA {
     }
 
     void _trans_leader(google::protobuf::RpcController *controller,
-                       const EA::discovery::RaftControlRequest *request,
-                       EA::discovery::RaftControlResponse *response,
+                       const EA::RaftControlRequest *request,
+                       EA::RaftControlResponse *response,
                        google::protobuf::Closure *done,
                        braft::Node *node) {
         brpc::ClosureGuard done_guard(done);
@@ -364,14 +364,14 @@ namespace EA {
         }
         braft::PeerId peer;
         if (peer.parse(request->new_leader()) != 0) {
-            response->set_errcode(EA::discovery::INPUT_PARAM_ERROR);
+            response->set_errcode(EA::INPUT_PARAM_ERROR);
             response->set_errmsg("new leader parse fail");
             return;
         }
         // return 0 or -1
         int ret = node->transfer_leadership_to(peer);
         if (ret != 0) {
-            response->set_errcode(EA::discovery::NOT_LEADER);
+            response->set_errcode(EA::NOT_LEADER);
             response->set_leader(butil::endpoint2str(node->leader_id().addr).c_str());
             TLOG_WARN("node:{} {} transfer leader fail, log_id:{}",
                        node->node_id().group_id.c_str(),
@@ -386,14 +386,14 @@ namespace EA {
                        node->node_id().group_id.c_str(),
                        node->node_id().peer_id.to_string().c_str(),
                        log_id);
-            response->set_errcode(EA::discovery::INTERNAL_ERROR);
+            response->set_errcode(EA::INTERNAL_ERROR);
             response->set_errmsg("list peers fail");
             return;
         }
         for(auto &peer : peers) {
             response->add_peers(butil::endpoint2str(peer.addr).c_str());
         }
-        response->set_errcode(EA::discovery::SUCCESS);
+        response->set_errcode(EA::SUCCESS);
         response->set_leader(request->new_leader());
     }
 

@@ -32,7 +32,7 @@ message MetaManageRequest {
 
 message MetaManageResponse {
   required MetaOP meta_op = 1;
-  required ErrorCode error_code = 2;
-  optional string error_message = 3;
+  required ErrorCode errcode = 2;
+  optional string errmsg = 3;
   optional string leader = 4;
 }

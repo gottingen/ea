@@ -32,7 +32,7 @@ namespace EA::discovery {
                 int64_t id = manager->_namespace_id_map[namespace_name];
                 *(response->add_namespace_infos()) = manager->_namespace_info_map[id];
             } else {
-                response->set_errcode(EA::discovery::INPUT_PARAM_ERROR);
+                response->set_errcode(EA::INPUT_PARAM_ERROR);
                 response->set_errmsg("namespace not exist");
                 TLOG_ERROR("namespace: {}  not exist", namespace_name.c_str());
             }

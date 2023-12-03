@@ -16,3 +16,8 @@ syntax="proto2";
 package EA.db;
 option cc_generic_services = true;
 
+import "ea/proto/meta.struct.proto";
+
+service MetaService {
+  rpc meta_manage(MetaManageRequest) returns (MetaManageResponse);
+}

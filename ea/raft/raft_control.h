@@ -20,12 +20,12 @@
 #include <brpc/channel.h>
 #include <brpc/server.h>
 #include <brpc/controller.h>
-#include "eapi/discovery/raft.pb.h"
+#include "eapi/raft/raft.pb.h"
 
 namespace EA {
     extern void common_raft_control(google::protobuf::RpcController *controller,
-                                    const EA::discovery::RaftControlRequest *request,
-                                    EA::discovery::RaftControlResponse *response,
+                                    const EA::RaftControlRequest *request,
+                                    EA::RaftControlResponse *response,
                                     google::protobuf::Closure *done,
                                     braft::Node *node);
 }

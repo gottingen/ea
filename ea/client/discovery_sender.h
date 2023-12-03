@@ -259,13 +259,13 @@ namespace EA::client {
                 ++retry_time;
                 continue;
             }
-            if (response.errcode() == EA::discovery::HAVE_NOT_INIT) {
+            if (response.errcode() == EA::HAVE_NOT_INIT) {
                 TLOG_WARN_IF(_verbose, "connect with server fail. HAVE_NOT_INIT  log_id:{}", cntl.log_id());
                 set_leader_address(butil::EndPoint());
                 ++retry_time;
                 continue;
             }
-            if (response.errcode() == EA::discovery::NOT_LEADER) {
+            if (response.errcode() == EA::NOT_LEADER) {
                 TLOG_WARN_IF(_verbose, "connect with discovery server:{} fail. not leader, redirect to :{}, log_id:{}",
                              butil::endpoint2str(cntl.remote_side()).c_str(),
                              response.leader(), cntl.log_id());

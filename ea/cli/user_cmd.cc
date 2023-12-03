@@ -182,7 +182,7 @@ namespace EA::cli {
                                                request.op_type(),
                                                response.errmsg());
         ss.add_table("result", std::move(table));
-        if (response.errcode() != EA::discovery::SUCCESS) {
+        if (response.errcode() != EA::SUCCESS) {
             return;
         }
         table = show_discovery_query_user_response(response);
@@ -202,7 +202,7 @@ namespace EA::cli {
                                                request.op_type(),
                                                response.errmsg());
         ss.add_table("result", std::move(table));
-        if (response.errcode() != EA::discovery::SUCCESS) {
+        if (response.errcode() != EA::SUCCESS) {
             return;
         }
         table = show_discovery_query_user_flat_response(response);
@@ -222,7 +222,7 @@ namespace EA::cli {
                                                request.op_type(),
                                                response.errmsg());
         ss.add_table("result", std::move(table));
-        if (response.errcode() != EA::discovery::SUCCESS) {
+        if (response.errcode() != EA::SUCCESS) {
             return;
         }
         table = show_discovery_query_user_response(response);

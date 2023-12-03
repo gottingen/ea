@@ -180,8 +180,8 @@ namespace EA::cli {
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(response.errcode(), request.op_type(),
                                                response.errmsg());
-        ss.add_table("result", std::move(table), response.errcode() == EA::discovery::SUCCESS);
-        if (response.errcode() == EA::discovery::SUCCESS) {
+        ss.add_table("result", std::move(table), response.errcode() == EA::SUCCESS);
+        if (response.errcode() == EA::SUCCESS) {
             table = show_query_instance_list_response(response);
             ss.add_table("summary", std::move(table), true);
         }
@@ -198,8 +198,8 @@ namespace EA::cli {
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(response.errcode(), request.op_type(),
                                                response.errmsg());
-        ss.add_table("result", std::move(table), response.errcode() == EA::discovery::SUCCESS);
-        if (response.errcode() == EA::discovery::SUCCESS) {
+        ss.add_table("result", std::move(table), response.errcode() == EA::SUCCESS);
+        if (response.errcode() == EA::SUCCESS) {
             table = show_query_instance_info_response(response);
             ss.add_table("summary", std::move(table), true);
         }

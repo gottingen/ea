@@ -221,7 +221,7 @@ namespace EA::client {
             }
             return turbo::OkStatus();
             /*
-            if (response.errcode() != EA::discovery::SUCCESS) {
+            if (response.errcode() != EA::SUCCESS) {
                 TLOG_WARN_IF(_verbose, "send discovery server fail, log_id:{}, response:{}", cntl.log_id(),
                              response.ShortDebugString());
                 //return turbo::UnavailableError("send discovery server fail, log_id:{}, response:{}", cntl.log_id(),

@@ -173,7 +173,7 @@ namespace EA::discovery {
 
         TLOG_ERROR("request has wrong op_type:{} , log_id:{}",
                  request->op_type(), log_id);
-        response->set_errcode(EA::discovery::INPUT_PARAM_ERROR);
+        response->set_errcode(EA::INPUT_PARAM_ERROR);
         response->set_errmsg("invalid op_type");
         response->set_op_type(request->op_type());
     }
@@ -193,7 +193,7 @@ namespace EA::discovery {
         }
         RETURN_IF_NOT_INIT(_init_success, response, log_id);
         TimeCost time_cost;
-        response->set_errcode(EA::discovery::SUCCESS);
+        response->set_errcode(EA::SUCCESS);
         response->set_errmsg("success");
         switch (request->op_type()) {
             case EA::discovery::QUERY_USER_PRIVILEGE: {
@@ -241,7 +241,7 @@ namespace EA::discovery {
             default: {
                 TLOG_WARN("invalid op_type, request:{} logid:{}",
                            request->ShortDebugString(), log_id);
-                response->set_errcode(EA::discovery::INPUT_PARAM_ERROR);
+                response->set_errcode(EA::INPUT_PARAM_ERROR);
                 response->set_errmsg("invalid op_type");
             }
         }
@@ -251,8 +251,8 @@ namespace EA::discovery {
     }
 
     void DiscoveryServer::raft_control(google::protobuf::RpcController *controller,
-                                  const EA::discovery::RaftControlRequest *request,
-                                  EA::discovery::RaftControlResponse *response,
+                                  const EA::RaftControlRequest *request,
+                                  EA::RaftControlResponse *response,
                                   google::protobuf::Closure *done) {
         brpc::ClosureGuard done_guard(done);
         if (request->region_id() == 0) {
@@ -268,7 +268,7 @@ namespace EA::discovery {
             return;
         }
         response->set_region_id(request->region_id());
-        response->set_errcode(EA::discovery::INPUT_PARAM_ERROR);
+        response->set_errcode(EA::INPUT_PARAM_ERROR);
         response->set_errmsg("unmatch region id");
         TLOG_ERROR("unmatch region_id in discovery server, request: {}", request->ShortDebugString());
     }

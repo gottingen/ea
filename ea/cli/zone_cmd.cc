@@ -123,7 +123,7 @@ namespace EA::cli {
         auto table = ShowHelper::show_response(OptionContext::get_instance()->router_server, response.errcode(), request.op_type(),
                                                response.errmsg());
         ss.add_table("result", std::move(table));
-        if(response.errcode() != EA::discovery::SUCCESS) {
+        if(response.errcode() != EA::SUCCESS) {
             return;
         }
         table = show_discovery_query_zone_response(response);
@@ -142,7 +142,7 @@ namespace EA::cli {
         auto table = ShowHelper::show_response(OptionContext::get_instance()->router_server, response.errcode(), request.op_type(),
                                                response.errmsg());
         ss.add_table("result", std::move(table));
-        if(response.errcode() != EA::discovery::SUCCESS) {
+        if(response.errcode() != EA::SUCCESS) {
             return;
         }
         table = show_discovery_query_zone_response(response);

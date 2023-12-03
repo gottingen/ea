@@ -31,7 +31,7 @@ namespace EA::discovery {
         brpc::ClosureGuard done_guard(done);
         if (!_discovery_state_machine->is_leader()) {
             if (response) {
-                response->set_errcode(EA::discovery::NOT_LEADER);
+                response->set_errcode(EA::NOT_LEADER);
                 response->set_errmsg("not leader");
                 response->set_leader(butil::endpoint2str(_discovery_state_machine->get_leader()).c_str());
             }
@@ -47,7 +47,7 @@ namespace EA::discovery {
             }
         }
         ON_SCOPE_EXIT(([cntl, log_id, response]() {
-            if (response != nullptr && response->errcode() != EA::discovery::SUCCESS) {
+            if (response != nullptr && response->errcode() != EA::SUCCESS) {
                 const auto &remote_side_tmp = butil::endpoint2str(cntl->remote_side());
                 const char *remote_side = remote_side_tmp.c_str();
                 TLOG_WARN("response error, remote_side:{}, log_id:{}", remote_side, log_id);
@@ -58,7 +58,7 @@ namespace EA::discovery {
             case EA::discovery::OP_MODIFY_NAMESPACE:
             case EA::discovery::OP_DROP_NAMESPACE: {
                 if (!request->has_namespace_info()) {
-                    ERROR_SET_RESPONSE(response, EA::discovery::INPUT_PARAM_ERROR,
+                    ERROR_SET_RESPONSE(response, EA::INPUT_PARAM_ERROR,
                                        "no namespace_info", request->op_type(), log_id);
                     return;
 
@@ -69,7 +69,7 @@ namespace EA::discovery {
                 case EA::discovery::OP_MODIFY_ZONE:
                 case EA::discovery::OP_DROP_ZONE: {
                     if (!request->has_zone_info()) {
-                        ERROR_SET_RESPONSE(response, EA::discovery::INPUT_PARAM_ERROR,
+                        ERROR_SET_RESPONSE(response, EA::INPUT_PARAM_ERROR,
                                            "no zone_info", request->op_type(), log_id);
                         return;
                     }
@@ -80,7 +80,7 @@ namespace EA::discovery {
                 case EA::discovery::OP_MODIFY_SERVLET:
                 case EA::discovery::OP_DROP_SERVLET: {
                     if (!request->has_servlet_info()) {
-                        ERROR_SET_RESPONSE(response, EA::discovery::INPUT_PARAM_ERROR,
+                        ERROR_SET_RESPONSE(response, EA::INPUT_PARAM_ERROR,
                                            "no servlet info", request->op_type(), log_id);
                         return;
                     }
@@ -91,7 +91,7 @@ namespace EA::discovery {
                 case EA::discovery::OP_DROP_INSTANCE:
                 case EA::discovery::OP_UPDATE_INSTANCE: {
                     if (!request->has_instance_info()) {
-                        ERROR_SET_RESPONSE(response, EA::discovery::INPUT_PARAM_ERROR,
+                        ERROR_SET_RESPONSE(response, EA::INPUT_PARAM_ERROR,
                                            "no instance info", request->op_type(), log_id);
                         return;
                     }
@@ -101,7 +101,7 @@ namespace EA::discovery {
                         || !instance.has_servlet_name()
                         || !instance.has_address()
                         || !instance.has_env()) {
-                        ERROR_SET_RESPONSE(response, EA::discovery::INPUT_PARAM_ERROR,
+                        ERROR_SET_RESPONSE(response, EA::INPUT_PARAM_ERROR,
                                            "no required namespace zone or servlet info", request->op_type(), log_id);
                         return;
                     }
@@ -111,7 +111,7 @@ namespace EA::discovery {
             }
 
             default:
-                ERROR_SET_RESPONSE(response, EA::discovery::INPUT_PARAM_ERROR,
+                ERROR_SET_RESPONSE(response, EA::INPUT_PARAM_ERROR,
                                    "invalid op_type", request->op_type(), log_id);
                 return;
         }

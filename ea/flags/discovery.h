@@ -14,8 +14,8 @@
 
 
 
-#ifndef EA_FLAGS_META_H_
-#define EA_FLAGS_META_H_
+#ifndef EA_FLAGS_DISCOVERY_H_
+#define EA_FLAGS_DISCOVERY_H_
 
 #include "gflags/gflags_declare.h"
 
@@ -41,4 +41,4 @@ namespace EA {
 
 }  // namespace EA
 
-#endif  // EA_FLAGS_META_H_
+#endif  // EA_FLAGS_DISCOVERY_H_

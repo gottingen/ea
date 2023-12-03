@@ -21,7 +21,7 @@ namespace EA::discovery {
                                         ::EA::discovery::DiscoveryQueryResponse *response) {
         if (!request->has_config_name()) {
             response->set_errmsg("config name not set");
-            response->set_errcode(EA::discovery::INPUT_PARAM_ERROR);
+            response->set_errcode(EA::INPUT_PARAM_ERROR);
             return;
         }
         BAIDU_SCOPED_LOCK( ConfigManager::get_instance()->_config_mutex);
@@ -30,7 +30,7 @@ namespace EA::discovery {
         auto it = configs.find(name);
         if (it == configs.end() || it->second.empty()) {
             response->set_errmsg("config not exist");
-            response->set_errcode(EA::discovery::INPUT_PARAM_ERROR);
+            response->set_errcode(EA::INPUT_PARAM_ERROR);
             return;
         }
         turbo::ModuleVersion version;
@@ -41,7 +41,7 @@ namespace EA::discovery {
             auto cit = it->second.rbegin();
             *(response->add_config_infos()) = cit->second;
             response->set_errmsg("success");
-            response->set_errcode(EA::discovery::SUCCESS);
+            response->set_errcode(EA::SUCCESS);
             return;
         }
         auto &request_version = request->config_version();
@@ -51,13 +51,13 @@ namespace EA::discovery {
         if (cit == it->second.end()) {
             /// not exists
             response->set_errmsg("config not exist");
-            response->set_errcode(EA::discovery::INPUT_PARAM_ERROR);
+            response->set_errcode(EA::INPUT_PARAM_ERROR);
             return;
         }
 
         *(response->add_config_infos()) = cit->second;
         response->set_errmsg("success");
-        response->set_errcode(EA::discovery::SUCCESS);
+        response->set_errcode(EA::SUCCESS);
     }
 
     void QueryConfigManager::list_config(const ::EA::discovery::DiscoveryQueryRequest *request,
@@ -71,14 +71,14 @@ namespace EA::discovery {
             *(response->add_config_infos()) = config;
         }
         response->set_errmsg("success");
-        response->set_errcode(EA::discovery::SUCCESS);
+        response->set_errcode(EA::SUCCESS);
     }
 
     void QueryConfigManager::list_config_version(const ::EA::discovery::DiscoveryQueryRequest *request,
                                                  ::EA::discovery::DiscoveryQueryResponse *response) {
         if (!request->has_config_name()) {
             response->set_errmsg("config name not set");
-            response->set_errcode(EA::discovery::INPUT_PARAM_ERROR);
+            response->set_errcode(EA::INPUT_PARAM_ERROR);
             return;
         }
         auto &name = request->config_name();
@@ -87,7 +87,7 @@ namespace EA::discovery {
         auto it = configs.find(name);
         if (it == configs.end()) {
             response->set_errmsg("config not exist");
-            response->set_errcode(EA::discovery::INPUT_PARAM_ERROR);
+            response->set_errcode(EA::INPUT_PARAM_ERROR);
             return;
         }
         response->mutable_config_infos()->Reserve(it->second.size());
@@ -95,7 +95,7 @@ namespace EA::discovery {
             *(response->add_config_infos()) = vit->second;
         }
         response->set_errmsg("success");
-        response->set_errcode(EA::discovery::SUCCESS);
+        response->set_errcode(EA::SUCCESS);
     }
 
 }  // namespace EA::discovery

@@ -134,7 +134,7 @@ namespace EA::cli {
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(response.errcode(), response.op_type(),
                                                response.errmsg());
-        ss.add_table("result", std::move(table), response.errcode() == EA::discovery::SUCCESS);
+        ss.add_table("result", std::move(table), response.errcode() == EA::SUCCESS);
     }
 
     void ConfigCmd::run_config_dump_cmd() {
@@ -245,8 +245,8 @@ namespace EA::cli {
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(response.errcode(), request.op_type(),
                                                response.errmsg());
-        ss.add_table("result", std::move(table), response.errcode() == EA::discovery::SUCCESS);
-        if (response.errcode() == EA::discovery::SUCCESS) {
+        ss.add_table("result", std::move(table), response.errcode() == EA::SUCCESS);
+        if (response.errcode() == EA::SUCCESS) {
             table = show_query_ops_config_list_response(response);
             ss.add_table("summary", std::move(table), true);
         }
@@ -263,8 +263,8 @@ namespace EA::cli {
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(response.errcode(), request.op_type(),
                                                response.errmsg());
-        ss.add_table("result", std::move(table), response.errcode() == EA::discovery::SUCCESS);
-        if (response.errcode() == EA::discovery::SUCCESS) {
+        ss.add_table("result", std::move(table), response.errcode() == EA::SUCCESS);
+        if (response.errcode() == EA::SUCCESS) {
             table = show_query_ops_config_list_version_response(response);
             ss.add_table("summary", std::move(table), true);
         }
@@ -282,7 +282,7 @@ namespace EA::cli {
         auto table = ShowHelper::show_response(response.errcode(), request.op_type(),
                                                response.errmsg());
         ss.add_table("result", std::move(table), true);
-        if (response.errcode() != EA::discovery::SUCCESS) {
+        if (response.errcode() != EA::SUCCESS) {
             return;
         }
         turbo::Status save_status;

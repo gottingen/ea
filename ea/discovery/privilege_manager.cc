@@ -35,7 +35,7 @@ namespace EA::discovery {
         }
         if (!request->has_user_privilege()) {
             ERROR_SET_RESPONSE(response,
-                               EA::discovery::INPUT_PARAM_ERROR,
+                               EA::INPUT_PARAM_ERROR,
                                "no user_privilege",
                                request->op_type(),
                                log_id);
@@ -45,7 +45,7 @@ namespace EA::discovery {
             case EA::discovery::OP_CREATE_USER: {
                 if (!request->user_privilege().has_password()) {
                     ERROR_SET_RESPONSE(response,
-                                       EA::discovery::INPUT_PARAM_ERROR,
+                                       EA::INPUT_PARAM_ERROR,
                                        "no password",
                                        request->op_type(),
                                        log_id);
@@ -62,7 +62,7 @@ namespace EA::discovery {
             }
             default: {
                 ERROR_SET_RESPONSE(response,
-                                   EA::discovery::INPUT_PARAM_ERROR,
+                                   EA::INPUT_PARAM_ERROR,
                                    "invalid op_type",
                                    request->op_type(),
                                    log_id);
@@ -77,13 +77,13 @@ namespace EA::discovery {
         if (_user_privilege.find(username) != _user_privilege.end()) {
             TLOG_WARN("request username has been created, username:{}",
                       user_privilege.username());
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INPUT_PARAM_ERROR, "username has been repeated");
+            IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "username has been repeated");
             return;
         }
         int ret = SchemaManager::get_instance()->check_and_get_for_privilege(user_privilege);
         if (ret < 0) {
             TLOG_WARN("request not illegal, request:{}", request.ShortDebugString());
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INPUT_PARAM_ERROR, "request invalid");
+            IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "request invalid");
             return;
         }
         user_privilege.set_version(1);
@@ -91,20 +91,20 @@ namespace EA::discovery {
         std::string value;
         if (!user_privilege.SerializeToString(&value)) {
             TLOG_WARN("request serializeToArray fail, request:{}", request.ShortDebugString());
-            IF_DONE_SET_RESPONSE(done, EA::discovery::PARSE_TO_PB_FAIL, "serializeToArray fail");
+            IF_DONE_SET_RESPONSE(done, EA::PARSE_TO_PB_FAIL, "serializeToArray fail");
             return;
         }
         // write date to rocksdb
         ret = DiscoveryRocksdb::get_instance()->put_discovery_info(construct_privilege_key(username), value);
         if (ret < 0) {
             TLOG_WARN("add username:{} privilege to rocksdb fail", username);
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INTERNAL_ERROR, "write db fail");
+            IF_DONE_SET_RESPONSE(done, EA::INTERNAL_ERROR, "write db fail");
             return;
         }
         // update memory values
         BAIDU_SCOPED_LOCK(_user_mutex);
         _user_privilege[username] = user_privilege;
-        IF_DONE_SET_RESPONSE(done, EA::discovery::SUCCESS, "success");
+        IF_DONE_SET_RESPONSE(done, EA::SUCCESS, "success");
         TLOG_INFO("create user success, request:{}", request.ShortDebugString());
     }
 
@@ -112,7 +112,7 @@ namespace EA::discovery {
         std::string username = request.user_privilege().username();
         if (_user_privilege.find(username) == _user_privilege.end()) {
             TLOG_WARN("request username not exist, username:{}", username);
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INPUT_PARAM_ERROR, "username not exist");
+            IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "username not exist");
             return;
         }
 
@@ -121,13 +121,13 @@ namespace EA::discovery {
                 std::vector<std::string>{construct_privilege_key(username)});
         if (ret < 0) {
             TLOG_WARN("drop username:{} privilege to rocksdb fail", username);
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INTERNAL_ERROR, "delete from db fail");
+            IF_DONE_SET_RESPONSE(done, EA::INTERNAL_ERROR, "delete from db fail");
             return;
         }
         // update memory
         BAIDU_SCOPED_LOCK(_user_mutex);
         _user_privilege.erase(username);
-        IF_DONE_SET_RESPONSE(done, EA::discovery::SUCCESS, "success");
+        IF_DONE_SET_RESPONSE(done, EA::SUCCESS, "success");
         TLOG_INFO("drop user success, request:{}", request.ShortDebugString());
     }
 
@@ -136,13 +136,13 @@ namespace EA::discovery {
         std::string username = user_privilege.username();
         if (_user_privilege.find(username) == _user_privilege.end()) {
             TLOG_WARN("request username not exist, username:{}", username);
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INPUT_PARAM_ERROR, "username not exist");
+            IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "username not exist");
             return;
         }
         int ret = SchemaManager::get_instance()->check_and_get_for_privilege(user_privilege);
         if (ret < 0) {
             TLOG_WARN("request not illegal, request:{}", request.ShortDebugString());
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INPUT_PARAM_ERROR, "request invalid");
+            IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "request invalid");
             return;
         }
         EA::discovery::UserPrivilege tmp_mem_privilege = _user_privilege[username];
@@ -166,19 +166,19 @@ namespace EA::discovery {
         std::string value;
         if (!tmp_mem_privilege.SerializeToString(&value)) {
             TLOG_WARN("request serializeToArray fail, request:{}", request.ShortDebugString());
-            IF_DONE_SET_RESPONSE(done, EA::discovery::PARSE_TO_PB_FAIL, "serializeToArray fail");
+            IF_DONE_SET_RESPONSE(done, EA::PARSE_TO_PB_FAIL, "serializeToArray fail");
             return;
         }
         // write date to rocksdb
         ret = DiscoveryRocksdb::get_instance()->put_discovery_info(construct_privilege_key(username), value);
         if (ret != 0) {
             TLOG_WARN("add username:{} privilege to rocksdb fail", username);
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INTERNAL_ERROR, "write db fail");
+            IF_DONE_SET_RESPONSE(done, EA::INTERNAL_ERROR, "write db fail");
             return;
         }
         BAIDU_SCOPED_LOCK(_user_mutex);
         _user_privilege[username] = tmp_mem_privilege;
-        IF_DONE_SET_RESPONSE(done, EA::discovery::SUCCESS, "success");
+        IF_DONE_SET_RESPONSE(done, EA::SUCCESS, "success");
         TLOG_INFO("add privilege success, request:{}", request.ShortDebugString());
     }
 
@@ -187,13 +187,13 @@ namespace EA::discovery {
         std::string username = user_privilege.username();
         if (_user_privilege.find(username) == _user_privilege.end()) {
             TLOG_WARN("request username not exist, username:{}", username);
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INPUT_PARAM_ERROR, "username not exist");
+            IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "username not exist");
             return;
         }
         int ret = SchemaManager::get_instance()->check_and_get_for_privilege(user_privilege);
         if (ret < 0) {
             TLOG_WARN("request not illegal, request:{}", request.ShortDebugString());
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INPUT_PARAM_ERROR, "request invalid");
+            IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "request invalid");
             return;
         }
         EA::discovery::UserPrivilege tmp_mem_privilege = _user_privilege[username];
@@ -220,19 +220,19 @@ namespace EA::discovery {
         std::string value;
         if (!tmp_mem_privilege.SerializeToString(&value)) {
             TLOG_WARN("request serializeToArray fail, request:{}", request.ShortDebugString());
-            IF_DONE_SET_RESPONSE(done, EA::discovery::PARSE_TO_PB_FAIL, "serializeToArray fail");
+            IF_DONE_SET_RESPONSE(done, EA::PARSE_TO_PB_FAIL, "serializeToArray fail");
             return;
         }
         // write date to rocksdb
         ret = DiscoveryRocksdb::get_instance()->put_discovery_info(construct_privilege_key(username), value);
         if (ret < 0) {
             TLOG_WARN("add username:{} privilege to rocksdb fail", username);
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INTERNAL_ERROR, "write db fail");
+            IF_DONE_SET_RESPONSE(done, EA::INTERNAL_ERROR, "write db fail");
             return;
         }
         BAIDU_SCOPED_LOCK(_user_mutex);
         _user_privilege[username] = tmp_mem_privilege;
-        IF_DONE_SET_RESPONSE(done, EA::discovery::SUCCESS, "success");
+        IF_DONE_SET_RESPONSE(done, EA::SUCCESS, "success");
         TLOG_INFO("drop privilege success, request:{}", request.ShortDebugString());
     }
 

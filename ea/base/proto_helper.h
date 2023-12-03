@@ -45,8 +45,8 @@ namespace fmt {
     };
 
     template<>
-    struct formatter<::EA::discovery::RaftControlOp> : public formatter<int> {
-        auto format(const ::EA::discovery::RaftControlOp& a, format_context& ctx) const {
+    struct formatter<::EA::RaftControlOp> : public formatter<int> {
+        auto format(const ::EA::RaftControlOp& a, format_context& ctx) const {
             return formatter<int>::format(static_cast<int>(a), ctx);
         }
     };

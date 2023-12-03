@@ -26,19 +26,19 @@ namespace EA::discovery {
         auto ret = SchemaManager::get_instance()->check_and_get_for_instance(instance_info);
         if (ret < 0) {
             TLOG_WARN("request not illegal, request:{}", request.ShortDebugString());
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INPUT_PARAM_ERROR, "request invalid");
+            IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "request invalid");
             return;
         }
         if (_instance_info.find(address) != _instance_info.end()) {
             TLOG_WARN("request instance:{} has been existed", address);
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INPUT_PARAM_ERROR, "instance already existed");
+            IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "instance already existed");
             return;
         }
         auto it = _removed_instance.find(address);
         if(it != _removed_instance.end()) {
             if(it->second.get_time_s() < int64_t(3600)) {
                 TLOG_WARN("request instance:{} has been removed in 1 hour", address);
-                IF_DONE_SET_RESPONSE(done, EA::discovery::INPUT_PARAM_ERROR, "removed in 1 hour");
+                IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "removed in 1 hour");
                 return;
             }
         }
@@ -51,7 +51,7 @@ namespace EA::discovery {
         std::string instance_value;
         if (!instance_info.SerializeToString(&instance_value)) {
             TLOG_WARN("request serializeToArray fail, request:{}", request.ShortDebugString());
-            IF_DONE_SET_RESPONSE(done, EA::discovery::PARSE_TO_PB_FAIL, "serializeToArray fail");
+            IF_DONE_SET_RESPONSE(done, EA::PARSE_TO_PB_FAIL, "serializeToArray fail");
             return;
         }
         rocksdb_keys.push_back(construct_instance_key(address));
@@ -61,13 +61,13 @@ namespace EA::discovery {
 
         ret = DiscoveryRocksdb::get_instance()->put_discovery_info(rocksdb_keys, rocksdb_values);
         if (ret < 0) {
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INTERNAL_ERROR, "write db fail");
+            IF_DONE_SET_RESPONSE(done, EA::INTERNAL_ERROR, "write db fail");
             return;
         }
         // update values in memory
         BAIDU_SCOPED_LOCK(_instance_mutex);
         set_instance_info(instance_info);
-        IF_DONE_SET_RESPONSE(done, EA::discovery::SUCCESS, "success");
+        IF_DONE_SET_RESPONSE(done, EA::SUCCESS, "success");
         TLOG_INFO("create instance success, request:{}", request.ShortDebugString());
     }
 
@@ -76,7 +76,7 @@ namespace EA::discovery {
         std::string address = instance_info.address();
         if (_instance_info.find(address) == _instance_info.end()) {
             TLOG_WARN("request address:{} not exist", address);
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INPUT_PARAM_ERROR, "address not exist");
+            IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "address not exist");
             return;
         }
 
@@ -84,12 +84,12 @@ namespace EA::discovery {
 
         int ret = DiscoveryRocksdb::get_instance()->remove_discovery_info(std::vector<std::string>{instance_key});
         if (ret < 0) {
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INTERNAL_ERROR, "write db fail");
+            IF_DONE_SET_RESPONSE(done, EA::INTERNAL_ERROR, "write db fail");
             return;
         }
 
         remove_instance_info(address);
-        IF_DONE_SET_RESPONSE(done, EA::discovery::SUCCESS, "success");
+        IF_DONE_SET_RESPONSE(done, EA::SUCCESS, "success");
         TLOG_INFO("drop instance success, request:{}", request.ShortDebugString());
     }
 
@@ -98,7 +98,7 @@ namespace EA::discovery {
         std::string address = instance_info.address();
         if (_instance_info.find(address) == _instance_info.end()) {
             TLOG_WARN("request address:{} not exist", address);
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INPUT_PARAM_ERROR, "address not exist");
+            IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "address not exist");
             return;
         }
 
@@ -123,19 +123,19 @@ namespace EA::discovery {
         std::string instance_value;
         if (!tmp_instance_pb.SerializeToString(&instance_value)) {
             TLOG_WARN("request serializeToArray fail, request:{}", request.ShortDebugString());
-            IF_DONE_SET_RESPONSE(done, EA::discovery::PARSE_TO_PB_FAIL, "serializeToArray fail");
+            IF_DONE_SET_RESPONSE(done, EA::PARSE_TO_PB_FAIL, "serializeToArray fail");
             return;
         }
 
         int ret = DiscoveryRocksdb::get_instance()->put_discovery_info(instance_key, instance_value);
         if (ret < 0) {
-            IF_DONE_SET_RESPONSE(done, EA::discovery::INTERNAL_ERROR, "write db fail");
+            IF_DONE_SET_RESPONSE(done, EA::INTERNAL_ERROR, "write db fail");
             return;
         }
 
         BAIDU_SCOPED_LOCK(_instance_mutex);
         set_instance_info(tmp_instance_pb);
-        IF_DONE_SET_RESPONSE(done, EA::discovery::SUCCESS, "success");
+        IF_DONE_SET_RESPONSE(done, EA::SUCCESS, "success");
         TLOG_INFO("drop instance success, request:{}", request.ShortDebugString());
     }
 

@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "ea/engine/rocks_storage.h"
+#include "ea/storage/rocks_storage.h"
 
 namespace EA::discovery {
     class DiscoveryRocksdb {

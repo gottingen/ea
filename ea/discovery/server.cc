@@ -20,7 +20,7 @@
 #include <gflags/gflags.h>
 #include "ea/discovery/discovery_server.h"
 #include "ea/discovery/router_service.h"
-#include "ea/engine/rocks_storage.h"
+#include "ea/storage/rocks_storage.h"
 #include "ea/base/memory_profile.h"
 #include "turbo/files/filesystem.h"
 #include "turbo/strings/str_split.h"

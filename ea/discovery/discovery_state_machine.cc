@@ -25,9 +25,9 @@
 #include "ea/discovery/zone_manager.h"
 #include "ea/discovery/instance_manager.h"
 #include "ea/discovery/servlet_manager.h"
-#include "ea/engine/rocks_storage.h"
+#include "ea/storage/rocks_storage.h"
 #include "ea/discovery/query_privilege_manager.h"
-#include "ea/engine/sst_file_writer.h"
+#include "ea/storage/sst_file_writer.h"
 #include "ea/discovery/parse_path.h"
 
 namespace EA::discovery {

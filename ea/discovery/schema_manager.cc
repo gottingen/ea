@@ -19,7 +19,7 @@
 #include "ea/discovery/servlet_manager.h"
 #include "ea/discovery/instance_manager.h"
 #include "ea/discovery/namespace_manager.h"
-#include "ea/engine/rocks_storage.h"
+#include "ea/storage/rocks_storage.h"
 #include "ea/base/scope_exit.h"
 
 namespace EA::discovery {

@@ -17,7 +17,7 @@
 #pragma once
 
 #include <string>
-#include "ea/engine/rocks_storage.h"
+#include "ea/storage/rocks_storage.h"
 
 namespace EA {
 

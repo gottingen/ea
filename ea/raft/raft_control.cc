@@ -14,7 +14,7 @@
 //
 
 
-#include "ea/discovery/raft_control.h"
+#include "ea/raft/raft_control.h"
 #include <algorithm>
 #include "ea/base/tlog.h"
 

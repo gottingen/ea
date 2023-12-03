@@ -66,8 +66,8 @@ namespace EA::client {
     };
 
     /**
-     * @brief ConfigClient is used to download config files from the meta server.
-     *        It is used by the DiscoveryClient to download config files from the meta server.
+     * @brief ConfigClient is used to download config files from the discovery server.
+     *        It is used by the DiscoveryClient to download config files from the discovery server.
      */
     class ConfigClient {
     public:
@@ -97,11 +97,11 @@ namespace EA::client {
         void join();
 
         /**
-         * @brief get_config is used to get a config from the meta server, and add it to the ConfigCache.
+         * @brief get_config is used to get a config from the discovery server, and add it to the ConfigCache.
          * @param config_name [input] is the name of the config to get. it can not be empty.
          * @param version [input] is the version of the config to get. it can not be empty.
-         * @param content [out] is the content of the config received from the meta server.
-         * @param type [out] if not null, it is the type of the config received from the meta server.
+         * @param content [out] is the content of the config received from the discovery server.
+         * @param type [out] if not null, it is the type of the config received from the discovery server.
          * @return Status::OK if the config was received successfully. Otherwise, an error status is returned. 
          */
         turbo::Status
@@ -109,11 +109,11 @@ namespace EA::client {
                    std::string *type = nullptr);
 
         /**
-         * @brief get_config is used to get a config from the meta server, and add it to the ConfigCache.
+         * @brief get_config is used to get a config from the discovery server, and add it to the ConfigCache.
          * @param config_name [input] is the name of the config to get. it can not be empty.
-         * @param content [out] is the content of the config received from the meta server and added to the ConfigCache.
-         * @param version [out] if not null, it is the version of the config received from the meta server and added to the ConfigCache.
-         * @param type [out] if not null, it is the type of the config received from the meta server and added to the ConfigCache.
+         * @param content [out] is the content of the config received from the discovery server and added to the ConfigCache.
+         * @param version [out] if not null, it is the version of the config received from the discovery server and added to the ConfigCache.
+         * @param type [out] if not null, it is the type of the config received from the discovery server and added to the ConfigCache.
          * @return Status::OK if the config was received successfully. Otherwise, an error status is returned. 
          */ 
         turbo::Status get_config(const std::string &config_name, std::string &content, std::string *version = nullptr,

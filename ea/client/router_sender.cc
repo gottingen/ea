@@ -60,7 +60,7 @@ namespace EA::client {
     }
 
     RouterSender &RouterSender::set_interval_time(int time_ms) {
-        _between_meta_connect_error_ms = time_ms;
+        _between_discovery_connect_error_ms = time_ms;
         return *this;
     }
 

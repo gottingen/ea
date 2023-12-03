@@ -1,0 +1,38 @@
+// Copyright 2023 The Elastic Architecture Infrastructure Authors.
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      https://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+syntax="proto2";
+package EA.db;
+option cc_generic_services = true;
+
+import "ea/proto/meta_op.proto";
+import "ea/proto/error_code.proto";
+
+message Bootstrap {
+  required string node_peer = 1;
+  optional int64  boot_ms   = 2;
+  optional string resource_tag  = 3;
+};
+
+message MetaManageRequest {
+  required MetaOP meta_op = 1;
+  optional Bootstrap bootstrap = 2;
+}
+
+message MetaManageResponse {
+  required MetaOP meta_op = 1;
+  required ErrorCode error_code = 2;
+  optional string error_message = 3;
+  optional string leader = 4;
+}

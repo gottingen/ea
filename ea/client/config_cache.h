@@ -27,8 +27,8 @@ namespace EA::client {
 
     /**
      * @ingroup config_client
-     * @brief ConfigCache is used to cache the config files downloaded from the meta server.
-     *        It is used by the DiscoveryClient to cache the config files downloaded from the meta server.
+     * @brief ConfigCache is used to cache the config files downloaded from the discovery server.
+     *        It is used by the DiscoveryClient to cache the config files downloaded from the discovery server.
      */
     class ConfigCache {
     public:

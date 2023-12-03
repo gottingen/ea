@@ -31,7 +31,7 @@ namespace EA::client {
 
     /**
      * @ingroup ea_rpc
-     * @brief RouterSender is used to send messages to the meta server.
+     * @brief RouterSender is used to send messages to the discovery server.
      *        It is used by the DiscoveryClient to send messages to the router server.
      *        It do not need to be judge the leader, because the router server will
      *        do it.
@@ -46,7 +46,7 @@ namespace EA::client {
      *       EA::discovery::DiscoveryManagerResponse response;
      *       auto status = router_sender->discovery_manager(request, response);
      *       if(!status.ok()) {
-     *          TLOG_ERROR("send meta manager request fail, error:{}", status.message());
+     *          TLOG_ERROR("send discovery manager request fail, error:{}", status.message());
      *          return -1;
      *       }
      *       ...
@@ -72,14 +72,14 @@ namespace EA::client {
 
         /**
          * @brief init is used to initialize the RouterSender. It must be called before using the RouterSender.
-         * @param server [input] are the addresses of the meta servers, separated by commas.
+         * @param server [input] are the addresses of the discovery servers, separated by commas.
          * @return Status::OK if the RouterSender was initialized successfully. Otherwise, an error status is returned. 
          */
         turbo::Status init(const std::string &server);
 
         /**
-         * @brief set_server is used to set the addresses of the meta servers, must be called before using the RouterSender.
-         * @param server [input] are the addresses of the meta servers, separated by commas.
+         * @brief set_server is used to set the addresses of the discovery servers, must be called before using the RouterSender.
+         * @param server [input] are the addresses of the discovery servers, separated by commas.
          * @return the RouterSender.
          */
         RouterSender &set_server(const std::string &server);
@@ -120,10 +120,10 @@ namespace EA::client {
         RouterSender &set_retry_time(int retry);
 
         /**
-         * @brief send_request is used to send a request to the meta server.
+         * @brief send_request is used to send a request to the discovery server.
          * @param service_name [input] is the name of the service to send the request to.
          * @param request [input] is the request to send.
-         * @param response [output] is the response received from the meta server.
+         * @param response [output] is the response received from the discovery server.
          * @param retry_times [input] is the number of times to retry sending the request.
          * @return Status::OK if the request was sent successfully. Otherwise, an error status is returned. 
          */
@@ -133,9 +133,9 @@ namespace EA::client {
                                    Response &response, int retry_times);
 
         /**
-         * @brief discovery_manager is used to send a DiscoveryManagerRequest to the meta server.
+         * @brief discovery_manager is used to send a DiscoveryManagerRequest to the discovery server.
          * @param request [input] is the DiscoveryManagerRequest to send.
-         * @param response [output] is the MetaManagerResponse received from the meta server.
+         * @param response [output] is the DiscoveryManagerResponse received from the discovery server.
          * @param retry_time [input] is the number of times to retry sending the request.
          * @return Status::OK if the request was sent successfully. Otherwise, an error status is returned. 
          */
@@ -143,18 +143,18 @@ namespace EA::client {
                                    EA::discovery::DiscoveryManagerResponse &response, int retry_time) override;
 
         /**
-         * @brief discovery_manager is used to send a DiscoveryManagerRequest to the meta server.
+         * @brief discovery_manager is used to send a DiscoveryManagerRequest to the discovery server.
          * @param request [input] is the DiscoveryManagerRequest to send.
-         * @param response [output] is the MetaManagerResponse received from the meta server.
+         * @param response [output] is the DiscoveryManagerResponse received from the discovery server.
          * @return Status::OK if the request was sent successfully. Otherwise, an error status is returned. 
          */
         turbo::Status discovery_manager(const EA::discovery::DiscoveryManagerRequest &request,
                                    EA::discovery::DiscoveryManagerResponse &response) override;
 
         /**
-         * @brief discovery_query is used to send a DiscoveryQueryRequest to the meta server.
+         * @brief discovery_query is used to send a DiscoveryQueryRequest to the discovery server.
          * @param request [input] is the DiscoveryQueryRequest to send.
-         * @param response [output] is the DiscoveryQueryResponse received from the meta server.
+         * @param response [output] is the DiscoveryQueryResponse received from the discovery server.
          * @param retry_time [input] is the number of times to retry sending the request.
          * @return Status::OK if the request was sent successfully. Otherwise, an error status is returned. 
          */
@@ -162,9 +162,9 @@ namespace EA::client {
                                  EA::discovery::DiscoveryQueryResponse &response, int retry_time) override;
 
         /**
-         * @brief discovery_query is used to send a DiscoveryQueryRequest to the meta server.
+         * @brief discovery_query is used to send a DiscoveryQueryRequest to the discovery server.
          * @param request [input] is the DiscoveryQueryRequest to send.
-         * @param response [output] is the DiscoveryQueryResponse received from the meta server.
+         * @param response [output] is the DiscoveryQueryResponse received from the discovery server.
          * @return Status::OK if the request was sent successfully. Otherwise, an error status is returned. 
          */
         turbo::Status discovery_query(const EA::discovery::DiscoveryQueryRequest &request,
@@ -177,7 +177,7 @@ namespace EA::client {
         std::string _server;
         int _timeout_ms{300};
         int _connect_timeout_ms{500};
-        int _between_meta_connect_error_ms{1000};
+        int _between_discovery_connect_error_ms{1000};
     };
 
     template<typename Request, typename Response>
@@ -195,7 +195,7 @@ namespace EA::client {
         uint64_t log_id = butil::fast_rand();
         do {
             if (retry_time > 0 && retry_times > 0) {
-                bthread_usleep(1000 * _between_meta_connect_error_ms);
+                bthread_usleep(1000 * _between_discovery_connect_error_ms);
             }
             brpc::Controller cntl;
             cntl.set_log_id(log_id);
@@ -222,9 +222,9 @@ namespace EA::client {
             return turbo::OkStatus();
             /*
             if (response.errcode() != EA::discovery::SUCCESS) {
-                TLOG_WARN_IF(_verbose, "send meta server fail, log_id:{}, response:{}", cntl.log_id(),
+                TLOG_WARN_IF(_verbose, "send discovery server fail, log_id:{}, response:{}", cntl.log_id(),
                              response.ShortDebugString());
-                //return turbo::UnavailableError("send meta server fail, log_id:{}, response:{}", cntl.log_id(),
+                //return turbo::UnavailableError("send discovery server fail, log_id:{}, response:{}", cntl.log_id(),
                 //                               response.ShortDebugString());
                 return turbo::OkStatus();
             } else {

@@ -98,11 +98,11 @@ namespace EA::client {
     turbo::Status
     DiscoveryClient::create_config(const EA::discovery::ConfigInfo &request,
                               int *retry_times) {
-        EA::discovery::DiscoveryManagerRequest meta_request;
+        EA::discovery::DiscoveryManagerRequest discovery_request;
         EA::discovery::DiscoveryManagerResponse response;
-        meta_request.set_op_type(EA::discovery::OP_CREATE_CONFIG);
-        *meta_request.mutable_config_info() = request;
-        auto rs = discovery_manager(meta_request, response, retry_times);
+        discovery_request.set_op_type(EA::discovery::OP_CREATE_CONFIG);
+        *discovery_request.mutable_config_info() = request;
+        auto rs = discovery_manager(discovery_request, response, retry_times);
         if (!rs.ok()) {
             return rs;
         }

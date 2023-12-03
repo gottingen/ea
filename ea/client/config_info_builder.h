@@ -30,8 +30,8 @@ namespace EA::client {
      * @code
      *        EA::discovery::ConfigInfo info;
      *        ConfigInfoBuilder builder(&info);
-     *        std::string content = "listen_port=8010;raft_group=meta_raft";
-     *        auto status = builder.build_from_content("meta_config", content, "1.2.3", "json");
+     *        std::string content = "listen_port=8010;raft_group=discovery_raft";
+     *        auto status = builder.build_from_content("dicovery_config", content, "1.2.3", "json");
      *        if(!status.ok) {
      *          handler_error();
      *         }

@@ -13,8 +13,8 @@
 //
 
 
-#ifndef EA_CLIENT_META_H_
-#define EA_CLIENT_META_H_
+#ifndef EA_CLIENT_DISCOVERY_H_
+#define EA_CLIENT_DISCOVERY_H_
 
 #include "turbo/base/status.h"
 #include <butil/endpoint.h>
@@ -34,10 +34,10 @@ namespace EA::client {
 
     /**
      * @ingroup discovery_client
-     * @brief DiscoveryClient is used by the ConfigClient to communicate with the meta server by sender.
+     * @brief DiscoveryClient is used by the ConfigClient to communicate with the discovery server by sender.
      *       It does not support asynchronous calls. run it in a bthread by yourself. farther more, it is not thread safe.
      *       It does not hold the ownership of the sender. The sender must be valid during the lifetime of the DiscoveryClient.
-     *       It is a proxy interface of the meta server.
+     *       It is a proxy interface of the discovery server.
      * @attention before using the DiscoveryClient, you must call init to initialize it
      * @code
      *      BaseMessageSender *sender = new RouterSender();
@@ -80,7 +80,7 @@ namespace EA::client {
 
         /**
          * @brief init is used to initialize the DiscoveryClient. It must be called before using the DiscoveryClient.
-         * @param sender [input] is the sender used to communicate with the meta server, it can be a RouterSender or a ConfigSender.
+         * @param sender [input] is the sender used to communicate with the discovery server, it can be a RouterSender or a ConfigSender.
          * @return Status::OK if the DiscoveryClient was initialized successfully. Otherwise, an error status is returned.
          */         
         turbo::Status init(BaseMessageSender *sender);
@@ -150,17 +150,17 @@ namespace EA::client {
         turbo::Status create_config_by_json(const std::string &json_path, int *retry_time = nullptr);
 
         /**
-         * @brief list_config is used to list all config names from the meta server, it is a synchronous call.
-         * @param configs [output] is the config names received from the meta server.
+         * @brief list_config is used to list all config names from the discovery server, it is a synchronous call.
+         * @param configs [output] is the config names received from the discovery server.
          * @param retry_time [input] is the retry times of the list config.
          * @return Status::OK if the config names were received successfully. Otherwise, an error status is returned. 
          */
         turbo::Status list_config(std::vector<std::string> &configs, int *retry_time = nullptr);
 
         /**
-         * @brief list_config_version is used to list all config versions of a config from the meta server, it is a synchronous call.
+         * @brief list_config_version is used to list all config versions of a config from the discovery server, it is a synchronous call.
          * @param config_name [input] is the name of the config to list the versions for.
-         * @param versions [output] is the config versions received from the meta server.
+         * @param versions [output] is the config versions received from the discovery server.
          * @param retry_time [input] is the retry times of the list config version.
          * @return Status::OK if the config versions were received successfully. Otherwise, an error status is returned. 
          */
@@ -168,9 +168,9 @@ namespace EA::client {
                                           int *retry_time = nullptr);
 
         /**
-         * @brief list_config_version is used to list all config versions of a config from the meta server, it is a synchronous call.
+         * @brief list_config_version is used to list all config versions of a config from the discovery server, it is a synchronous call.
          * @param config_name [input] is the name of the config to list the versions for.
-         * @param versions [output] is the config versions received from the meta server.
+         * @param versions [output] is the config versions received from the discovery server.
          * @param retry_time [input] is the retry times of the list config version.
          * @return Status::OK if the config versions were received successfully. Otherwise, an error status is returned. 
          */
@@ -178,10 +178,10 @@ namespace EA::client {
                                           int *retry_time = nullptr);
 
         /**
-         * @brief get_config is used to get a config from the meta server, it is a synchronous call.
+         * @brief get_config is used to get a config from the discovery server, it is a synchronous call.
          * @param config_name [input] is the name of the config to get.
          * @param version [input] is the version of the config to get.
-         * @param config [output] is the config received from the meta server.
+         * @param config [output] is the config received from the discovery server.
          * @param retry_time [input] is the retry times of the get config.
          * @return Status::OK if the config was received successfully. Otherwise, an error status is returned. 
          */
@@ -190,13 +190,13 @@ namespace EA::client {
                    int *retry_time = nullptr);
 
         /**
-         * @brief get_config is used to get a config from the meta server, it is a synchronous call.
+         * @brief get_config is used to get a config from the discovery server, it is a synchronous call.
          * @param config_name [input] is the name of the config to get.
          * @param version [input] is the version of the config to get.
-         * @param config [output] is the config received from the meta server.
+         * @param config [output] is the config received from the discovery server.
          * @param retry_time [input] is the retry times of the get config.
-         * @param type [output] is the type of the config received from the meta server.
-         * @param time [output] is the time of the config received from the meta server.
+         * @param type [output] is the type of the config received from the discovery server.
+         * @param time [output] is the time of the config received from the discovery server.
          * @return Status::OK if the config was received successfully. Otherwise, an error status is returned. 
          */
         turbo::Status get_config(const std::string &config_name, const std::string &version, std::string &config,
@@ -225,9 +225,9 @@ namespace EA::client {
         save_config(const std::string &config_name, const std::string &version, int *retry_time = nullptr);
 
         /**
-         * @brief get_config is used to get the latest version of a config from the meta server, it is a synchronous call.
+         * @brief get_config is used to get the latest version of a config from the discovery server, it is a synchronous call.
          * @param config_name [input] is the name of the config to get the latest version for.
-         * @param config [output] is the config received from the meta server.
+         * @param config [output] is the config received from the discovery server.
          * @param retry_time [input] is the retry times of the get config.
          * @return Status::OK if the config was received successfully. Otherwise, an error status is returned. 
          */
@@ -236,10 +236,10 @@ namespace EA::client {
                           int *retry_time = nullptr);
 
         /**
-         * @brief get_config is used to get the latest version of a config from the meta server, it is a synchronous call.
+         * @brief get_config is used to get the latest version of a config from the discovery server, it is a synchronous call.
          * @param config_name [input] is the name of the config to get the latest version for.
-         * @param config [output] is the config received from the meta server.
-         * @param version [output] is the version of the config received from the meta server.
+         * @param config [output] is the config received from the discovery server.
+         * @param version [output] is the version of the config received from the discovery server.
          * @param retry_time [input] is the retry times of the get config.
          * @return Status::OK if the config was received successfully. Otherwise, an error status is returned. 
          */
@@ -248,11 +248,11 @@ namespace EA::client {
                           int *retry_time = nullptr);
 
         /**
-         * @brief get_config is used to get the latest version of a config from the meta server, it is a synchronous call.
+         * @brief get_config is used to get the latest version of a config from the discovery server, it is a synchronous call.
          * @param config_name [input] is the name of the config to get the latest version for.
-         * @param version [output] is the version of the config received from the meta server.
-         * @param config [output] is the config received from the meta server.
-         * @param type [output] is the type of the config received from the meta server.
+         * @param version [output] is the version of the config received from the discovery server.
+         * @param config [output] is the config received from the discovery server.
+         * @param type [output] is the type of the config received from the discovery server.
          * @param retry_time [input] is the retry times of the get config.
          * @return Status::OK if the config was received successfully. Otherwise, an error status is returned. 
          */
@@ -261,10 +261,10 @@ namespace EA::client {
                           int *retry_time = nullptr);
 
         /**
-         * @brief get_config is used to get the latest version of a config from the meta server, it is a synchronous call.
+         * @brief get_config is used to get the latest version of a config from the discovery server, it is a synchronous call.
          * @param config_name [input] is the name of the config to get the latest version for.
-         * @param config [output] is the config received from the meta server.
-         * @param version [output] is the version of the config received from the meta server.
+         * @param config [output] is the config received from the discovery server.
+         * @param version [output] is the version of the config received from the discovery server.
          * @param retry_time [input] is the retry times of the get config.
          * @return Status::OK if the config was received successfully. Otherwise, an error status is returned. 
          */
@@ -273,11 +273,11 @@ namespace EA::client {
                           int *retry_time = nullptr);
 
         /**
-         * @brief get_config is used to get the latest version of a config from the meta server, it is a synchronous call.
+         * @brief get_config is used to get the latest version of a config from the discovery server, it is a synchronous call.
          * @param config_name [input] is the name of the config to get the latest version for.
-         * @param config [output] is the config received from the meta server.
-         * @param version [output] is the version of the config received from the meta server.
-         * @param type [output] is the type of the config received from the meta server.
+         * @param config [output] is the config received from the discovery server.
+         * @param version [output] is the version of the config received from the discovery server.
+         * @param type [output] is the type of the config received from the discovery server.
          * @param retry_time [input] is the retry times of the get config.
          * @return Status::OK if the config was received successfully. Otherwise, an error status is returned.
          */
@@ -287,9 +287,9 @@ namespace EA::client {
                           int *retry_time = nullptr);
 
         /**
-         * @brief get_config is used to get the latest version of a config from the meta server, it is a synchronous call.
+         * @brief get_config is used to get the latest version of a config from the discovery server, it is a synchronous call.
          * @param config_name [input] is the name of the config to get the latest version for.
-         * @param config [output] is the config received from the meta server.
+         * @param config [output] is the config received from the discovery server.
          * @param retry_time [input] is the retry times of the get config.
          * @return Status::OK if the config was received successfully. Otherwise, an error status is returned. 
          */
@@ -297,7 +297,7 @@ namespace EA::client {
         get_config_latest(const std::string &config_name, std::string &config, int *retry_time = nullptr);
 
         /**
-         * @brief remove_config is used to remove a config from the meta server, it is a synchronous call.
+         * @brief remove_config is used to remove a config from the discovery server, it is a synchronous call.
          * @param config_name [input] is the name of the config to get the latest version for.
          * @param version [input] is the version of the config to remove.
          * @param retry_time [input] is the retry times of the get config.
@@ -307,7 +307,7 @@ namespace EA::client {
         remove_config(const std::string &config_name, const std::string &version, int *retry_time = nullptr);
 
         /**
-         * @brief remove_config is used to remove a config from the meta server, it is a synchronous call.
+         * @brief remove_config is used to remove a config from the discovery server, it is a synchronous call.
          * @param config_name [input] is the name of the config to remove.
          * @param version [input] is the version of the config to remove.
          * @param retry_time [input] is the retry times of the remove config.
@@ -317,7 +317,7 @@ namespace EA::client {
         remove_config(const std::string &config_name, const turbo::ModuleVersion &version, int *retry_time = nullptr);
 
         /**
-         * @brief remove_config_all_version is used to remove all versions of a config from the meta server, it is a synchronous call.
+         * @brief remove_config_all_version is used to remove all versions of a config from the discovery server, it is a synchronous call.
          * @param config_name [input] is the name of the config to remove all versions for.
          * @param retry_time [input] is the retry times of the remove config.
          * @return Status::OK if the config was removed successfully. Otherwise, an error status is returned. 
@@ -360,7 +360,7 @@ namespace EA::client {
         turbo::Status create_namespace_by_file(const std::string &path, int *retry_time = nullptr);
 
         /**
-         * remove_namespace is used to remove a namespace from the meta server, it is a synchronous call.
+         * remove_namespace is used to remove a namespace from the discovery server, it is a synchronous call.
          * @param ns [input] is the name of the namespace to remove.
          * @param retry_time [input] is the retry times of the remove namespace.
          * @return Status::OK if the namespace was removed successfully. Otherwise, an error status is returned. 
@@ -392,31 +392,31 @@ namespace EA::client {
         turbo::Status modify_namespace_by_file(const std::string &path, int *retry_time = nullptr);
 
         /**
-         * @brief list_namespace is used to list all namespace names from the meta server, it is a synchronous call.
-         * @param ns_list [output] is the namespace names received from the meta server.
+         * @brief list_namespace is used to list all namespace names from the discovery server, it is a synchronous call.
+         * @param ns_list [output] is the namespace names received from the discovery server.
          * @param retry_time [input] is the retry times of the list namespace.
          * @return Status::OK if the namespace names were received successfully. Otherwise, an error status is returned. 
          */
         turbo::Status list_namespace(std::vector<std::string> &ns_list, int *retry_time = nullptr);
 
         /**
-         * @brief list_namespace is used to list all namespace names from the meta server, it is a synchronous call.
-         * @param ns_list [output] is the namespace names received from the meta server.
+         * @brief list_namespace is used to list all namespace names from the discovery server, it is a synchronous call.
+         * @param ns_list [output] is the namespace names received from the discovery server.
          * @param retry_time [input] is the retry times of the list namespace.
          * @return Status::OK if the namespace names were received successfully. Otherwise, an error status is returned. 
          */
         turbo::Status list_namespace(std::vector<EA::discovery::NameSpaceInfo> &ns_list, int *retry_time = nullptr);
 
         /**
-         * @brief list_namespace_to_json is used to list all namespace names from the meta server, it is a synchronous call.
-         * @param ns_list [output] is the namespace names received from the meta server.
+         * @brief list_namespace_to_json is used to list all namespace names from the discovery server, it is a synchronous call.
+         * @param ns_list [output] is the namespace names received from the discovery server.
          * @param retry_time [input] is the retry times of the list namespace.
          * @return Status::OK if the namespace names were received successfully. Otherwise, an error status is returned. 
          */
         turbo::Status list_namespace_to_json(std::vector<std::string> &ns_list, int *retry_time = nullptr);
 
         /**
-         * @brief list_namespace_to_file is used to list all namespace names from the meta server, it is a synchronous call.
+         * @brief list_namespace_to_file is used to list all namespace names from the discovery server, it is a synchronous call.
          * @param save_path [input] is the path of the file to save the namespace names to.
          * @param retry_time [input] is the retry times of the list namespace.
          * @return Status::OK if the namespace names were received successfully. Otherwise, an error status is returned. 
@@ -424,9 +424,9 @@ namespace EA::client {
         turbo::Status list_namespace_to_file(const std::string &save_path, int *retry_time = nullptr);
 
         /**
-         * @brief get_namespace is used to get a namespace from the meta server, it is a synchronous call.
+         * @brief get_namespace is used to get a namespace from the discovery server, it is a synchronous call.
          * @param ns_name [input] is the name of the namespace to get.
-         * @param ns_pb [output] is the namespace received from the meta server.
+         * @param ns_pb [output] is the namespace received from the discovery server.
          * @param retry_time [input] is the retry times of the get namespace.
          * @return Status::OK if the namespace was received successfully. Otherwise, an error status is returned. 
          */
@@ -434,9 +434,9 @@ namespace EA::client {
         get_namespace(const std::string &ns_name, EA::discovery::NameSpaceInfo &ns_pb, int *retry_time = nullptr);
 
         /**
-         * @brief get_namespace is used to get a namespace from the meta server, it is a synchronous call.
+         * @brief get_namespace is used to get a namespace from the discovery server, it is a synchronous call.
          * @param ns_name [input] is the name of the namespace to get.
-         * @param json_str [output] is the namespace received from the meta server.
+         * @param json_str [output] is the namespace received from the discovery server.
          * @param retry_time [input] is the retry times of the get namespace.
          * @return Status::OK if the namespace was received successfully. Otherwise, an error status is returned. 
          */
@@ -488,7 +488,7 @@ namespace EA::client {
         turbo::Status create_zone_by_file(const std::string &path, int *retry_time = nullptr);
 
         /**
-         * @brief remove_zone is used to remove a zone from the meta server, it is a synchronous call.
+         * @brief remove_zone is used to remove a zone from the discovery server, it is a synchronous call.
          * @param ns [input] is the namespace name of the zone to remove.
          * @param zone [input] is the zone name of the zone to remove.
          * @param retry_time [input] is the retry times of the remove zone.
@@ -521,17 +521,17 @@ namespace EA::client {
         turbo::Status modify_zone_by_file(const std::string &path, int *retry_time = nullptr);
 
         /**
-         * @brief list_zone is used to list all zone names from the meta server, it is a synchronous call.
-         * @param zone_list [output] is the zone names received from the meta server.
+         * @brief list_zone is used to list all zone names from the discovery server, it is a synchronous call.
+         * @param zone_list [output] is the zone names received from the discovery server.
          * @param retry_time [input] is the retry times of the list zone.
          * @return Status::OK if the zone names were received successfully. Otherwise, an error status is returned. 
          */
         turbo::Status list_zone(std::vector<EA::discovery::ZoneInfo> &zone_list, int *retry_time = nullptr);
 
         /**
-         * @brief list_zone is used to list all zone names of a namespace from the meta server, it is a synchronous call.
+         * @brief list_zone is used to list all zone names of a namespace from the discovery server, it is a synchronous call.
          * @param ns [input] is the namespace name of the zones to list.
-         * @param zone_list [output] is the zone names received from the meta server.
+         * @param zone_list [output] is the zone names received from the discovery server.
          * @param retry_time [input] is the retry times of the list zone.
          * @return Status::OK if the zone names were received successfully. Otherwise, an error status is returned. 
          */
@@ -539,34 +539,34 @@ namespace EA::client {
         list_zone(const std::string &ns, std::vector<EA::discovery::ZoneInfo> &zone_list, int *retry_time = nullptr);
 
         /**
-         * @brief list_zone is used to list all zone names from the meta server, it is a synchronous call.
-         * @param zone_list [output] is the zone names received from the meta server.
+         * @brief list_zone is used to list all zone names from the discovery server, it is a synchronous call.
+         * @param zone_list [output] is the zone names received from the discovery server.
          * @param retry_time [input] is the retry times of the list zone.
          * @return Status::OK if the zone names were received successfully. Otherwise, an error status is returned. 
          */
         turbo::Status list_zone(std::vector<std::string> &zone_list, int *retry_time = nullptr);
 
         /**
-         * @brief list_zone is used to list all zone names of a namespace from the meta server, it is a synchronous call.
+         * @brief list_zone is used to list all zone names of a namespace from the discovery server, it is a synchronous call.
          * @param ns [input] is the namespace name of the zones to list.
-         * @param zone_list [output] is the zone names received from the meta server.
+         * @param zone_list [output] is the zone names received from the discovery server.
          * @param retry_time [input] is the retry times of the list zone.
          * @return Status::OK if the zone names were received successfully. Otherwise, an error status is returned. 
          */
         turbo::Status list_zone(std::string &ns, std::vector<std::string> &zone_list, int *retry_time = nullptr);
 
         /**
-         * @brief list_zone_to_json is used to list all zone names from the meta server, it is a synchronous call.
-         * @param zone_list [output] is the zone names received from the meta server.
+         * @brief list_zone_to_json is used to list all zone names from the discovery server, it is a synchronous call.
+         * @param zone_list [output] is the zone names received from the discovery server.
          * @param retry_time [input] is the retry times of the list zone.
          * @return Status::OK if the zone names were received successfully. Otherwise, an error status is returned. 
          */
         turbo::Status list_zone_to_json(std::vector<std::string> &zone_list, int *retry_time = nullptr);
 
         /**
-         * @brief list_zone_to_json is used to list all zone names of a namespace from the meta server, it is a synchronous call.
+         * @brief list_zone_to_json is used to list all zone names of a namespace from the discovery server, it is a synchronous call.
          * @param ns [input] is the namespace name of the zones to list.
-         * @param zone_list [output] is the zone names received from the meta server.
+         * @param zone_list [output] is the zone names received from the discovery server.
          * @param retry_time [input] is the retry times of the list zone.
          * @return Status::OK if the zone names were received successfully. Otherwise, an error status is returned. 
          */
@@ -574,7 +574,7 @@ namespace EA::client {
         list_zone_to_json(const std::string &ns, std::vector<std::string> &zone_list, int *retry_time = nullptr);
 
         /**
-         * @brief list_zone_to_file is used to list all zone names from the meta server, it is a synchronous call.
+         * @brief list_zone_to_file is used to list all zone names from the discovery server, it is a synchronous call.
          * @param save_path [input] is the path of the file to save the zones to.
          * @param retry_time [input] is the retry times of the list zone.
          * @return Status::OK if the zones were received successfully. Otherwise, an error status is returned. 
@@ -582,7 +582,7 @@ namespace EA::client {
         turbo::Status list_zone_to_file(const std::string &save_path, int *retry_time = nullptr);
 
         /**
-         * @brief list_zone_to_file is used to list all zone names of a namespace from the meta server, it is a synchronous call.
+         * @brief list_zone_to_file is used to list all zone names of a namespace from the discovery server, it is a synchronous call.
          * @param ns [input] is the namespace name of the zones to list.
          * @param save_path [input] is the path of the file to save the zones to.
          * @param retry_time [input] is the retry times of the list zone.
@@ -591,10 +591,10 @@ namespace EA::client {
         turbo::Status list_zone_to_file(const std::string &ns, const std::string &save_path, int *retry_time = nullptr);
 
         /**
-         * @brief get_zone is used to get a zone from the meta server, it is a synchronous call.
+         * @brief get_zone is used to get a zone from the discovery server, it is a synchronous call.
          * @param ns_name [input] is the namespace name of the zone to get.
          * @param zone_name [input] is the zone name of the zone to get.
-         * @param zone_pb [output] is the zone received from the meta server.
+         * @param zone_pb [output] is the zone received from the discovery server.
          * @param retry_time [input] is the retry times of the get zone.
          * @return Status::OK if the zone was received successfully. Otherwise, an error status is returned. 
          */     
@@ -602,10 +602,10 @@ namespace EA::client {
                                int *retry_time = nullptr);
 
         /**
-         * @brief get_zone_json is used to get a zone from the meta server, it is a synchronous call.
+         * @brief get_zone_json is used to get a zone from the discovery server, it is a synchronous call.
          * @param ns_name [input] is the namespace name of the zone to get.
          * @param zone_name [input] is the zone name of the zone to get.
-         * @param json_str [output] is the zone received from the meta server.
+         * @param json_str [output] is the zone received from the discovery server.
          * @param retry_time [input] is the retry times of the get zone.
          * @return Status::OK if the zone was received successfully. Otherwise, an error status is returned. 
          */
@@ -662,7 +662,7 @@ namespace EA::client {
 
 
         /**
-         * @brief remove_servlet is used to remove a servlet from the meta server, it is a synchronous call.
+         * @brief remove_servlet is used to remove a servlet from the discovery server, it is a synchronous call.
          * @param ns [input] is the namespace name of the servlet to remove.
          * @param zone [input] is the zone name of the servlet to remove.
          * @param servlet [input] is the servlet name to remove.
@@ -697,17 +697,17 @@ namespace EA::client {
         turbo::Status modify_servlet_by_file(const std::string &path, int *retry_time = nullptr);
 
         /**
-         * @brief list_servlet is used to list all servlets from the meta server, it is a synchronous call.
-         * @param servlet_list [output] is the servlets received from the meta server.
+         * @brief list_servlet is used to list all servlets from the discovery server, it is a synchronous call.
+         * @param servlet_list [output] is the servlets received from the discovery server.
          * @param retry_time [input] is the retry times of the list servlet.
          * @return Status::OK if the servlets were received successfully. Otherwise, an error status is returned. 
          */
         turbo::Status list_servlet(std::vector<EA::discovery::ServletInfo> &servlet_list, int *retry_time = nullptr);
 
         /**
-         * @brief list_servlet is used to list all servlets of a namespace from the meta server, it is a synchronous call.
+         * @brief list_servlet is used to list all servlets of a namespace from the discovery server, it is a synchronous call.
          * @param ns [input] is the namespace name of the servlets to list.
-         * @param servlet_list [output] is the servlets received from the meta server.
+         * @param servlet_list [output] is the servlets received from the discovery server.
          * @param retry_time [input] is the retry times of the list servlet.
          * @return Status::OK if the servlets were received successfully. Otherwise, an error status is returned. 
          */
@@ -717,10 +717,10 @@ namespace EA::client {
 
 
         /**
-         * @brief list_servlet is used to list all servlets of a zone from the meta server, it is a synchronous call.
+         * @brief list_servlet is used to list all servlets of a zone from the discovery server, it is a synchronous call.
          * @param ns [input] is the namespace name of the servlets to list.
          * @param zone [input] is the zone name of the servlets to list.
-         * @param servlet_list [output] is the servlets received from the meta server.
+         * @param servlet_list [output] is the servlets received from the discovery server.
          * @param retry_time [input] is the retry times of the list servlet.
          * @return Status::OK if the servlets were received successfully. Otherwise, an error status is returned. 
          */
@@ -729,17 +729,17 @@ namespace EA::client {
                      std::vector<EA::discovery::ServletInfo> &servlet_list, int *retry_time = nullptr);
 
         /**
-         * @brief list_servlet is used to list all servlets from the meta server, it is a synchronous call.
-         * @param servlet_list [output] is the servlets received from the meta server.
+         * @brief list_servlet is used to list all servlets from the discovery server, it is a synchronous call.
+         * @param servlet_list [output] is the servlets received from the discovery server.
          * @param retry_time [input] is the retry times of the list servlet.
          * @return Status::OK if the servlets were received successfully. Otherwise, an error status is returned. 
          */
         turbo::Status list_servlet(std::vector<std::string> &servlet_list, int *retry_time = nullptr);
 
         /**
-         * @brief list_servlet is used to list all servlets of a namespace from the meta server, it is a synchronous call.
+         * @brief list_servlet is used to list all servlets of a namespace from the discovery server, it is a synchronous call.
          * @param ns [input] is the namespace name of the servlets to list.
-         * @param servlet_list [output] is the servlets received from the meta server.
+         * @param servlet_list [output] is the servlets received from the discovery server.
          * @param retry_time [input] is the retry times of the list servlet.
          * @return Status::OK if the servlets were received successfully. Otherwise, an error status is returned. 
          */
@@ -747,10 +747,10 @@ namespace EA::client {
         list_servlet(const std::string &ns, std::vector<std::string> &servlet_list, int *retry_time = nullptr);
 
         /**
-         * @brief list_servlet is used to list all servlets of a zone from the meta server, it is a synchronous call.
+         * @brief list_servlet is used to list all servlets of a zone from the discovery server, it is a synchronous call.
          * @param ns [input] is the namespace name of the servlets to list.
          * @param zone [input] is the zone name of the servlets to list.
-         * @param servlet_list [output] is the servlets received from the meta server.
+         * @param servlet_list [output] is the servlets received from the discovery server.
          * @param retry_time [input] is the retry times of the list servlet.
          * @return Status::OK if the servlets were received successfully. Otherwise, an error status is returned. 
          */
@@ -760,17 +760,17 @@ namespace EA::client {
                      int *retry_time = nullptr);
 
         /**
-         * @brief list_servlet_to_json is used to list all servlets from the meta server, it is a synchronous call.
-         * @param servlet_list [output] is the servlets received from the meta server.
+         * @brief list_servlet_to_json is used to list all servlets from the discovery server, it is a synchronous call.
+         * @param servlet_list [output] is the servlets received from the discovery server.
          * @param retry_time [input] is the retry times of the list servlet.
          * @return Status::OK if the servlets were received successfully. Otherwise, an error status is returned. 
          */
         turbo::Status list_servlet_to_json(std::vector<std::string> &servlet_list, int *retry_time = nullptr);
 
         /**
-         * @brief list_servlet_to_json is used to list all servlets of a namespace from the meta server, it is a synchronous call.
+         * @brief list_servlet_to_json is used to list all servlets of a namespace from the discovery server, it is a synchronous call.
          * @param ns [input] is the namespace name of the servlets to list.
-         * @param servlet_list [output] is the servlets received from the meta server.
+         * @param servlet_list [output] is the servlets received from the discovery server.
          * @param retry_time [input] is the retry times of the list servlet.
          * @return Status::OK if the servlets were received successfully. Otherwise, an error status is returned. 
          */
@@ -778,10 +778,10 @@ namespace EA::client {
         list_servlet_to_json(const std::string &ns, std::vector<std::string> &servlet_list, int *retry_time = nullptr);
 
         /**
-         * @brief list_servlet_to_json is used to list all servlets of a zone from the meta server, it is a synchronous call.
+         * @brief list_servlet_to_json is used to list all servlets of a zone from the discovery server, it is a synchronous call.
          * @param ns [input] is the namespace name of the servlets to list.
          * @param zone [input] is the zone name of the servlets to list.
-         * @param servlet_list [output] is the servlets received from the meta server.
+         * @param servlet_list [output] is the servlets received from the discovery server.
          * @param retry_time [input] is the retry times of the list servlet.
          * @return Status::OK if the servlets were received successfully. Otherwise, an error status is returned. 
          */
@@ -791,7 +791,7 @@ namespace EA::client {
 
 
         /**
-         * @brief list_servlet_to_file is used to list all servlets from the meta server, it is a synchronous call.
+         * @brief list_servlet_to_file is used to list all servlets from the discovery server, it is a synchronous call.
          * @param save_path [input] is the path of the file to save the servlets to.
          * @param retry_time [input] is the retry times of the list servlet.
          * @return Status::OK if the servlets were received successfully. Otherwise, an error status is returned. 
@@ -799,7 +799,7 @@ namespace EA::client {
         turbo::Status list_servlet_to_file(const std::string &save_path, int *retry_time = nullptr);
 
         /**
-         * @brief list_servlet_to_file is used to list all servlets of a namespace from the meta server, it is a synchronous call.
+         * @brief list_servlet_to_file is used to list all servlets of a namespace from the discovery server, it is a synchronous call.
          * @param ns [input] is the namespace name of the servlets to list.
          * @param save_path [input] is the path of the file to save the servlets to.
          * @param retry_time [input] is the retry times of the list servlet.
@@ -810,7 +810,7 @@ namespace EA::client {
         list_servlet_to_file(const std::string &ns, const std::string &save_path, int *retry_time = nullptr);
 
         /**
-         * @brief list_servlet_to_file is used to list all servlets of a zone from the meta server, it is a synchronous call.
+         * @brief list_servlet_to_file is used to list all servlets of a zone from the discovery server, it is a synchronous call.
          * @param ns [input] is the namespace name of the servlets to list.
          * @param zone [input] is the zone name of the servlets to list.
          * @param save_path [input] is the path of the file to save the servlets to.
@@ -821,11 +821,11 @@ namespace EA::client {
                                            int *retry_time = nullptr);
 
         /**
-         * @brief get_servlet is used to get a servlet from the meta server, it is a synchronous call.
+         * @brief get_servlet is used to get a servlet from the discovery server, it is a synchronous call.
          * @param ns_name [input] is the namespace name of the servlet to get.
          * @param zone_name [input] is the zone name of the servlet to get.
          * @param servlet [input] is the servlet to get.
-         * @param servlet_pb [output] is the servlet received from the meta server.
+         * @param servlet_pb [output] is the servlet received from the discovery server.
          * @param retry_time [input] is the retry times of the get servlet.
          * @return Status::OK if the servlet was received successfully. Otherwise, an error status is returned. 
          */
@@ -834,11 +834,11 @@ namespace EA::client {
                                   int *retry_time = nullptr);
 
         /**
-         * @brief get_servlet is used to get a servlet from the meta server, it is a synchronous call.
+         * @brief get_servlet is used to get a servlet from the discovery server, it is a synchronous call.
          * @param ns_name [input] is the namespace name of the servlet to get.
          * @param zone_name [input] is the zone name of the servlet to get.
          * @param servlet [input] is the servlet to get.
-         * @param json_str [output] is the servlet received from the meta server.
+         * @param json_str [output] is the servlet received from the discovery server.
          * @param retry_time [input] is the retry times of the get servlet.
          * @return Status::OK if the servlet was received successfully. Otherwise, an error status is returned. 
          */
@@ -862,20 +862,20 @@ namespace EA::client {
                           int *retry_time = nullptr);
 
         /**
-         * @brief discovery_manager is used to send a DiscoveryManagerRequest to the meta server.
+         * @brief discovery_manager is used to send a DiscoveryManagerRequest to the discovery server.
          * @param request [input] is the DiscoveryManagerRequest to send.
-         * @param response [output] is the MetaManagerResponse received from the meta server.
-         * @param retry_time [input] is the retry times of the meta manager.
+         * @param response [output] is the DiscoveryManagerResponse received from the discovery server.
+         * @param retry_time [input] is the retry times of the discovery manager.
          * @return Status::OK if the request was sent successfully. Otherwise, an error status is returned. 
          */
         turbo::Status discovery_manager(const EA::discovery::DiscoveryManagerRequest &request,
                                    EA::discovery::DiscoveryManagerResponse &response, int *retry_time);
 
         /**
-         * @brief discovery_manager is used to send a DiscoveryManagerRequest to the meta server.
+         * @brief discovery_manager is used to send a DiscoveryManagerRequest to the discovery server.
          * @param request [input] is the DiscoveryManagerRequest to send.
-         * @param response [output] is the MetaManagerResponse received from the meta server.
-         * @param retry_time [input] is the retry times of the meta manager.
+         * @param response [output] is the DiscoveryManagerResponse received from the discovery server.
+         * @param retry_time [input] is the retry times of the discovery manager.
          * @return Status::OK if the request was sent successfully. Otherwise, an error status is returned. 
          */
         turbo::Status discovery_query(const EA::discovery::DiscoveryQueryRequest &request,
@@ -903,4 +903,4 @@ namespace EA::client {
 
 }  // namespace EA::client
 
-#endif // EA_CLIENT_META_H_
+#endif // EA_CLIENT_DISCOVERY_H_

@@ -17,7 +17,7 @@
 #pragma once
 
 #include <braft/raft.h>
-#include "ea/discovery/raft_control.h"
+#include "ea/raft/raft_control.h"
 #include "eapi/discovery/discovery.interface.pb.h"
 #include "ea/base/bthread.h"
 #include "ea/base/time_cast.h"
@@ -54,17 +54,6 @@ namespace EA::discovery {
         TimeCost time_cost;
         bool is_sync = false;
         BthreadCond *sync_cond;
-    };
-
-    struct ApplyraftClosure : public google::protobuf::Closure {
-        virtual void Run() {
-            cond.decrease_signal();
-            delete this;
-        }
-
-        ApplyraftClosure(BthreadCond &cond) : cond(cond) {}
-
-        BthreadCond &cond;
     };
 
     class BaseStateMachine : public braft::StateMachine {

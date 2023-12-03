@@ -17,6 +17,7 @@
 file(COPY ${PROJECT_SOURCE_DIR}/conf DESTINATION ${PROJECT_BINARY_DIR})
 file(GLOB STORAGE storage/*.cc)
 file(GLOB BASE base/*.cc)
+file(GLOB RAFT raft/*.cc)
 
 set(EA_COMMON
         ${BASE}

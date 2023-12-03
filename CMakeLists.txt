@@ -73,6 +73,33 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/copts)
 
 include(carbin_module)
 
+include(carbin_cc_proto)
+set(PROTO_FILES
+        ea/proto/error_code.proto
+        ea/proto/meta_op.proto
+        ea/proto/meta.struct.proto
+        ea/proto/meta.interface.proto
+)
+
+file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/output/include/ea/proto)
+set(PROTOC_FLAGS ${PROTOC_FLAGS} -I${PROTOBUF_INCLUDE_DIR} -I${PROJECT_SOURCE_DIR})
+
+carbin_cc_proto(PROTO_HDRS PROTO_SRCS ${PROJECT_BINARY_DIR}
+        ${PROJECT_BINARY_DIR}/output/include
+        ${PROJECT_SOURCE_DIR}
+        "${PROTO_FILES}")
+
+carbin_cc_library(
+        NAMESPACE ea
+        NAME db_proto
+        SOURCES ${PROTO_SRCS}
+        COPTS ${CARBIN_DEFAULT_COPTS}
+        DEPS
+        ${CARBIN_DYLINK}
+        PUBLIC
+)
+
+
 add_subdirectory(ea)
 
 if (CARBIN_BUILD_TEST)

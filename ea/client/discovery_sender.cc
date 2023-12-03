@@ -30,7 +30,7 @@ namespace EA::client {
             if(butil::str2endpoint(peer.c_str(), &end_point) != 0) {
                 return turbo::InvalidArgumentError("invalid address {}", peer);
             }
-            _servlet_nodes.push_back(end_point);
+            _discovery_nodes.push_back(end_point);
         }
         return turbo::OkStatus();
     }
@@ -84,7 +84,7 @@ namespace EA::client {
     }
 
     DiscoverySender &DiscoverySender::set_interval_time(int time_ms) {
-        _between_meta_connect_error_ms = time_ms;
+        _between_discovery_connect_error_ms = time_ms;
         return *this;
     }
 

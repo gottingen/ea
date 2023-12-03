@@ -23,8 +23,8 @@ namespace EA::client {
 
     /**
      * @ingroup ea_rpc
-     * @brief BaseMessageSender is the interface for sending messages to the meta server.
-     *        It is used by the DiscoveryClient to send messages to the meta server. The DiscoveryClient will
+     * @brief BaseMessageSender is the interface for sending messages to the discovery server.
+     *        It is used by the DiscoveryClient to send messages to the discovery server. The DiscoveryClient will
      *        implement this interface. 
      */
     class BaseMessageSender {
@@ -32,36 +32,36 @@ namespace EA::client {
         virtual ~BaseMessageSender() = default;
 
         /**
-         * @brief discovery_manager is used to send a DiscoveryManagerRequest to the meta server.
+         * @brief discovery_manager is used to send a DiscoveryManagerRequest to the discovery server.
          * @param request [input] is the DiscoveryManagerRequest to send.
-         * @param response [output] is the MetaManagerResponse received from the meta server.
+         * @param response [output] is the DiscoveryManagerResponse received from the discovery server.
          * @param retry_times [input] is the number of times to retry sending the request.
          * @return Status::OK if the request was sent successfully. Otherwise, an error status is returned. 
          */
         virtual turbo::Status discovery_manager(const EA::discovery::DiscoveryManagerRequest &request,
                                                                      EA::discovery::DiscoveryManagerResponse &response, int retry_times) = 0;
         /**
-         * @brief discovery_manager is used to send a DiscoveryManagerRequest to the meta server.
+         * @brief discovery_manager is used to send a DiscoveryManagerRequest to the discovery server.
          * @param request [input] is the DiscoveryManagerRequest to send.
-         * @param response [output] is the MetaManagerResponse received from the meta server.
+         * @param response [output] is the DiscoveryManagerResponse received from the discovery server.
          * @return Status::OK if the request was sent successfully. Otherwise, an error status is returned. 
          */        
         virtual turbo::Status discovery_manager(const EA::discovery::DiscoveryManagerRequest &request,
                                            EA::discovery::DiscoveryManagerResponse &response) = 0;
 
         /**
-         * @brief discovery_query is used to send a DiscoveryQueryRequest to the meta server.
+         * @brief discovery_query is used to send a DiscoveryQueryRequest to the discovery server.
          * @param request [input] is the DiscoveryQueryRequest to send.
-         * @param response [output] is the DiscoveryQueryResponse received from the meta server.
+         * @param response [output] is the DiscoveryQueryResponse received from the discovery server.
          * @param retry_times [input] is the number of times to retry sending the request.
          * @return Status::OK if the request was sent successfully. Otherwise, an error status is returned.
          */
         virtual turbo::Status discovery_query(const EA::discovery::DiscoveryQueryRequest &request,
                                                     EA::discovery::DiscoveryQueryResponse &response, int retry_times) = 0;
         /**
-         * @brief discovery_query is used to send a DiscoveryQueryRequest to the meta server.
+         * @brief discovery_query is used to send a DiscoveryQueryRequest to the discovery server.
          * @param request [input] is the DiscoveryQueryRequest to send.
-         * @param response [output] is the DiscoveryQueryResponse received from the meta server.
+         * @param response [output] is the DiscoveryQueryResponse received from the discovery server.
          * @return Status::OK if the request was sent successfully. Otherwise, an error status is returned. 
          */
         virtual turbo::Status discovery_query(const EA::discovery::DiscoveryQueryRequest &request,

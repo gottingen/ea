@@ -23,6 +23,7 @@ Contents
 -------------
 
 ..  toctree::
+    :caption: QUICK START
     :maxdepth: 2
 
     en/quick_start

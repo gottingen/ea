@@ -16,7 +16,7 @@
 #define EA_CLI_USER_CMD_H_
 
 #include "turbo/flags/flags.h"
-#include "eapi/servlet/servlet.interface.pb.h"
+#include "eapi/discovery/discovery.interface.pb.h"
 #include "turbo/format/table.h"
 #include "turbo/base/status.h"
 #include <string>
@@ -64,28 +64,28 @@ namespace EA::cli {
     void run_user_info_cmd();
 
     [[nodiscard]] turbo::Status
-    make_user_create(EA::servlet::MetaManagerRequest *req);
+    make_user_create(EA::discovery::DiscoveryManagerRequest *req);
 
     [[nodiscard]] turbo::Status
-    make_user_remove(EA::servlet::MetaManagerRequest *req);
+    make_user_remove(EA::discovery::DiscoveryManagerRequest *req);
 
     [[nodiscard]] turbo::Status
-    make_user_add_privilege(EA::servlet::MetaManagerRequest *req);
+    make_user_add_privilege(EA::discovery::DiscoveryManagerRequest *req);
 
     [[nodiscard]] turbo::Status
-    make_user_remove_privilege(EA::servlet::MetaManagerRequest *req);
+    make_user_remove_privilege(EA::discovery::DiscoveryManagerRequest *req);
 
     [[nodiscard]] turbo::Status
-    make_user_list(EA::servlet::QueryRequest *req);
+    make_user_list(EA::discovery::DiscoveryQueryRequest *req);
 
     [[nodiscard]] turbo::Status
-    make_user_flat(EA::servlet::QueryRequest *req);
+    make_user_flat(EA::discovery::DiscoveryQueryRequest *req);
 
     [[nodiscard]] turbo::Status
-    make_user_info(EA::servlet::QueryRequest *req);
+    make_user_info(EA::discovery::DiscoveryQueryRequest *req);
 
-    turbo::Table show_meta_query_user_response(const EA::servlet::QueryResponse &res);
-    turbo::Table show_meta_query_user_flat_response(const EA::servlet::QueryResponse &res);
+    turbo::Table show_discovery_query_user_response(const EA::discovery::DiscoveryQueryResponse &res);
+    turbo::Table show_discovery_query_user_flat_response(const EA::discovery::DiscoveryQueryResponse &res);
 
 }  // namespace EA::cli
 

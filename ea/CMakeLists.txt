@@ -15,12 +15,12 @@
 #
 
 file(COPY ${PROJECT_SOURCE_DIR}/conf DESTINATION ${PROJECT_BINARY_DIR})
-file(GLOB ENGINE engine/*.cc)
+file(GLOB STORAGE storage/*.cc)
 file(GLOB BASE base/*.cc)
 
 set(EA_COMMON
         ${BASE}
-        ${ENGINE}
+        ${STORAGE}
         ${RAFT}
         ${RPC}
         )
@@ -79,11 +79,11 @@ carbin_cc_library(
 )
 
 
-file(GLOB META_SERVER meta_server/*.cc)
+file(GLOB META_SERVER discovery/*.cc)
 
 carbin_cc_binary(
         NAMESPACE ea
-        NAME eameta
+        NAME eadiscovery
         SOURCES
         ${META_SERVER}
         COPTS

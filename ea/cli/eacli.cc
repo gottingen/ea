@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include "ea/cli/meta_cmd.h"
+
 #include "turbo/flags/flags.h"
 #include "turbo/format/print.h"
 #include "ea/cli/option_context.h"
-#include "ea/client/meta.h"
+#include "ea/client/discovery.h"
 #include "ea/client/base_message_sender.h"
 #include "ea/client/router_sender.h"
-#include "ea/client/meta_sender.h"
+#include "ea/client/discovery_sender.h"
 #include "ea/cli/raft_cmd.h"
 #include "ea/cli/discovery.h"
 
@@ -29,14 +29,14 @@ int main(int argc, char **argv) {
     app.add_flag("-V, --verbose", opt->verbose, "verbose detail message default(false)")->default_val(false);
     app.add_option("-s,--server", opt->router_server, "server address default(\"127.0.0.1:8010\")")->default_val(
             "127.0.0.1:8010");
-    app.add_option("-m,--meta_server", opt->meta_server, "server address default(\"127.0.0.1:8010\")")->default_val(
+    app.add_option("-d,--discovery_server", opt->discovery_server, "server address default(\"127.0.0.1:8010\")")->default_val(
             "127.0.0.1:8010");
     app.add_flag("-r,--router", opt->router, "server address default(false)")->default_val(false);
     app.add_option("-T,--timeout", opt->timeout_ms, "timeout ms default(2000)");
     app.add_option("-C,--connect", opt->connect_timeout_ms, "connect timeout ms default(100)");
     app.add_option("-R,--retry", opt->max_retry, "max try time default(3)");
-    app.add_option("-I,--interval", opt->time_between_meta_connect_error_ms,
-                   "time between meta connect error ms default(1000)");
+    app.add_option("-I,--interval", opt->time_between_discovery_connect_error_ms,
+                   "time between discovery server connect error ms default(1000)");
     app.callback([&app] {
         if (app.get_subcommands().empty()) {
             turbo::Println("{}", app.help());
@@ -57,27 +57,27 @@ int main(int argc, char **argv) {
                 exit(0);
             }
             EA::client::RouterSender::get_instance()->set_connect_time_out(opt->connect_timeout_ms)
-                    .set_interval_time(opt->time_between_meta_connect_error_ms)
+                    .set_interval_time(opt->time_between_discovery_connect_error_ms)
                     .set_retry_time(opt->max_retry)
                     .set_verbose(opt->verbose);
             sender = EA::client::RouterSender::get_instance();
             TLOG_INFO_IF(opt->verbose, "init connect success to router server {}", opt->router_server);
         } else {
-            EA::client::MetaSender::get_instance()->set_connect_time_out(opt->connect_timeout_ms)
-                    .set_interval_time(opt->time_between_meta_connect_error_ms)
+            EA::client::DiscoverySender::get_instance()->set_connect_time_out(opt->connect_timeout_ms)
+                    .set_interval_time(opt->time_between_discovery_connect_error_ms)
                     .set_retry_time(opt->max_retry)
                     .set_verbose(opt->verbose);
-            auto rs = EA::client::MetaSender::get_instance()->init(opt->meta_server);
+            auto rs = EA::client::DiscoverySender::get_instance()->init(opt->discovery_server);
             if (!rs.ok()) {
                 turbo::Println("{}", rs.message());
                 exit(0);
             }
-            sender = EA::client::MetaSender::get_instance();
-            TLOG_INFO_IF(opt->verbose, "init connect success to meta server:{}", opt->meta_server);
+            sender = EA::client::DiscoverySender::get_instance();
+            TLOG_INFO_IF(opt->verbose, "init connect success to discovery server:{}", opt->discovery_server);
         }
-        auto r = EA::client::MetaClient::get_instance()->init(sender);
+        auto r = EA::client::DiscoveryClient::get_instance()->init(sender);
         if (!r.ok()) {
-            turbo::Println("set up meta server error:{}", r.message());
+            turbo::Println("set up discovery server error:{}", r.message());
             exit(0);
         }
     };
@@ -86,7 +86,6 @@ int main(int argc, char **argv) {
     // Call the setup functions for the subcommands.
     // They are kept alive by a shared pointer in the
     // lambda function
-    EA::cli::setup_meta_cmd(app);
     EA::cli::RaftCmd::setup_raft_cmd(app);
     EA::cli::DiscoveryCmd::setup_discovery_cmd(app);
     // More setup if needed, i.e., other subcommands etc.

@@ -20,7 +20,7 @@
 #define EA_CLI_ATOMIC_CMD_H_
 
 #include "turbo/flags/flags.h"
-#include "eapi/servlet/servlet.interface.pb.h"
+#include "eapi/discovery/discovery.interface.pb.h"
 #include "turbo/format/table.h"
 #include "turbo/base/status.h"
 #include <string>

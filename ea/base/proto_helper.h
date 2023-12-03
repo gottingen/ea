@@ -6,7 +6,7 @@
 #define EA_COMMON_PROTO_HELPER_H_
 
 #include "turbo/format/format.h"
-#include "eapi/servlet/servlet.interface.pb.h"
+#include "eapi/discovery/discovery.interface.pb.h"
 #include "rocksdb/db.h"
 #include "rocksdb/utilities/memory_util.h"
 #include "rapidjson/rapidjson.h"
@@ -24,8 +24,8 @@ namespace fmt {
     };
 
     template<>
-    struct formatter<EA::servlet::OpType> : public formatter<int> {
-        auto format(const EA::servlet::OpType& a, format_context& ctx) const {
+    struct formatter<EA::discovery::OpType> : public formatter<int> {
+        auto format(const EA::discovery::OpType& a, format_context& ctx) const {
             return formatter<int>::format(static_cast<int>(a), ctx);
         }
     };
@@ -45,8 +45,8 @@ namespace fmt {
     };
 
     template<>
-    struct formatter<::EA::servlet::RaftControlOp> : public formatter<int> {
-        auto format(const ::EA::servlet::RaftControlOp& a, format_context& ctx) const {
+    struct formatter<::EA::discovery::RaftControlOp> : public formatter<int> {
+        auto format(const ::EA::discovery::RaftControlOp& a, format_context& ctx) const {
             return formatter<int>::format(static_cast<int>(a), ctx);
         }
     };

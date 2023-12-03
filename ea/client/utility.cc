@@ -18,48 +18,48 @@
 
 namespace EA::client {
 
-    std::string config_type_to_string(EA::servlet::ConfigType type) {
+    std::string config_type_to_string(EA::discovery::ConfigType type) {
         switch (type) {
-            case EA::servlet::CF_JSON:
+            case EA::discovery::CF_JSON:
                 return "json";
-            case EA::servlet::CF_TEXT:
+            case EA::discovery::CF_TEXT:
                 return "text";
-            case EA::servlet::CF_INI:
+            case EA::discovery::CF_INI:
                 return "ini";
-            case EA::servlet::CF_YAML:
+            case EA::discovery::CF_YAML:
                 return "yaml";
-            case EA::servlet::CF_XML:
+            case EA::discovery::CF_XML:
                 return "xml";
-            case EA::servlet::CF_GFLAGS:
+            case EA::discovery::CF_GFLAGS:
                 return "gflags";
-            case EA::servlet::CF_TOML:
+            case EA::discovery::CF_TOML:
                 return "toml";
             default:
                 return "unknown format";
         }
     }
 
-    turbo::ResultStatus<EA::servlet::ConfigType> string_to_config_type(const std::string &str) {
+    turbo::ResultStatus<EA::discovery::ConfigType> string_to_config_type(const std::string &str) {
         auto lc = turbo::StrToLower(str);
         if (lc == "json") {
-            return EA::servlet::CF_JSON;
+            return EA::discovery::CF_JSON;
         } else if (lc == "text") {
-            return EA::servlet::CF_TEXT;
+            return EA::discovery::CF_TEXT;
         } else if (lc == "ini") {
-            return EA::servlet::CF_INI;
+            return EA::discovery::CF_INI;
         } else if (lc == "yaml") {
-            return EA::servlet::CF_YAML;
+            return EA::discovery::CF_YAML;
         } else if (lc == "xml") {
-            return EA::servlet::CF_XML;
+            return EA::discovery::CF_XML;
         } else if (lc == "gflags") {
-            return EA::servlet::CF_GFLAGS;
+            return EA::discovery::CF_GFLAGS;
         } else if (lc == "toml") {
-            return EA::servlet::CF_TOML;
+            return EA::discovery::CF_TOML;
         }
         return turbo::InvalidArgumentError("unknown format '{}'", str);
     }
 
-    turbo::Status string_to_version(const std::string &str, EA::servlet::Version *v) {
+    turbo::Status string_to_version(const std::string &str, EA::discovery::Version *v) {
         std::vector<std::string> vs = turbo::StrSplit(str, ".");
         if (vs.size() != 3)
             return turbo::InvalidArgumentError("version error, should be like 1.2.3");
@@ -100,7 +100,7 @@ namespace EA::client {
         return turbo::OkStatus();
     }
 
-    std::string version_to_string(const EA::servlet::Version &v) {
+    std::string version_to_string(const EA::discovery::Version &v) {
         return turbo::Format("{}.{}.{}", v.major(), v.minor(), v.patch());
     }
 

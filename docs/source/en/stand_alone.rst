@@ -3,74 +3,74 @@
 .. _stand_alone_section:
 
 =======================================
-Stand Alone deploy
+stand alone deploy
 =======================================
 
 Now, we start using `EA`, starting from a single machine and single node raft node.The purpose of this
-part is to become familiar with the functions of `EA meta` and the use of `eacli`. Make sure that the `EA`
+part is to become familiar with the functions of `EA discovery` and the use of `eacli`. Make sure that the `EA`
 components are properly installed via any way and that they are placed in the system's search path. if you
 have notinstall `EA`, see :ref:`build_and_install_section` install it first. Two components will be used
-here: `eameta` and `eacli`. here we go!
+here: `eadiscovery` and `eacli`. here we go!
 
 .. note::
-    eameta will create files in the running directory and read and write files. Make sure user has read,
+    eadiscovery will create files in the running directory and read and write files. Make sure user has read,
     write and run permissions on the current directory.
 
 config setting
 ======================================
 
-The default stand-alone configuration file of eameta is as follows, gflags::
+The default stand-alone configuration file of eadiscovery is as follows, gflags::
 
     -defer_close_second=300
-    -meta_snapshot_interval_s=600
-    -meta_election_timeout_ms=10000
-    -meta_raft_max_election_delay_ms=5000
-    -meta_log_uri=local://./meta/raft_log/
-    -meta_stable_uri=local://./meta/raft_data/stable
-    -meta_snapshot_uri=local://./meta/raft_data/snapshot
-    -meta_db_path=./meta/rocks_db
-    -meta_replica_number=1
-    -meta_server_peers=127.0.0.1:8010
-    -meta_listen=127.0.0.1:8010
+    -discovery_snapshot_interval_s=600
+    -discovery_election_timeout_ms=10000
+    -discovery_raft_max_election_delay_ms=5000
+    -discovery_log_uri=local://./discovery/raft_log/
+    -discovery_stable_uri=local://./discovery/raft_data/stable
+    -discovery_snapshot_uri=local://./discovery/raft_data/snapshot
+    -discovery_db_path=./discovery/rocks_db
+    -discovery_replica_number=1
+    -discovery_server_peers=127.0.0.1:8010
+    -discovery_listen=127.0.0.1:8010
     -bthread_concurrency=100
     -bvar_dump
-    -bvar_dump_file=./monitor/bvar.eameta.data
-    -ea_log_base_name=meta_log.txt
+    -bvar_dump_file=./monitor/bvar.eadiscovery.data
+    -ea_log_base_name=discovery_log.txt
 
-at the directory you want to run eameta, create directory `conf` and copy the config above, write to file
-`meta_gflags.conf`.
+at the directory you want to run eadiscovery, create directory `conf` and copy the config above, write to file
+`discovery_gflags.conf`.
 
 .. note::
     The meaning of gflags configuration will be explained in detail in the management and deployment section
     later. Ignore them now, Detailed configuration explanation is here  :ref:`gflags_section`, But it is not
     recommended to look at the configuration now, because it will affect our wonderful time.
 
-start eameta
+start eadiscovery
 ========================================
 
-start eameta::
+start eadiscovery::
 
-    >eameta &
+    >eadiscovery &
 
-`eameta` fixedly reads `conf/meta_gflags.conf` files as configuration startup. `eameta` success start up,
-corresponding to the above configuration, eameta will listen to port 8010.
+`eadiscovery` fixedly reads `conf/discovery_gflags.conf` files as configuration startup. `eadiscovery` success start up,
+corresponding to the above configuration, eadiscovery will listen to port 8010.
 
 check the listening port::
 
     >netstat -ntl
     tcp        0      0 127.0.0.1:8010          0.0.0.0:*               LISTEN
 
-`eameta` will create dirs for data store, after start up `meta` `monitor` `logs` dir will be create automic.
+`eadiscovery` will create dirs for data store, after start up `discovery` `monitor` `logs` dir will be create automic.
 
 check directories::
 
     > ls
-    conf logs monitor meta
+    conf logs monitor discovery
 
 
-now we run `eacli` to check `eameta` and `eacli` can interact correctly::
+now we run `eacli` to check `eadiscovery` and `eacli` can interact correctly::
 
-    >eacli meta config list
+    >eacli discovery config list
 
 if return this means work well::
 
@@ -82,7 +82,7 @@ if return this means work well::
     | rpc     |                                            ok                                           |
     +---------+-----------------------------------------------------------------------------------------+
     | result  | +---------+----------------+---------+-------------------+------------+---------------+ |
-    |         | | status  | meta leader    | op code | op string         | error code | error message | |
+    |         | | status  |discovery leader| op code | op string         | error code | error message | |
     |         | +---------+----------------+---------+-------------------+------------+---------------+ |
     |         | | success | 127.0.0.1:8010 | 19      | QUERY_LIST_CONFIG | 0          | success       | |
     |         | +---------+----------------+---------+-------------------+------------+---------------+ |
@@ -111,7 +111,7 @@ and this means some thing wrong::
 check log::
 
     >tail logs/ea_log_2023-12-02.txt
-    [2023-12-02 08:16:21.425] [ea-logger] [warning] [meta_server.cc:82] _tso_state_machine init success
+    [2023-12-02 08:16:21.425] [ea-logger] [warning] [discovery_server.cc:82] _tso_state_machine init success
     [2023-12-02 08:16:21.426] [ea-logger] [info] [base_state_machine.cc:152] new conf committed, new peer: 127.0.0.1:8010:0,
     [2023-12-02 08:16:21.426] [ea-logger] [info] [base_state_machine.cc:127] leader start at term: 3
     [2023-12-02 08:16:21.426] [ea-logger] [warning] [tso_state_machine.cc:363] tso leader start
@@ -119,10 +119,10 @@ check log::
     [2023-12-02 08:16:21.428] [ea-logger] [warning] [tso_state_machine.cc:380] sync timestamp ok
 
 
-Try Config Component
+try config component
 ====================
 
-In this part, I use `eacli` to interact with `eameta` to demonstrate the functions of `eameta`. actually,
+In this part, I use `eacli` to interact with `eadiscovery` to demonstrate the functions of `eadiscovery`. actually,
 our previous test was one of the config command -- view the config list.
 
 dump a example
@@ -130,7 +130,7 @@ dump a example
 
 First, we create a simple config through eacli::
 
-    >eacli meta config dump -e 123.json
+    >eacli discovery config dump -e 123.json
     +--------------+----------------------------------+
     | phase        |              status              |
     +--------------+----------------------------------+
@@ -181,7 +181,7 @@ Using the configuration we just generated, we create the first configuration.
 
 create config::
 
-    >eacli meta config create -j 123.json
+    >eacli discovery config create -j 123.json
     +---------+----------------------------------------------------------------------------------------+
     | phase   |                                         status                                         |
     +---------+----------------------------------------------------------------------------------------+
@@ -190,7 +190,7 @@ create config::
     | rpc     |                                           ok                                           |
     +---------+----------------------------------------------------------------------------------------+
     | result  | +---------+----------------+---------+------------------+------------+---------------+ |
-    |         | | status  | meta leader    | op code | op string        | error code | error message | |
+    |         | | status  |discovery leader| op code | op string        | error code | error message | |
     |         | +---------+----------------+---------+------------------+------------+---------------+ |
     |         | | success | 127.0.0.1:8010 | 38      | OP_CREATE_CONFIG | 0          | success       | |
     |         | +---------+----------------+---------+------------------+------------+---------------+ |
@@ -202,7 +202,7 @@ it will act fail.
 
 try again::
 
-    >eacli meta config create -j 123.json
+    >eacli discovery config create -j 123.json
     +---------+----------------------------------------------------------------------------------------------+
     | phase   |                                            status                                            |
     +---------+----------------------------------------------------------------------------------------------+
@@ -211,7 +211,7 @@ try again::
     | rpc     |                                              ok                                              |
     +---------+----------------------------------------------------------------------------------------------+
     | result  | +--------+----------------+---------+------------------+------------+----------------------+ |
-    |         | | status | meta leader    | op code | op string        | error code | error message        | |
+    |         | | status |discovery leader| op code | op string        | error code | error message        | |
     |         | +--------+----------------+---------+------------------+------------+----------------------+ |
     |         | | fail   | 127.0.0.1:8010 | 38      | OP_CREATE_CONFIG | 21         | config already exist | |
     |         | +--------+----------------+---------+------------------+------------+----------------------+ |
@@ -220,11 +220,11 @@ try again::
 download config
 -----------------------------
 
-Now that we have created the config in `eameta`, download it through the command line and save it to my_config.json
+Now that we have created the config in `eadiscovery`, download it through the command line and save it to my_config.json
 
 get config::
 
-    >eacli meta config get -n example -o my_config.json
+    >eacli discovery config get -n example -o my_config.json
     +-----------+----------------------------------------------------------------------------------------+
     | operation |                                     get config info                                    |
     +-----------+----------------------------------------------------------------------------------------+
@@ -239,7 +239,7 @@ get config::
     | rpc       |                                           ok                                           |
     +-----------+----------------------------------------------------------------------------------------+
     | result    | +---------+----------------+---------+------------------+------------+---------------+ |
-    |           | | status  | meta leader    | op code | op string        | error code | error message | |
+    |           | | status  |discovery leader| op code | op string        | error code | error message | |
     |           | +---------+----------------+---------+------------------+------------+---------------+ |
     |           | | success | 127.0.0.1:8010 | 17      | QUERY_GET_CONFIG | 0          | success       | |
     |           | +---------+----------------+---------+------------------+------------+---------------+ |
@@ -283,10 +283,10 @@ create config more version
 
 Now, we create `example` config more versions and another names `jeff`
 
-        >eacli meta config create -n example -f my_config.json -v 1.2.4
+        >eacli discovery config create -n example -f my_config.json -v 1.2.4
         ...
-        >eacli meta config create -n example -f my_config.json -v 1.2.8
-        >eacli meta config create -n jeff -f my_config.json -v 0.1.0
+        >eacli discovery config create -n example -f my_config.json -v 1.2.8
+        >eacli discovery config create -n jeff -f my_config.json -v 0.1.0
 
 list config
 -------------------------------------------
@@ -295,7 +295,7 @@ let us see config list, the command that we always using it for a check.
 
 config list::
 
-    >eacli meta config list
+    >eacli discovery config list
     +---------+-----------------------------------------------------------------------------------------+
     | phase   |                                          status                                         |
     +---------+-----------------------------------------------------------------------------------------+
@@ -304,7 +304,7 @@ config list::
     | rpc     |                                            ok                                           |
     +---------+-----------------------------------------------------------------------------------------+
     | result  | +---------+----------------+---------+-------------------+------------+---------------+ |
-    |         | | status  | meta leader    | op code | op string         | error code | error message | |
+    |         | | status  |discovery leader| op code | op string         | error code | error message | |
     |         | +---------+----------------+---------+-------------------+------------+---------------+ |
     |         | | success | 127.0.0.1:8010 | 19      | QUERY_LIST_CONFIG | 0          | success       | |
     |         | +---------+----------------+---------+-------------------+------------+---------------+ |
@@ -324,7 +324,7 @@ If we specify the name field, it will list the config version that we have creat
 
 list version::
 
-    >eacli meta config list -n example
+    >eacli discovery config list -n example
     +---------+-------------------------------------------------------------------------------------------------+
     | phase   |                                              status                                             |
     +---------+-------------------------------------------------------------------------------------------------+
@@ -333,7 +333,7 @@ list version::
     | rpc     |                                                ok                                               |
     +---------+-------------------------------------------------------------------------------------------------+
     | result  | +---------+----------------+---------+---------------------------+------------+---------------+ |
-    |         | | status  | meta leader    | op code | op string                 | error code | error message | |
+    |         | | status  |discovery leader| op code | op string                 | error code | error message | |
     |         | +---------+----------------+---------+---------------------------+------------+---------------+ |
     |         | | success | 127.0.0.1:8010 | 18      | QUERY_LIST_CONFIG_VERSION | 0          | success       | |
     |         | +---------+----------------+---------+---------------------------+------------+---------------+ |
@@ -357,8 +357,8 @@ list version::
     |         | +--------------+---------+                                                                      |
     +---------+-------------------------------------------------------------------------------------------------+
 
-At this point, we have demonstrated the use of eameta by using parts of  config functions. For detailed config
-functions, see the config module. Next we will focus our attention on how to build an eameta cluster.First build a
+At this point, we have demonstrated the use of eadiscovery by using parts of  config functions. For detailed config
+functions, see the config module. Next we will focus our attention on how to build an eadiscovery cluster.First build a
 cluster on a single machine.
 
 Deploy Clust Stand Alone
@@ -395,60 +395,60 @@ we designed the three node listening to ports `127.0.0.1:8011`, `127.0.0.1:8012`
 node-1 configration::
 
     -defer_close_second=300
-    -meta_snapshot_interval_s=600
-    -meta_election_timeout_ms=10000
-    -meta_raft_max_election_delay_ms=5000
-    -meta_log_uri=local://./meta/raft_log/
-    -meta_stable_uri=local://./meta/raft_data/stable
-    -meta_snapshot_uri=local://./meta/raft_data/snapshot
-    -meta_db_path=./meta/rocks_db
-    -meta_replica_number=1
-    -meta_server_peers=127.0.0.1:8011,127.0.0.1:8012,127.0.0.1:8013
-    -meta_listen=127.0.0.1:8011
+    -discovery_snapshot_interval_s=600
+    -discovery_election_timeout_ms=10000
+    -discovery_raft_max_election_delay_ms=5000
+    -discovery_log_uri=local://./discovery/raft_log/
+    -discovery_stable_uri=local://./discovery/raft_data/stable
+    -discovery_snapshot_uri=local://./discovery/raft_data/snapshot
+    -discovery_db_path=./discovery/rocks_db
+    -discovery_replica_number=1
+    -discovery_server_peers=127.0.0.1:8011,127.0.0.1:8012,127.0.0.1:8013
+    -discovery_listen=127.0.0.1:8011
     -bthread_concurrency=100
     -bvar_dump
-    -bvar_dump_file=./monitor/bvar.eameta.data
-    -ea_log_base_name=meta_log.txt
+    -bvar_dump_file=./monitor/bvar.eadiscovery.data
+    -ea_log_base_name=discovery_log.txt
 
 node-2 configration::
 
     -defer_close_second=300
-    -meta_snapshot_interval_s=600
-    -meta_election_timeout_ms=10000
-    -meta_raft_max_election_delay_ms=5000
-    -meta_log_uri=local://./meta/raft_log/
-    -meta_stable_uri=local://./meta/raft_data/stable
-    -meta_snapshot_uri=local://./meta/raft_data/snapshot
-    -meta_db_path=./meta/rocks_db
-    -meta_replica_number=1
-    -meta_server_peers=127.0.0.1:8011,127.0.0.1:8012,127.0.0.1:8013
-    -meta_listen=127.0.0.1:8012
+    -discovery_snapshot_interval_s=600
+    -discovery_election_timeout_ms=10000
+    -discovery_raft_max_election_delay_ms=5000
+    -discovery_log_uri=local://./discovery/raft_log/
+    -discovery_stable_uri=local://./discovery/raft_data/stable
+    -discovery_snapshot_uri=local://./discovery/raft_data/snapshot
+    -discovery_db_path=./discovery/rocks_db
+    -discovery_replica_number=1
+    -discovery_server_peers=127.0.0.1:8011,127.0.0.1:8012,127.0.0.1:8013
+    -discovery_listen=127.0.0.1:8012
     -bthread_concurrency=100
     -bvar_dump
-    -bvar_dump_file=./monitor/bvar.eameta.data
-    -ea_log_base_name=meta_log.txt
+    -bvar_dump_file=./monitor/bvar.eadiscovery.data
+    -ea_log_base_name=discovery_log.txt
 
 
 node-3 configration::
 
     -defer_close_second=300
-    -meta_snapshot_interval_s=600
-    -meta_election_timeout_ms=10000
-    -meta_raft_max_election_delay_ms=5000
-    -meta_log_uri=local://./meta/raft_log/
-    -meta_stable_uri=local://./meta/raft_data/stable
-    -meta_snapshot_uri=local://./meta/raft_data/snapshot
-    -meta_db_path=./meta/rocks_db
-    -meta_replica_number=1
-    -meta_server_peers=127.0.0.1:8011,127.0.0.1:8012,127.0.0.1:8013
-    -meta_listen=127.0.0.1:8013
+    -discovery_snapshot_interval_s=600
+    -discovery_election_timeout_ms=10000
+    -discovery_raft_max_election_delay_ms=5000
+    -discovery_log_uri=local://./discovery/raft_log/
+    -discovery_stable_uri=local://./discovery/raft_data/stable
+    -discovery_snapshot_uri=local://./discovery/raft_data/snapshot
+    -discovery_db_path=./discovery/rocks_db
+    -discovery_replica_number=1
+    -discovery_server_peers=127.0.0.1:8011,127.0.0.1:8012,127.0.0.1:8013
+    -discovery_listen=127.0.0.1:8013
     -bthread_concurrency=100
     -bvar_dump
-    -bvar_dump_file=./monitor/bvar.eameta.data
-    -ea_log_base_name=meta_log.txt
+    -bvar_dump_file=./monitor/bvar.eadiscovery.data
+    -ea_log_base_name=discovery_log.txt
 
-as deploy signal peer, write the **meta_gflags.conf** configration for every node to
-respectively directory(node-[1|2|3]/conf/meta_gflags.conf).
+as deploy signal peer, write the **discovery_gflags.conf** configration for every node to
+respectively directory(node-[1|2|3]/conf/discovery_gflags.conf).
 
 start up cluster
 ------------------------------------
@@ -456,11 +456,11 @@ start up cluster
 start up::
 
     > cd node-1
-    > eameta
+    > eadiscovery
     > cd node-2
-    > eameta
+    > eadiscovery
     > cd node-3
-    > eameta
+    > eadiscovery
 
 check cluster
 ---------------------------------------

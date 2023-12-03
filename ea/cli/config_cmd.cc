@@ -23,7 +23,7 @@
 #include "turbo/times/clock.h"
 #include "json2pb/pb_to_json.h"
 #include "json2pb/json_to_pb.h"
-#include "ea/client/meta.h"
+#include "ea/client/discovery.h"
 #include "ea/client/dumper.h"
 #include "ea/client/config_info_builder.h"
 #include "nlohmann/json.hpp"
@@ -104,10 +104,10 @@ namespace EA::cli {
     }
 
     void ConfigCmd::run_config_create_cmd() {
-        EA::servlet::MetaManagerRequest request;
-        EA::servlet::MetaManagerResponse response;
+        EA::discovery::DiscoveryManagerRequest request;
+        EA::discovery::DiscoveryManagerResponse response;
         ScopeShower ss;
-        request.set_op_type(EA::servlet::OP_CREATE_CONFIG);
+        request.set_op_type(EA::discovery::OP_CREATE_CONFIG);
         auto opt = ConfigOptionContext::get_instance();
         auto config_info = request.mutable_config_info();
         EA::client::ConfigInfoBuilder builder(config_info);
@@ -130,15 +130,15 @@ namespace EA::cli {
             }
         }
         PREPARE_ERROR_RETURN_OR_OK(ss, rs, request);
-        rs = EA::client::MetaClient::get_instance()->meta_manager(request, response, nullptr);
+        rs = EA::client::DiscoveryClient::get_instance()->discovery_manager(request, response, nullptr);
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(response.errcode(), response.op_type(),
                                                response.errmsg());
-        ss.add_table("result", std::move(table), response.errcode() == EA::servlet::SUCCESS);
+        ss.add_table("result", std::move(table), response.errcode() == EA::discovery::SUCCESS);
     }
 
     void ConfigCmd::run_config_dump_cmd() {
-        EA::servlet::ConfigInfo request;
+        EA::discovery::ConfigInfo request;
 
         ScopeShower ss;
         auto opt = ConfigOptionContext::get_instance();
@@ -189,7 +189,7 @@ namespace EA::cli {
     }
 
     void ConfigCmd::run_config_test_cmd() {
-        EA::servlet::ConfigInfo request;
+        EA::discovery::ConfigInfo request;
         ScopeShower ss;
         if (ConfigOptionContext::get_instance()->config_file.empty()) {
             ss.add_table("prepare", "no input file", false);
@@ -235,55 +235,54 @@ namespace EA::cli {
             run_config_version_list_cmd();
             return;
         }
-        EA::servlet::QueryRequest request;
-        EA::servlet::QueryResponse response;
+        EA::discovery::DiscoveryQueryRequest request;
+        EA::discovery::DiscoveryQueryResponse response;
 
         ScopeShower ss;
         auto rs = make_config_list(&request);
         PREPARE_ERROR_RETURN_OR_OK(ss, rs, request);
-        rs = EA::client::MetaClient::get_instance()->meta_query(request, response, nullptr);
+        rs = EA::client::DiscoveryClient::get_instance()->discovery_query(request, response, nullptr);
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(response.errcode(), request.op_type(),
                                                response.errmsg());
-        ss.add_table("result", std::move(table), response.errcode() == EA::servlet::SUCCESS);
-        if (response.errcode() == EA::servlet::SUCCESS) {
+        ss.add_table("result", std::move(table), response.errcode() == EA::discovery::SUCCESS);
+        if (response.errcode() == EA::discovery::SUCCESS) {
             table = show_query_ops_config_list_response(response);
             ss.add_table("summary", std::move(table), true);
         }
     }
 
     void ConfigCmd::run_config_version_list_cmd() {
-        EA::servlet::QueryRequest request;
-        EA::servlet::QueryResponse response;
+        EA::discovery::DiscoveryQueryRequest request;
+        EA::discovery::DiscoveryQueryResponse response;
 
         ScopeShower ss;
         auto rs = make_config_list_version(&request);
         PREPARE_ERROR_RETURN_OR_OK(ss, rs, request);
-        rs = EA::client::MetaClient::get_instance()->meta_query(request, response, nullptr);
+        rs = EA::client::DiscoveryClient::get_instance()->discovery_query(request, response, nullptr);
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(response.errcode(), request.op_type(),
                                                response.errmsg());
-        ss.add_table("result", std::move(table), response.errcode() == EA::servlet::SUCCESS);
-        if (response.errcode() == EA::servlet::SUCCESS) {
+        ss.add_table("result", std::move(table), response.errcode() == EA::discovery::SUCCESS);
+        if (response.errcode() == EA::discovery::SUCCESS) {
             table = show_query_ops_config_list_version_response(response);
             ss.add_table("summary", std::move(table), true);
         }
     }
 
     void ConfigCmd::run_config_get_cmd() {
-        EA::servlet::QueryRequest request;
-        EA::servlet::QueryResponse response;
+        EA::discovery::DiscoveryQueryRequest request;
+        EA::discovery::DiscoveryQueryResponse response;
 
         ScopeShower ss("get config info");
         auto rs = make_config_get(&request);
-        ss.prepare(rs);
         PREPARE_ERROR_RETURN_OR_OK(ss, rs, request);
-        rs = EA::client::MetaClient::get_instance()->meta_query(request, response, nullptr);
+        rs = EA::client::DiscoveryClient::get_instance()->discovery_query(request, response, nullptr);
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(response.errcode(), request.op_type(),
                                                response.errmsg());
         ss.add_table("result", std::move(table), true);
-        if (response.errcode() != EA::servlet::SUCCESS) {
+        if (response.errcode() != EA::discovery::SUCCESS) {
             return;
         }
         turbo::Status save_status;
@@ -294,7 +293,7 @@ namespace EA::cli {
         ss.add_table("summary", std::move(table), true);
     }
 
-    turbo::Status ConfigCmd::save_config_to_file(const std::string &path, const EA::servlet::QueryResponse &res) {
+    turbo::Status ConfigCmd::save_config_to_file(const std::string &path, const EA::discovery::DiscoveryQueryResponse &res) {
         turbo::SequentialWriteFile file;
         auto s = file.open(path, true);
         if (!s.ok()) {
@@ -309,13 +308,13 @@ namespace EA::cli {
     }
 
     void ConfigCmd::run_config_remove_cmd() {
-        EA::servlet::MetaManagerRequest request;
-        EA::servlet::MetaManagerResponse response;
+        EA::discovery::DiscoveryManagerRequest request;
+        EA::discovery::DiscoveryManagerResponse response;
 
         ScopeShower ss;
         auto rs = make_config_remove(&request);
         PREPARE_ERROR_RETURN_OR_OK(ss, rs, request);
-        rs = EA::client::MetaClient::get_instance()->meta_manager(request, response, nullptr);
+        rs = EA::client::DiscoveryClient::get_instance()->discovery_manager(request, response, nullptr);
         RPC_ERROR_RETURN_OR_OK(ss, rs, request);
         auto table = ShowHelper::show_response(response.errcode(), response.op_type(),
                                                response.errmsg());
@@ -323,10 +322,10 @@ namespace EA::cli {
     }
 
     [[nodiscard]] turbo::Status
-    ConfigCmd::make_example_config_dump(EA::servlet::ConfigInfo *req) {
+    ConfigCmd::make_example_config_dump(EA::discovery::ConfigInfo *req) {
         req->set_name("example");
         req->set_time(static_cast<int>(turbo::ToTimeT(turbo::Now())));
-        req->set_type(EA::servlet::CF_JSON);
+        req->set_type(EA::discovery::CF_JSON);
         auto v = req->mutable_version();
         v->set_major(1);
         v->set_minor(2);
@@ -344,22 +343,22 @@ namespace EA::cli {
     }
 
     [[nodiscard]] turbo::Status
-    ConfigCmd::make_config_list(EA::servlet::QueryRequest *req) {
-        req->set_op_type(EA::servlet::QUERY_LIST_CONFIG);
+    ConfigCmd::make_config_list(EA::discovery::DiscoveryQueryRequest *req) {
+        req->set_op_type(EA::discovery::QUERY_LIST_CONFIG);
         return turbo::OkStatus();
     }
 
     [[nodiscard]] turbo::Status
-    ConfigCmd::make_config_list_version(EA::servlet::QueryRequest *req) {
-        req->set_op_type(EA::servlet::QUERY_LIST_CONFIG_VERSION);
+    ConfigCmd::make_config_list_version(EA::discovery::DiscoveryQueryRequest *req) {
+        req->set_op_type(EA::discovery::QUERY_LIST_CONFIG_VERSION);
         auto opt = ConfigOptionContext::get_instance();
         req->set_config_name(opt->config_name);
         return turbo::OkStatus();
     }
 
     [[nodiscard]] turbo::Status
-    ConfigCmd::make_config_get(EA::servlet::QueryRequest *req) {
-        req->set_op_type(EA::servlet::QUERY_GET_CONFIG);
+    ConfigCmd::make_config_get(EA::discovery::DiscoveryQueryRequest *req) {
+        req->set_op_type(EA::discovery::QUERY_GET_CONFIG);
         auto opt = ConfigOptionContext::get_instance();
         req->set_config_name(opt->config_name);
         if (!opt->config_version.empty()) {
@@ -370,8 +369,8 @@ namespace EA::cli {
     }
 
     [[nodiscard]] turbo::Status
-    ConfigCmd::make_config_remove(EA::servlet::MetaManagerRequest *req) {
-        req->set_op_type(EA::servlet::OP_REMOVE_CONFIG);
+    ConfigCmd::make_config_remove(EA::discovery::DiscoveryManagerRequest *req) {
+        req->set_op_type(EA::discovery::OP_REMOVE_CONFIG);
         auto rc = req->mutable_config_info();
         auto opt = ConfigOptionContext::get_instance();
         rc->set_name(opt->config_name);
@@ -382,7 +381,7 @@ namespace EA::cli {
         return turbo::OkStatus();
     }
 
-    turbo::Table ConfigCmd::show_query_ops_config_list_response(const EA::servlet::QueryResponse &res) {
+    turbo::Table ConfigCmd::show_query_ops_config_list_response(const EA::discovery::DiscoveryQueryResponse &res) {
         turbo::Table result;
         auto &config_list = res.config_infos();
         result.add_row(turbo::Table::Row_t{"config size", turbo::Format(config_list.size())});
@@ -392,11 +391,11 @@ namespace EA::cli {
         last = result.size() - 1;
         result[last].format().font_color(turbo::Color::green);
         int i = 0;
-        std::vector<EA::servlet::ConfigInfo> sorted_list;
+        std::vector<EA::discovery::ConfigInfo> sorted_list;
         for (auto &ns: config_list) {
             sorted_list.push_back(ns);
         }
-        auto less_fun = [](const EA::servlet::ConfigInfo & lhs, const EA::servlet::ConfigInfo &rhs) -> bool{
+        auto less_fun = [](const EA::discovery::ConfigInfo & lhs, const EA::discovery::ConfigInfo &rhs) -> bool{
             return std::less()(lhs.name(), rhs.name());
         };
         std::sort(sorted_list.begin(), sorted_list.end(),less_fun);
@@ -409,10 +408,10 @@ namespace EA::cli {
         return result;
     }
 
-    turbo::Table ConfigCmd::show_query_ops_config_list_version_response(const EA::servlet::QueryResponse &res) {
+    turbo::Table ConfigCmd::show_query_ops_config_list_version_response(const EA::discovery::DiscoveryQueryResponse &res) {
         turbo::Table result;
         auto &config_versions = res.config_infos();
-        result.add_row(turbo::Table::Row_t{"version size", turbo::Format(config_versions.size())});
+        result.add_row(turbo::Table::Row_t{"version num", turbo::Format(config_versions.size())});
         auto last = result.size() - 1;
         result[last].format().font_color(turbo::Color::green);
         result.add_row(turbo::Table::Row_t{"number", "version"});
@@ -431,7 +430,7 @@ namespace EA::cli {
         return result;
     }
 
-    turbo::Table ConfigCmd::show_query_ops_config_get_response(const EA::servlet::QueryResponse &res,
+    turbo::Table ConfigCmd::show_query_ops_config_get_response(const EA::discovery::DiscoveryQueryResponse &res,
                                                                const turbo::Status &save_status) {
         turbo::Table result_table;
         auto config = res.config_infos(0);

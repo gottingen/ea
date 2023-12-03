@@ -17,24 +17,24 @@
 #ifndef EA_CLI_PROTO_HELP_H_
 #define EA_CLI_PROTO_HELP_H_
 
-#include "eapi/servlet/servlet.interface.pb.h"
+#include "eapi/discovery/discovery.interface.pb.h"
 #include "turbo/base/result_status.h"
 
 namespace EA::cli {
 
-    std::string config_type_to_string(EA::servlet::ConfigType type);
+    std::string config_type_to_string(EA::discovery::ConfigType type);
 
-    turbo::ResultStatus<EA::servlet::ConfigType> string_to_config_type(const std::string &str);
+    turbo::ResultStatus<EA::discovery::ConfigType> string_to_config_type(const std::string &str);
 
-    std::string get_op_string(EA::servlet::OpType type);
+    std::string get_op_string(EA::discovery::OpType type);
 
-    std::string get_op_string(EA::servlet::RaftControlOp type);
+    std::string get_op_string(EA::discovery::RaftControlOp type);
 
-    std::string get_op_string(EA::servlet::QueryOpType type);
+    std::string get_op_string(EA::discovery::QueryOpType type);
 
-    turbo::Status string_to_version(const std::string &str, EA::servlet::Version*v);
+    turbo::Status string_to_version(const std::string &str, EA::discovery::Version*v);
 
-    std::string version_to_string(const EA::servlet::Version &v);
+    std::string version_to_string(const EA::discovery::Version &v);
 
 
 }  // namespace EA::cli

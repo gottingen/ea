@@ -17,7 +17,7 @@
 #ifndef EA_CLIENT_CONFIG_INFO_BUILDER_H_
 #define EA_CLIENT_CONFIG_INFO_BUILDER_H_
 
-#include "eapi/servlet/servlet.struct.pb.h"
+#include "eapi/discovery/discovery.struct.pb.h"
 #include "turbo/base/status.h"
 
 namespace EA::client {
@@ -28,7 +28,7 @@ namespace EA::client {
      *        it does not hold the ConfigInfo object memory, and not thread safe. user should guard
      *        that the object is usable and make sure it is thread safe call. eg.
      * @code
-     *        EA::servlet::ConfigInfo info;
+     *        EA::discovery::ConfigInfo info;
      *        ConfigInfoBuilder builder(&info);
      *        std::string content = "listen_port=8010;raft_group=meta_raft";
      *        auto status = builder.build_from_content("meta_config", content, "1.2.3", "json");
@@ -45,13 +45,13 @@ namespace EA::client {
 
         ~ConfigInfoBuilder() = default;
 
-        explicit ConfigInfoBuilder(EA::servlet::ConfigInfo *info);
+        explicit ConfigInfoBuilder(EA::discovery::ConfigInfo *info);
 
         /**
          * @brief set up ConfigInfo pointer for building
          * @param info
          */
-        void set_info(EA::servlet::ConfigInfo *info);
+        void set_info(EA::discovery::ConfigInfo *info);
 
         /**
          * @brief load ConfigInfo from json format string.
@@ -75,8 +75,8 @@ namespace EA::client {
          * @param type [input] config type, can be any one of this [CF_JSON|CF_GFLAGS|CF_TEXT|CF_TOML|CF_XML|CF_YAML|CF_INI].
          * @return status.ok() if success else return the reason of parse fail.
          */
-        turbo::Status build_from_file(const std::string &name, const std::string &file, const EA::servlet::Version &version,
-                                      const EA::servlet::ConfigType &type = EA::servlet::CF_JSON);
+        turbo::Status build_from_file(const std::string &name, const std::string &file, const EA::discovery::Version &version,
+                                      const EA::discovery::ConfigType &type = EA::discovery::CF_JSON);
 
         /**
          * @brief build ConfigInfo by parameters, the config store in content
@@ -86,7 +86,7 @@ namespace EA::client {
          * @param type [input] config type, can be any one of this [json|toml|yaml|xml|gflags|text|ini].
          * @return status.ok() if success else return the reason of build fail.
          */
-        turbo::Status build_from_file(const std::string &name, const std::string &file, const EA::servlet::Version &version,
+        turbo::Status build_from_file(const std::string &name, const std::string &file, const EA::discovery::Version &version,
                                       const std::string &type = "json");
 
         /**
@@ -98,7 +98,7 @@ namespace EA::client {
          * @return status.ok() if success else return the reason of build fail.
          */
         turbo::Status build_from_file(const std::string &name, const std::string &file, const std::string &version,
-                                      const EA::servlet::ConfigType &type = EA::servlet::CF_JSON);
+                                      const EA::discovery::ConfigType &type = EA::discovery::CF_JSON);
 
         /**
          * @brief build ConfigInfo by parameters, the config store in content
@@ -119,8 +119,8 @@ namespace EA::client {
          * @param type [input] config type, can be any one of this [CF_JSON|CF_GFLAGS|CF_TEXT|CF_TOML|CF_XML|CF_YAML|CF_INI].
          * @return status.ok() if success else return the reason of build fail.
          */
-        turbo::Status build_from_content(const std::string &name, const std::string &content, const EA::servlet::Version &version,
-                                         const EA::servlet::ConfigType &type = EA::servlet::CF_JSON);
+        turbo::Status build_from_content(const std::string &name, const std::string &content, const EA::discovery::Version &version,
+                                         const EA::discovery::ConfigType &type = EA::discovery::CF_JSON);
         /**
          * @brief build ConfigInfo by parameters, the config store in content
          * @param name [input] config name
@@ -129,7 +129,7 @@ namespace EA::client {
          * @param type [input] config type, can be any one of this [json|toml|yaml|xml|gflags|text|ini].
          * @return status.ok() if success else return the reason of build fail.
          */
-        turbo::Status build_from_content(const std::string &name, const std::string &content, const EA::servlet::Version &version,
+        turbo::Status build_from_content(const std::string &name, const std::string &content, const EA::discovery::Version &version,
                                          const std::string &type = "json");
         /**
          * @brief build ConfigInfo by parameters, the config store in content
@@ -140,7 +140,7 @@ namespace EA::client {
          * @return status.ok() if success else return the reason of build fail.
          */
         turbo::Status build_from_content(const std::string &name, const std::string &content, const std::string &version,
-                                         const EA::servlet::ConfigType &type = EA::servlet::CF_JSON);
+                                         const EA::discovery::ConfigType &type = EA::discovery::CF_JSON);
         /**
          * @brief build ConfigInfo by parameters, the config store in content
          * @param name [input] config name
@@ -154,7 +154,7 @@ namespace EA::client {
                            const std::string &type = "json");
 
     private:
-        EA::servlet::ConfigInfo *_info{nullptr};
+        EA::discovery::ConfigInfo *_info{nullptr};
     };
 }  // namespace client
 

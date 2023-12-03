@@ -5,6 +5,6 @@
 
     eacli
     gflags
-    meta/meta_administrate
+    discovery/discovery_administrate
 
 

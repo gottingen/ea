@@ -20,7 +20,7 @@
 #include "turbo/base/status.h"
 #include "turbo/base/result_status.h"
 #include <string>
-#include "eapi/servlet/servlet.interface.pb.h"
+#include "eapi/discovery/discovery.interface.pb.h"
 #include "turbo/module/module_version.h"
 
 namespace EA::client {
@@ -31,7 +31,7 @@ namespace EA::client {
      * @param type [input] is the ConfigType to convert.
      * @return a string representation of the ConfigType.
      */
-    std::string config_type_to_string(EA::servlet::ConfigType type);
+    std::string config_type_to_string(EA::discovery::ConfigType type);
 
     /**
      * @ingroup ea_proto
@@ -39,7 +39,7 @@ namespace EA::client {
      * @param str [input] is the string to convert.
      * @return a ConfigType if the string is valid. Otherwise, an error status is returned.
      */
-    turbo::ResultStatus<EA::servlet::ConfigType> string_to_config_type(const std::string &str);
+    turbo::ResultStatus<EA::discovery::ConfigType> string_to_config_type(const std::string &str);
 
     /**
      * @ingroup ea_proto
@@ -48,7 +48,7 @@ namespace EA::client {
      * @param v [output] is the Version received from the string.
      * @return Status::OK if the string was converted successfully. Otherwise, an error status is returned.
      */
-    turbo::Status string_to_version(const std::string &str, EA::servlet::Version *v);
+    turbo::Status string_to_version(const std::string &str, EA::discovery::Version *v);
 
     /**
      * @ingroup ea_proto
@@ -65,7 +65,7 @@ namespace EA::client {
      * @param v [input] is the Version to convert.
      * @return a string representation of the Version.
      */
-    std::string version_to_string(const EA::servlet::Version &v);
+    std::string version_to_string(const EA::discovery::Version &v);
 
     /**
      * @ingroup ea_proto

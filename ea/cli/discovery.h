@@ -20,7 +20,7 @@
 #define EA_CLI_DISCOVERY_H_
 
 #include "turbo/flags/flags.h"
-#include "eapi/servlet/servlet.interface.pb.h"
+#include "eapi/discovery/discovery.interface.pb.h"
 #include "turbo/base/status.h"
 #include "turbo/format/table.h"
 #include <string>
@@ -67,24 +67,24 @@ namespace EA::cli {
         static void run_discovery_dump_cmd();
 
         [[nodiscard]] static turbo::Status
-        make_discovery_add_instance(EA::servlet::MetaManagerRequest *req);
+        make_discovery_add_instance(EA::discovery::DiscoveryManagerRequest *req);
 
         [[nodiscard]] static turbo::Status
-        make_discovery_remove_instance(EA::servlet::MetaManagerRequest *req);
+        make_discovery_remove_instance(EA::discovery::DiscoveryManagerRequest *req);
 
         [[nodiscard]] static turbo::Status
-        make_discovery_update_instance(EA::servlet::MetaManagerRequest *req);
+        make_discovery_update_instance(EA::discovery::DiscoveryManagerRequest *req);
 
         [[nodiscard]] static turbo::Status
-        make_discovery_list_instance(EA::servlet::QueryRequest *req);
+        make_discovery_list_instance(EA::discovery::DiscoveryQueryRequest *req);
 
         [[nodiscard]] static turbo::Status
-        make_discovery_info_instance(EA::servlet::QueryRequest *req);
+        make_discovery_info_instance(EA::discovery::DiscoveryQueryRequest *req);
 
-        [[nodiscard]] static turbo::ResultStatus<EA::servlet::Status> string_to_status(const std::string &status);
+        [[nodiscard]] static turbo::ResultStatus<EA::discovery::Status> string_to_status(const std::string &status);
 
-        static turbo::Table show_query_instance_list_response(const EA::servlet::QueryResponse &res);
-        static turbo::Table show_query_instance_info_response(const EA::servlet::QueryResponse &res);
+        static turbo::Table show_query_instance_list_response(const EA::discovery::DiscoveryQueryResponse &res);
+        static turbo::Table show_query_instance_info_response(const EA::discovery::DiscoveryQueryResponse &res);
     };
 }  // namespace EA::cli
 

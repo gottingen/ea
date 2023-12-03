@@ -22,11 +22,11 @@
 #include "turbo/base/status.h"
 #include <string>
 #include <google/protobuf/descriptor.h>
-#include "eapi/servlet/servlet.interface.pb.h"
+#include "eapi/discovery/discovery.interface.pb.h"
 
 /**
  * @defgroup ea_proto proto  proto operators
- * @defgroup meta_client meta_client meta_client operators
+ * @defgroup discovery_client discovery_client discovery_client operators
  * @defgroup ea_rpc rpc rpc operators
  * @defgroup config_client config_client config_client operators
  */
@@ -50,7 +50,7 @@ namespace EA::client {
      *             "type": "CF_JSON",
      *             "time": 1701477509
      *           }"
-     *        EA::servlet::ConfigInfo info;
+     *        EA::discovery::ConfigInfo info;
      *        auto status = Loader::load_proto(json_config, info);
      *        if(!status.ok) {
      *          handler_error();

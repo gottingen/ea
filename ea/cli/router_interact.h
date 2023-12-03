@@ -24,7 +24,7 @@
 #include <brpc/controller.h>
 #include <google/protobuf/descriptor.h>
 #include "ea/cli/option_context.h"
-#include "eapi/servlet/servlet.interface.pb.h"
+#include "eapi/discovery/discovery.interface.pb.h"
 
 namespace EA::cli {
 
@@ -39,7 +39,7 @@ namespace EA::cli {
         turbo::Status send_request(const std::string &service_name,
                                    const Request &request,
                                    Response &response) {
-            const ::google::protobuf::ServiceDescriptor *service_desc = EA::servlet::RouterService::descriptor();
+            const ::google::protobuf::ServiceDescriptor *service_desc = EA::discovery::DiscoveryService::descriptor();
             const ::google::protobuf::MethodDescriptor *method =
                     service_desc->FindMethodByName(service_name);
             auto verbose =  OptionContext::get_instance()->verbose;
@@ -51,7 +51,7 @@ namespace EA::cli {
             uint64_t log_id = butil::fast_rand();
             do {
                 if (retry_time > 0 && OptionContext::get_instance()->max_retry > 0) {
-                    bthread_usleep(1000 * OptionContext::get_instance()->time_between_meta_connect_error_ms);
+                    bthread_usleep(1000 * OptionContext::get_instance()->time_between_discovery_connect_error_ms);
                 }
                 brpc::Controller cntl;
                 cntl.set_log_id(log_id);
@@ -75,10 +75,10 @@ namespace EA::cli {
                     continue;
                 }
 
-                if (response.errcode() != EA::servlet::SUCCESS) {
-                    TLOG_WARN_IF(verbose, "send meta server fail, log_id:{}, response:{}", cntl.log_id(),
+                if (response.errcode() != EA::discovery::SUCCESS) {
+                    TLOG_WARN_IF(verbose, "send discovery router server fail, log_id:{}, response:{}", cntl.log_id(),
                               response.ShortDebugString());
-                    //return turbo::UnavailableError("send meta server fail, log_id:{}, response:{}", cntl.log_id(),
+                    //return turbo::UnavailableError("send discovery router server fail, log_id:{}, response:{}", cntl.log_id(),
                     //                               response.ShortDebugString());
                     return turbo::OkStatus();
                 } else {

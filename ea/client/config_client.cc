@@ -55,7 +55,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        EA::servlet::ConfigInfo config_pb;
+        EA::discovery::ConfigInfo config_pb;
         rs = ConfigCache::get_instance()->get_config(config_name, mv, config_pb);
         if (rs.ok()) {
             content = config_pb.content();
@@ -65,7 +65,7 @@ namespace EA::client {
             return turbo::OkStatus();
         }
 
-        rs = MetaClient::get_instance()->get_config(config_name, version, config_pb);
+        rs = DiscoveryClient::get_instance()->get_config(config_name, version, config_pb);
         if (!rs.ok()) {
             return rs;
         }
@@ -80,7 +80,7 @@ namespace EA::client {
     turbo::Status ConfigClient::get_config(const std::string &config_name, std::string &content, std::string *version,
                                            std::string *type) {
         turbo::ModuleVersion mv;
-        EA::servlet::ConfigInfo config_pb;
+        EA::discovery::ConfigInfo config_pb;
         auto rs = ConfigCache::get_instance()->get_config(config_name, config_pb);
         if (rs.ok()) {
             content = config_pb.content();
@@ -93,7 +93,7 @@ namespace EA::client {
             return turbo::OkStatus();
         }
 
-        rs = MetaClient::get_instance()->get_config_latest(config_name, config_pb);
+        rs = DiscoveryClient::get_instance()->get_config_latest(config_name, config_pb);
         if (!rs.ok()) {
             return rs;
         }
@@ -199,9 +199,9 @@ namespace EA::client {
             }
             TLOG_INFO("new round watch size:{}", watches.size());
             for(auto &it : watches) {
-                EA::servlet::ConfigInfo info;
+                EA::discovery::ConfigInfo info;
                 turbo::ModuleVersion current_version = it.second.notice_version;
-                auto rs = MetaClient::get_instance()->get_config_latest(it.first, info);
+                auto rs = DiscoveryClient::get_instance()->get_config_latest(it.first, info);
                 if(!rs.ok()) {
                     TLOG_WARN_IF(kZero != it.second.notice_version, "get config fail:{}", rs.message());
                     continue;

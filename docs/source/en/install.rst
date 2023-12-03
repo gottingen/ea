@@ -3,10 +3,10 @@
 .. _build_and_install_section:
 
 =================================================
-Build and Install
+build and install
 =================================================
 
-Build Prepare
+build prepare
 ====================
 
 EA uses cmake as the build system, and EA servers need to run on the Linux platform.
@@ -108,7 +108,7 @@ click. If you want to learn more about the use of caibin, please see: `carbin on
 and the docs `carbin docs <carbin.readthedocs.io/>`_.
 
 
-Ubuntu Dependencies
+ubuntu dependencies
 ----------------------------------
 
 install dependencies::
@@ -117,7 +117,7 @@ install dependencies::
     >pip install carbin
 
 
-centos Dependencies
+centos dependencies
 -----------------------------------
 
 install dependencies::
@@ -133,7 +133,7 @@ install cmake
 EA relies on some external projects, and some external projects have higher requirements for the cmake
 version. It is a good choice to try to install a newer version of cmake.
 
-install EA Dependencies
+install third-party dependencies
 -------------------------------------
 
 install dependencies::
@@ -152,7 +152,7 @@ then the dependencies will be install to `ea/carbin`. the  dependencies descript
     `--ignore-requirements` means that, do not download turbo's requirements recursively. and then, the other's is build
     arguments for cmake.
 
-Build And Install
+build and install
 ==================================
 
 build::
@@ -163,7 +163,7 @@ build::
     > make -j 6
 
 
-Test Running
+test running
 =================================
 
 run cmd::

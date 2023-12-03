@@ -3,7 +3,7 @@
 .. _stand_alone_section:
 
 =======================================
-Stand Alone deploy
+stand alone deploy
 =======================================
 
 Now, we start using `EA`, starting from a single machine and single node raft node.The purpose of this
@@ -119,7 +119,7 @@ check log::
     [2023-12-02 08:16:21.428] [ea-logger] [warning] [tso_state_machine.cc:380] sync timestamp ok
 
 
-Try Config Component
+try config component
 ====================
 
 In this part, I use `eacli` to interact with `eadiscovery` to demonstrate the functions of `eadiscovery`. actually,

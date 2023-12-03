@@ -17,7 +17,7 @@
 #include <bthread/bthread.h>
 #include <bthread/condition_variable.h>
 #include <bthread/mutex.h>
-#include "ea/engine/transaction_db_bthread_mutex.h"
+#include "ea/storage/transaction_db_bthread_mutex.h"
 
 namespace EA {
 

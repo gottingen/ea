@@ -15,12 +15,12 @@
 #
 
 file(COPY ${PROJECT_SOURCE_DIR}/conf DESTINATION ${PROJECT_BINARY_DIR})
-file(GLOB ENGINE engine/*.cc)
+file(GLOB STORAGE storage/*.cc)
 file(GLOB BASE base/*.cc)
 
 set(EA_COMMON
         ${BASE}
-        ${ENGINE}
+        ${STORAGE}
         ${RAFT}
         ${RPC}
         )

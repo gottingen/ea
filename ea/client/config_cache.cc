@@ -26,19 +26,19 @@ namespace EA::client {
 
     turbo::Status ConfigCache::init() {
         if(_init) {
-            return turbo::OkStatus();
+            return turbo::ok_status();
         }
         _cache_dir = EA::FLAGS_config_cache_dir;
         if(_cache_dir.empty()) {
-            return turbo::OkStatus();
+            return turbo::ok_status();
         }
         std::error_code ec;
         if(!turbo::filesystem::exists(_cache_dir, ec)) {
             if(ec) {
-                return turbo::UnknownError(ec.message());
+                return turbo::unknown_error(ec.message());
             }
             turbo::filesystem::create_directories(_cache_dir);
-            return turbo::OkStatus();
+            return turbo::ok_status();
         }
         turbo::filesystem::directory_iterator dir_itr(_cache_dir);
         turbo::filesystem::directory_iterator end;
@@ -56,7 +56,7 @@ namespace EA::client {
             TLOG_INFO("loading config cache file:{}", file_path);
         }
         _init = true;
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
     turbo::Status ConfigCache::add_config(const EA::discovery::ConfigInfo &config) {
         {
@@ -68,7 +68,7 @@ namespace EA::client {
             auto version = turbo::ModuleVersion(config.version().major(), config.version().minor(),
                                                 config.version().patch());
             if (it->second.find(version) != it->second.end()) {
-                return turbo::AlreadyExistsError("");
+                return turbo::already_exists_error("");
             }
             it->second[version] = config;
         }
@@ -93,10 +93,10 @@ namespace EA::client {
             auto vit = it->second.find(version);
             if (vit != it->second.end()) {
                 config = vit->second;
-                return turbo::OkStatus();
+                return turbo::ok_status();
             }
         }
-        return turbo::NotFoundError("");
+        return turbo::not_found_error("");
     }
 
     ///
@@ -111,10 +111,10 @@ namespace EA::client {
             auto vit = it->second.rbegin();
             if (vit != it->second.rend()) {
                 config = vit->second;
-                return turbo::OkStatus();
+                return turbo::ok_status();
             }
         }
-        return turbo::NotFoundError("");
+        return turbo::not_found_error("");
     }
 
     ///
@@ -125,7 +125,7 @@ namespace EA::client {
         for (auto it = _cache_map.begin(); it != _cache_map.end(); ++it) {
             configs.push_back(it->first);
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     ///
@@ -140,9 +140,9 @@ namespace EA::client {
             for (auto vit = it->second.begin(); vit != it->second.end(); ++vit) {
                 versions.push_back(vit->first);
             }
-            return turbo::OkStatus();
+            return turbo::ok_status();
         }
-        return turbo::NotFoundError("");
+        return turbo::not_found_error("");
     }
 
     ///
@@ -162,10 +162,10 @@ namespace EA::client {
                 if (it->second.empty()) {
                     _cache_map.erase(it);
                 }
-                return turbo::OkStatus();
+                return turbo::ok_status();
             }
         }
-        return turbo::NotFoundError("");
+        return turbo::not_found_error("");
     }
 
     ///
@@ -188,9 +188,9 @@ namespace EA::client {
             if (it->second.empty()) {
                 _cache_map.erase(it);
             }
-            return turbo::OkStatus();
+            return turbo::ok_status();
         }
-        return turbo::NotFoundError("");
+        return turbo::not_found_error("");
     }
 
     ///
@@ -212,9 +212,9 @@ namespace EA::client {
             if (it->second.empty()) {
                 _cache_map.erase(it);
             }
-            return turbo::OkStatus();
+            return turbo::ok_status();
         }
-        return turbo::NotFoundError("");
+        return turbo::not_found_error("");
     }
 
     ///
@@ -230,14 +230,14 @@ namespace EA::client {
                 TURBO_UNUSED(rs);
             }
             _cache_map.erase(it);
-            return turbo::OkStatus();
+            return turbo::ok_status();
         }
-        return turbo::NotFoundError("");
+        return turbo::not_found_error("");
     }
 
     turbo::Status ConfigCache::write_config_file(const std::string &dir, const EA::discovery::ConfigInfo &config) {
         if (dir.empty()) {
-            return turbo::OkStatus();
+            return turbo::ok_status();
         }
         auto file_path = make_cache_file_path(dir, config);
         return EA::client::Dumper::dump_proto_to_file(file_path, config);
@@ -245,11 +245,11 @@ namespace EA::client {
 
     turbo::Status ConfigCache::remove_config_file(const std::string &dir, const EA::discovery::ConfigInfo &config) {
         if (dir.empty()) {
-            return turbo::OkStatus();
+            return turbo::ok_status();
         }
         auto file_path = make_cache_file_path(dir, config);
         turbo::filesystem::remove(file_path);
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     std::string ConfigCache::make_cache_file_path(const std::string &dir, const EA::discovery::ConfigInfo &config) {

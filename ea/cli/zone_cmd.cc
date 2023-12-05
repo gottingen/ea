@@ -179,7 +179,7 @@ namespace EA::cli {
         }
         zone_req->set_namespace_name(ZoneOptionContext::get_instance()->namespace_name);
         zone_req->set_zone(ZoneOptionContext::get_instance()->zone_name);
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status make_zone_remove(EA::discovery::DiscoveryManagerRequest *req) {
@@ -195,7 +195,7 @@ namespace EA::cli {
         }
         zone_req->set_namespace_name(ZoneOptionContext::get_instance()->namespace_name);
         zone_req->set_zone(ZoneOptionContext::get_instance()->zone_name);
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status make_zone_modify(EA::discovery::DiscoveryManagerRequest *req) {
@@ -211,12 +211,12 @@ namespace EA::cli {
         }
         zone_req->set_namespace_name(ZoneOptionContext::get_instance()->namespace_name);
         zone_req->set_zone(ZoneOptionContext::get_instance()->zone_name);
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status make_zone_list(EA::discovery::DiscoveryQueryRequest *req) {
         req->set_op_type(EA::discovery::QUERY_ZONE);
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status make_zone_info(EA::discovery::DiscoveryQueryRequest *req) {
@@ -231,7 +231,7 @@ namespace EA::cli {
         }
         req->set_namespace_name(ZoneOptionContext::get_instance()->namespace_name);
         req->set_zone(ZoneOptionContext::get_instance()->zone_name);
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
 }  // namespace EA::cli

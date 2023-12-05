@@ -22,7 +22,7 @@ namespace EA::client {
 
     turbo::Status ConfigClient::init() {
         if(_init) {
-            return turbo::OkStatus();
+            return turbo::ok_status();
         }
         auto rs = ConfigCache::get_instance()->init();
         if (!rs.ok()) {
@@ -35,7 +35,7 @@ namespace EA::client {
             period_check();
         });
         _init = true;
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     void ConfigClient::stop() {
@@ -62,7 +62,7 @@ namespace EA::client {
             if (type) {
                 *type = config_type_to_string(config_pb.type());
             }
-            return turbo::OkStatus();
+            return turbo::ok_status();
         }
 
         rs = DiscoveryClient::get_instance()->get_config(config_name, version, config_pb);
@@ -74,7 +74,7 @@ namespace EA::client {
             *type = config_type_to_string(config_pb.type());
         }
         rs = ConfigCache::get_instance()->add_config(config_pb);
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status ConfigClient::get_config(const std::string &config_name, std::string &content, std::string *version,
@@ -90,7 +90,7 @@ namespace EA::client {
             if (version) {
                 *version = version_to_string(config_pb.version());
             }
-            return turbo::OkStatus();
+            return turbo::ok_status();
         }
 
         rs = DiscoveryClient::get_instance()->get_config_latest(config_name, config_pb);
@@ -112,14 +112,14 @@ namespace EA::client {
         turbo::ModuleVersion module_version;
         std::unique_lock lock(_watch_mutex);
         if (_watches.find(config_name) != _watches.end()) {
-            return turbo::AlreadyExistsError("");
+            return turbo::already_exists_error("");
         }
         auto ait = _apply_version.find(config_name);
         if (ait != _apply_version.end()) {
             module_version = ait->second;
         }
         _watches[config_name] = ConfigWatchEntity{module_version, listener};
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status ConfigClient::unwatch_config(const std::string &config_name) {
@@ -129,10 +129,10 @@ namespace EA::client {
 
     turbo::Status ConfigClient::do_unwatch_config(const std::string &config_name) {
         if (_watches.find(config_name) == _watches.end()) {
-            return turbo::NotFoundError("");
+            return turbo::not_found_error("");
         }
         _watches.erase(config_name);
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status ConfigClient::remove_config(const std::string &config_name) {
@@ -172,15 +172,15 @@ namespace EA::client {
     turbo::Status ConfigClient::do_unapply(const std::string &config_name) {
         auto it = _apply_version.find(config_name);
         if (it == _apply_version.end()) {
-            return turbo::NotFoundError("not found config:{}", config_name);
+            return turbo::not_found_error("not found config:{}", config_name);
         }
         _apply_version.erase(config_name);
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status ConfigClient::do_apply(const std::string &config_name, const turbo::ModuleVersion &version) {
         _apply_version[config_name] = version;
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     void ConfigClient::period_check() {
@@ -208,7 +208,7 @@ namespace EA::client {
                 }
                 TLOG_INFO("get config {} version:{}.{}.{}",info.name(),info.version().major(), info.version().minor(), info.version().patch());
                 rs = ConfigCache::get_instance()->add_config(info);
-                if(!rs.ok() && !turbo::IsAlreadyExists(rs)) {
+                if(!rs.ok() && !turbo::is_already_exists(rs)) {
                     TLOG_WARN("add config to cache fail:{}", rs.message());
                 }
                 turbo::ModuleVersion new_view(info.version().major(), info.version().minor(), info.version().patch());

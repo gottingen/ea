@@ -27,8 +27,8 @@ namespace EA::discovery {
         }
         std::vector<std::string> split_vec;
         std::vector<std::string> snapshot_index_vec;
-        split_vec = turbo::StrSplit(tmp_path, '/', turbo::SkipEmpty());
-        snapshot_index_vec = turbo::StrSplit(split_vec.back(), '_', turbo::SkipEmpty());
+        split_vec = turbo::str_split(tmp_path, '/', turbo::skip_empty());
+        snapshot_index_vec = turbo::str_split(split_vec.back(), '_', turbo::skip_empty());
         int64_t snapshot_index = 0;
         if (snapshot_index_vec.size() == 2) {
             snapshot_index = atoll(snapshot_index_vec[1].c_str());

@@ -241,7 +241,7 @@ namespace EA::cli {
             instance_req->set_weight(DiscoveryOptionContext::get_instance()->weight);
         }
         instance_req->set_timestamp(static_cast<int>(::time(nullptr)));
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     [[nodiscard]] turbo::Status
@@ -271,7 +271,7 @@ namespace EA::cli {
         instance_req->set_servlet_name(DiscoveryOptionContext::get_instance()->servlet_name);
         instance_req->set_address(DiscoveryOptionContext::get_instance()->address);
 
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     [[nodiscard]] turbo::Status
@@ -310,7 +310,7 @@ namespace EA::cli {
             instance_req->set_weight(DiscoveryOptionContext::get_instance()->weight);
         }
         instance_req->set_timestamp(static_cast<int>(::time(nullptr)));
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     void DiscoveryCmd::run_discovery_dump_cmd() {
@@ -348,18 +348,18 @@ namespace EA::cli {
         req->set_op_type(EA::discovery::QUERY_INSTANCE_FLATTEN);
         auto opt = DiscoveryOptionContext::get_instance();
         if (opt->namespace_name.empty()) {
-            return turbo::OkStatus();
+            return turbo::ok_status();
         }
         req->set_namespace_name(opt->namespace_name);
         if (opt->zone_name.empty()) {
-            return turbo::OkStatus();
+            return turbo::ok_status();
         }
         req->set_zone(opt->zone_name);
         if (opt->servlet_name.empty()) {
-            return turbo::OkStatus();
+            return turbo::ok_status();
         }
         req->set_servlet(opt->servlet_name);
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     [[nodiscard]] turbo::Status
@@ -370,7 +370,7 @@ namespace EA::cli {
         req->set_zone(opt->zone_name);
         req->set_servlet(opt->servlet_name);
         req->set_instance_address(opt->address);
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     [[nodiscard]] turbo::ResultStatus<EA::discovery::Status> DiscoveryCmd::string_to_status(const std::string &status) {
@@ -378,7 +378,7 @@ namespace EA::cli {
         if (EA::discovery::Status_Parse(status, &ret)) {
             return ret;
         }
-        return turbo::InvalidArgumentError("unknown status");
+        return turbo::invalid_argument_error("unknown status");
     }
 
     turbo::Table DiscoveryCmd::show_query_instance_list_response(const EA::discovery::DiscoveryQueryResponse &res) {

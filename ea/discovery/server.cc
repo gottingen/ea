@@ -53,7 +53,7 @@ int main(int argc, char **argv) {
     std::vector<std::string> instances;
     bool completely_deploy = false;
 
-    std::vector<std::string> list_raft_peers = turbo::StrSplit(EA::FLAGS_discovery_server_peers, ',');
+    std::vector<std::string> list_raft_peers = turbo::str_split(EA::FLAGS_discovery_server_peers, ',');
     for (auto &raft_peer: list_raft_peers) {
         TLOG_INFO("raft_peer:{}", raft_peer.c_str());
         braft::PeerId peer(raft_peer);

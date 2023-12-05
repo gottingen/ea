@@ -24,15 +24,15 @@ namespace EA::client {
 
     turbo::Status DiscoverySender::init(const std::string & raft_nodes) {
         _master_leader_address.ip = butil::IP_ANY;
-        std::vector<std::string> peers = turbo::StrSplit(raft_nodes, turbo::ByAnyChar(",;\t\n "));
+        std::vector<std::string> peers = turbo::str_split(raft_nodes, turbo::by_any_char(",;\t\n "));
         for (auto &peer : peers) {
             butil::EndPoint end_point;
             if(butil::str2endpoint(peer.c_str(), &end_point) != 0) {
-                return turbo::InvalidArgumentError("invalid address {}", peer);
+                return turbo::invalid_argument_error("invalid address {}", peer);
             }
             _discovery_nodes.push_back(end_point);
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
 

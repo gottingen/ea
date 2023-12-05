@@ -281,7 +281,9 @@ namespace EA::discovery {
             return -1;
         }
         for (auto json_iter = root.MemberBegin(); json_iter != root.MemberEnd(); ++json_iter) {
-            int64_t servlet_id = turbo::Atoi<int64_t>(json_iter->name.GetString()).value();
+            int64_t servlet_id;
+            auto ret = turbo::simple_atoi(json_iter->name.GetString(), &servlet_id);
+            TURBO_UNUSED(ret);
             uint64_t max_id = json_iter->value.GetUint64();
             TLOG_WARN("load auto increment, servlet_id:{}, max_id:{}", servlet_id, max_id);
             _auto_increment_map[servlet_id] = max_id;

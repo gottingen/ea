@@ -214,7 +214,7 @@ namespace EA::client {
                 service_desc->FindMethodByName(service_name);
         if (method == nullptr) {
             TLOG_ERROR_IF(_verbose, "service name not exist, service:{}", service_name);
-            return turbo::UnavailableError("service name not exist, service:{}", service_name);
+            return turbo::unavailable_error("service name not exist, service:{}", service_name);
         }
         int retry_time = 0;
         bool is_select_leader{false};
@@ -282,9 +282,9 @@ namespace EA::client {
                             butil::endpoint2str(leader_address).c_str(),cntl.log_id());
                 set_leader_address(leader_address);
             }
-            return turbo::OkStatus();
+            return turbo::ok_status();
         } while (retry_time < retry_times);
-        return turbo::UnavailableError("can not connect server after {} times try", retry_times);
+        return turbo::unavailable_error("can not connect server after {} times try", retry_times);
     }
 
 

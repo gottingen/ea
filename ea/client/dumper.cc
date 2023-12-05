@@ -39,16 +39,16 @@ namespace EA::client {
             return rs;
         }
         file.close();
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status Dumper::dump_proto(const google::protobuf::Message &message, std::string &content) {
         std::string err;
         content.clear();
         if (!json2pb::ProtoMessageToJson(message, &content, &err)) {
-            return turbo::InvalidArgumentError(err);
+            return turbo::invalid_argument_error(err);
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
 }  // namespace EA::client

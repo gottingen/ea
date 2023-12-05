@@ -154,7 +154,7 @@ namespace EA::cli {
         }
 
         if (!rs.ok()) {
-            ss.add_table("prepare", rs.ToString(), false);
+            ss.add_table("prepare", rs.to_string(), false);
             return;
         } else {
             ss.add_table("prepare", "ok", true);
@@ -162,7 +162,7 @@ namespace EA::cli {
         turbo::SequentialWriteFile file;
         rs = file.open(file_path, true);
         if (!rs.ok()) {
-            ss.add_table("prepare file", rs.ToString(), false);
+            ss.add_table("prepare file", rs.to_string(), false);
             return;
         } else {
             ss.add_table("prepare file", "ok", true);
@@ -171,7 +171,7 @@ namespace EA::cli {
         std::string err;
         rs = EA::client::Dumper::dump_proto(request, json);
         if (!rs.ok()) {
-            ss.add_table("convert", rs.ToString(), false);
+            ss.add_table("convert", rs.to_string(), false);
             return;
         } else {
             ss.add_table("convert", "ok", true);
@@ -179,7 +179,7 @@ namespace EA::cli {
 
         rs = file.write(json);
         if (!rs.ok()) {
-            ss.add_table("write", rs.ToString(), false);
+            ss.add_table("write", rs.to_string(), false);
             return;
         } else {
             ss.add_table("write", "ok", true);
@@ -199,20 +199,20 @@ namespace EA::cli {
         turbo::SequentialReadFile file;
         auto rs = file.open(ConfigOptionContext::get_instance()->config_file);
         if (!rs.ok()) {
-            ss.add_table("open file", rs.ToString(), false);
+            ss.add_table("open file", rs.to_string(), false);
             return;
         }
         ss.add_table("open file", "ok", true);
         auto r = file.read(&content);
         if (!r.ok()) {
-            ss.add_table("read file", rs.ToString(), false);
+            ss.add_table("read file", rs.to_string(), false);
             return;
         }
         ss.add_table("read file", "ok", true);
         EA::client::ConfigInfoBuilder builder(&request);
         rs = builder.build_from_json(content);
         if (!rs.ok()) {
-            ss.add_table("convert", rs.ToString(), false);
+            ss.add_table("convert", rs.to_string(), false);
             return;
         }
         ss.add_table("convert", "ok", true);
@@ -304,7 +304,7 @@ namespace EA::cli {
             return s;
         }
         file.close();
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     void ConfigCmd::run_config_remove_cmd() {
@@ -339,13 +339,13 @@ namespace EA::cli {
         nlohmann::to_string(json_content);
         req->set_content(nlohmann::to_string(json_content));
         std::cout<<json_content<<std::endl;
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     [[nodiscard]] turbo::Status
     ConfigCmd::make_config_list(EA::discovery::DiscoveryQueryRequest *req) {
         req->set_op_type(EA::discovery::QUERY_LIST_CONFIG);
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     [[nodiscard]] turbo::Status
@@ -353,7 +353,7 @@ namespace EA::cli {
         req->set_op_type(EA::discovery::QUERY_LIST_CONFIG_VERSION);
         auto opt = ConfigOptionContext::get_instance();
         req->set_config_name(opt->config_name);
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     [[nodiscard]] turbo::Status
@@ -365,7 +365,7 @@ namespace EA::cli {
             auto v = req->mutable_config_version();
             return string_to_version(opt->config_version, v);
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     [[nodiscard]] turbo::Status
@@ -378,7 +378,7 @@ namespace EA::cli {
             auto v = rc->mutable_version();
             return string_to_version(opt->config_version, v);
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Table ConfigCmd::show_query_ops_config_list_response(const EA::discovery::DiscoveryQueryResponse &res) {
@@ -473,7 +473,7 @@ namespace EA::cli {
             turbo::filesystem::create_directories(opt->config_watch_dir);
         }
         if(!rs.ok()) {
-            turbo::Println("watch error:{}", rs.ToString());
+            turbo::Println("watch error:{}", rs.to_string());
         }
 
         auto new_config_func = [](const EA::client::ConfigCallbackData &data) ->void  {
@@ -483,14 +483,14 @@ namespace EA::cli {
                 turbo::Println(turbo::color::green, "on new config:{} version:{}.{}.{} type:{}", data.config_name, data.new_version.major,
                                                       data.new_version.minor, data.new_version.patch, data.type);
             } else {
-                turbo::Println("{}", rs.ToString());
+                turbo::Println("{}", rs.to_string());
             }
             rs = EA::client::ConfigClient::get_instance()->apply(data.config_name, data.new_version);
             if(rs.ok()) {
                 turbo::Println(turbo::color::green, "apply new config:{} version:{}.{}.{} type:{}", data.config_name, data.new_version.major,
                                data.new_version.minor, data.new_version.patch, data.type);
             } else {
-                turbo::Println("{}", rs.ToString());
+                turbo::Println("{}", rs.to_string());
             }
         };
         auto new_version_func = [](const EA::client::ConfigCallbackData &data) ->void  {
@@ -500,21 +500,21 @@ namespace EA::cli {
                 turbo::Println(turbo::color::green, "on new config version:{} version:{}.{}.{} type:{}", data.config_name, data.new_version.major,
                                data.new_version.minor, data.new_version.patch, data.type);
             }else {
-                turbo::Println("{}", rs.ToString());
+                turbo::Println("{}", rs.to_string());
             }
             rs = EA::client::ConfigClient::get_instance()->apply(data.config_name, data.new_version);
             if(rs.ok()) {
                 turbo::Println(turbo::color::green, "apply new config version:{} version:{}.{}.{} type:{}", data.config_name, data.new_version.major,
                                data.new_version.minor, data.new_version.patch, data.type);
             }else {
-                turbo::Println("{}", rs.ToString());
+                turbo::Println("{}", rs.to_string());
             }
         };
         EA::client::ConfigEventListener listener{new_config_func, new_version_func};
         for(auto &it : opt->config_watch_list) {
             rs = EA::client::ConfigClient::get_instance()->watch_config(it, listener);
             if(!rs.ok()) {
-                turbo::Println(turbo::color::red,"{}", rs.ToString());
+                turbo::Println(turbo::color::red,"{}", rs.to_string());
             }
         }
         while (1) {
@@ -526,7 +526,7 @@ namespace EA::cli {
         std::string file_name = turbo::Format("{}/{}-{}.{}.{}.{}", basedir, data.config_name, data.new_version.major,
                                               data.new_version.minor, data.new_version.patch, data.type);
         if(turbo::filesystem::exists(file_name)) {
-            return turbo::AlreadyExistsError("write file [{}] already exists", file_name);
+            return turbo::already_exists_error("write file [{}] already exists", file_name);
         }
         turbo::SequentialWriteFile file;
         auto rs = file.open(file_name, true);
@@ -538,6 +538,6 @@ namespace EA::cli {
             return rs;
         }
         file.close();
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 }  // namespace EA::cli

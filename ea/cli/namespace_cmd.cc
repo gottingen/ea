@@ -185,7 +185,7 @@ namespace EA::cli {
         ns_req->set_namespace_name(NameSpaceOptionContext::get_instance()->namespace_name);
         ns_req->set_quota(NameSpaceOptionContext::get_instance()->namespace_quota);
         req->set_op_type(EA::discovery::OP_CREATE_NAMESPACE);
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status
@@ -197,7 +197,7 @@ namespace EA::cli {
         }
         ns_req->set_namespace_name(NameSpaceOptionContext::get_instance()->namespace_name);
         req->set_op_type(EA::discovery::OP_DROP_NAMESPACE);
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status
@@ -210,7 +210,7 @@ namespace EA::cli {
         ns_req->set_namespace_name(NameSpaceOptionContext::get_instance()->namespace_name);
         ns_req->set_quota(NameSpaceOptionContext::get_instance()->namespace_quota);
         req->set_op_type(EA::discovery::OP_MODIFY_NAMESPACE);
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status make_namespace_query(EA::discovery::DiscoveryQueryRequest *req) {
@@ -222,7 +222,7 @@ namespace EA::cli {
                 return rs;
             }
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
 }  // namespace EA::cli

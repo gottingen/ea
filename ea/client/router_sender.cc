@@ -35,7 +35,7 @@ namespace EA::client {
 
     turbo::Status RouterSender::init(const std::string &server) {
         _server = server;
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     RouterSender &RouterSender::set_server(const std::string &server) {

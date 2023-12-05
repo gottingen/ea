@@ -185,7 +185,7 @@ namespace EA::cli {
         servlet_req->set_namespace_name(ServletOptionContext::get_instance()->namespace_name);
         servlet_req->set_zone(ServletOptionContext::get_instance()->zone_name);
         servlet_req->set_servlet_name(ServletOptionContext::get_instance()->servlet_name);
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status make_servlet_remove(EA::discovery::DiscoveryManagerRequest *req) {
@@ -206,7 +206,7 @@ namespace EA::cli {
         servlet_req->set_namespace_name(ServletOptionContext::get_instance()->namespace_name);
         servlet_req->set_zone(ServletOptionContext::get_instance()->zone_name);
         servlet_req->set_servlet_name(ServletOptionContext::get_instance()->servlet_name);
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status make_servlet_modify(EA::discovery::DiscoveryManagerRequest *req) {
@@ -227,12 +227,12 @@ namespace EA::cli {
         servlet_req->set_namespace_name(ServletOptionContext::get_instance()->namespace_name);
         servlet_req->set_zone(ServletOptionContext::get_instance()->zone_name);
         servlet_req->set_servlet_name(ServletOptionContext::get_instance()->servlet_name);
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status make_servlet_list(EA::discovery::DiscoveryQueryRequest *req) {
         req->set_op_type(EA::discovery::QUERY_SERVLET);
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status make_servlet_info(EA::discovery::DiscoveryQueryRequest *req) {
@@ -256,7 +256,7 @@ namespace EA::cli {
         req->set_namespace_name(ServletOptionContext::get_instance()->namespace_name);
         req->set_zone(ServletOptionContext::get_instance()->zone_name);
 
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
 }  // namespace EA::cli

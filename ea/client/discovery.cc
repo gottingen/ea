@@ -25,7 +25,7 @@ namespace EA::client {
 
     turbo::Status DiscoveryClient::init(BaseMessageSender *sender) {
         _sender = sender;
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
 
@@ -34,9 +34,9 @@ namespace EA::client {
         EA::discovery::ConfigInfo config_pb;
         std::string errmsg;
         if (!json2pb::JsonToProtoMessage(json_content, &config_pb, &errmsg)) {
-            return turbo::InvalidArgumentError(errmsg);
+            return turbo::invalid_argument_error(errmsg);
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::check_config_file(const std::string &config_path) {
@@ -62,14 +62,14 @@ namespace EA::client {
         std::string json;
         std::string err;
         if (!json2pb::ProtoMessageToJson(config, &json, &err)) {
-            return turbo::InvalidArgumentError(err);
+            return turbo::invalid_argument_error(err);
         }
         rs = file.write(json);
         if (!rs.ok()) {
             return rs;
         }
         file.close();
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status
@@ -90,9 +90,9 @@ namespace EA::client {
             return rs;
         }
         if (response.errcode() != EA::SUCCESS) {
-            return turbo::UnavailableError(response.errmsg());
+            return turbo::unavailable_error(response.errmsg());
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status
@@ -107,9 +107,9 @@ namespace EA::client {
             return rs;
         }
         if (response.errcode() != EA::SUCCESS) {
-            return turbo::UnavailableError(response.errmsg());
+            return turbo::unavailable_error(response.errmsg());
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::create_config_by_file(const std::string &config_name,
@@ -128,9 +128,9 @@ namespace EA::client {
             return rs;
         }
         if (response.errcode() != EA::SUCCESS) {
-            return turbo::UnavailableError(response.errmsg());
+            return turbo::unavailable_error(response.errmsg());
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::create_config_by_json(const std::string &json_path, int *retry_times) {
@@ -146,9 +146,9 @@ namespace EA::client {
             return rs;
         }
         if (response.errcode() != EA::SUCCESS) {
-            return turbo::UnavailableError(response.errmsg());
+            return turbo::unavailable_error(response.errmsg());
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::list_config(std::vector<std::string> &configs, int *retry_time) {
@@ -160,13 +160,13 @@ namespace EA::client {
             return rs;
         }
         if (response.errcode() != EA::SUCCESS) {
-            return turbo::UnknownError(response.errmsg());
+            return turbo::unknown_error(response.errmsg());
         }
         auto res_configs = response.config_infos();
         for (auto config: res_configs) {
             configs.push_back(config.name());
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::list_config_version(const std::string &config_name, std::vector<std::string> &versions,
@@ -180,13 +180,13 @@ namespace EA::client {
             return rs;
         }
         if (response.errcode() != EA::SUCCESS) {
-            return turbo::UnknownError(response.errmsg());
+            return turbo::unknown_error(response.errmsg());
         }
         auto res_configs = response.config_infos();
         for (auto &config: res_configs) {
             versions.push_back(version_to_string(config.version()));
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status
@@ -201,14 +201,14 @@ namespace EA::client {
             return rs;
         }
         if (response.errcode() != EA::SUCCESS) {
-            return turbo::UnknownError(response.errmsg());
+            return turbo::unknown_error(response.errmsg());
         }
         auto res_configs = response.config_infos();
         for (auto config: res_configs) {
             versions.emplace_back(config.version().major(),
                                   config.version().minor(), config.version().patch());
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status
@@ -227,14 +227,14 @@ namespace EA::client {
             return rs;
         }
         if (response.errcode() != EA::SUCCESS) {
-            return turbo::UnknownError(response.errmsg());
+            return turbo::unknown_error(response.errmsg());
         }
         if (response.config_infos_size() != 1) {
-            return turbo::InvalidArgumentError("bad proto for config list size not 1");
+            return turbo::invalid_argument_error("bad proto for config list size not 1");
         }
 
         config = response.config_infos(0);
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status
@@ -252,7 +252,7 @@ namespace EA::client {
         if (time) {
             *time = config_pb.time();
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::save_config(const std::string &config_name, const std::string &version, std::string &path,
@@ -272,7 +272,7 @@ namespace EA::client {
             return rs;
         }
         file.close();
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status
@@ -294,7 +294,7 @@ namespace EA::client {
             return rs;
         }
         file.close();
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status
@@ -309,14 +309,14 @@ namespace EA::client {
             return rs;
         }
         if (response.errcode() != EA::SUCCESS) {
-            return turbo::UnknownError(response.errmsg());
+            return turbo::unknown_error(response.errmsg());
         }
         if (response.config_infos_size() != 1) {
-            return turbo::InvalidArgumentError("bad proto for config list size not 1");
+            return turbo::invalid_argument_error("bad proto for config list size not 1");
         }
 
         config = response.config_infos(0);
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status
@@ -329,7 +329,7 @@ namespace EA::client {
         }
         config = config_pb.content();
         version = version_to_string(config_pb.version());
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status
@@ -344,7 +344,7 @@ namespace EA::client {
         config = config_pb.content();
         version = version_to_string(config_pb.version());
         type = config_type_to_string(config_pb.type());
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status
@@ -358,7 +358,7 @@ namespace EA::client {
         config = config_pb.content();
         version = turbo::ModuleVersion(config_pb.version().major(), config_pb.version().minor(),
                                        config_pb.version().patch());
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status
@@ -374,7 +374,7 @@ namespace EA::client {
         version = turbo::ModuleVersion(config_pb.version().major(), config_pb.version().minor(),
                                        config_pb.version().patch());
         type = config_type_to_string(config_pb.type());
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status
@@ -385,7 +385,7 @@ namespace EA::client {
             return rs;
         }
         config = config_pb.content();
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status
@@ -405,9 +405,9 @@ namespace EA::client {
             return rs;
         }
         if (response.errcode() != EA::SUCCESS) {
-            return turbo::UnknownError(response.errmsg());
+            return turbo::unknown_error(response.errmsg());
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status
@@ -426,9 +426,9 @@ namespace EA::client {
             return rs;
         }
         if (response.errcode() != EA::SUCCESS) {
-            return turbo::UnknownError(response.errmsg());
+            return turbo::unknown_error(response.errmsg());
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status
@@ -444,9 +444,9 @@ namespace EA::client {
             return rs;
         }
         if (response.errcode() != EA::SUCCESS) {
-            return turbo::UnknownError(response.errmsg());
+            return turbo::unknown_error(response.errmsg());
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::create_namespace(EA::discovery::NameSpaceInfo &info, int *retry_time) {
@@ -460,7 +460,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::create_namespace(const std::string &ns, int64_t quota, int *retry_time) {
@@ -481,7 +481,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::create_namespace_by_json(const std::string &json_str, int *retry_time) {
@@ -496,7 +496,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::create_namespace_by_file(const std::string &path, int *retry_time) {
@@ -511,7 +511,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::remove_namespace(const std::string &ns, int *retry_time) {
@@ -529,7 +529,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::modify_namespace(EA::discovery::NameSpaceInfo &ns_info, int *retry_time) {
@@ -541,7 +541,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::modify_namespace_by_json(const std::string &json_str, int *retry_time) {
@@ -556,7 +556,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::modify_namespace_by_file(const std::string &path, int *retry_time) {
@@ -571,7 +571,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::list_namespace(std::vector<std::string> &ns_list, int *retry_time) {
@@ -583,7 +583,7 @@ namespace EA::client {
         for (auto &ns: ns_proto_list) {
             ns_list.push_back(ns.namespace_name());
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::list_namespace(std::vector<EA::discovery::NameSpaceInfo> &ns_list, int *retry_time) {
@@ -595,12 +595,12 @@ namespace EA::client {
             return rs;
         }
         if (response.errcode() != EA::SUCCESS) {
-            return turbo::UnknownError(response.errmsg());
+            return turbo::unknown_error(response.errmsg());
         }
         for (auto &ns: response.namespace_infos()) {
             ns_list.push_back(ns);
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::list_namespace_to_json(std::vector<std::string> &ns_list, int *retry_time) {
@@ -617,7 +617,7 @@ namespace EA::client {
             }
             ns_list.push_back(json_content);
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::list_namespace_to_file(const std::string &save_path, int *retry_time) {
@@ -639,7 +639,7 @@ namespace EA::client {
             }
         }
         file.close();
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status
@@ -648,7 +648,7 @@ namespace EA::client {
         EA::discovery::DiscoveryQueryResponse response;
         request.set_op_type(EA::discovery::QUERY_NAMESPACE);
         if (ns_name.empty()) {
-            return turbo::InvalidArgumentError("namespace name empty");
+            return turbo::invalid_argument_error("namespace name empty");
         }
         request.set_namespace_name(ns_name);
         auto rs = discovery_query(request, response, retry_time);
@@ -656,13 +656,13 @@ namespace EA::client {
             return rs;
         }
         if (response.errcode() != EA::SUCCESS) {
-            return turbo::UnknownError(response.errmsg());
+            return turbo::unknown_error(response.errmsg());
         }
         if (response.namespace_infos_size() != 1) {
-            return turbo::UnknownError("bad proto format for namespace info size {}", response.namespace_infos_size());
+            return turbo::unknown_error("bad proto format for namespace info size {}", response.namespace_infos_size());
         }
         ns_pb = response.namespace_infos(0);
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::get_namespace_json(const std::string &ns_name, std::string &json_str, int *retry_time) {
@@ -696,7 +696,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status
@@ -722,7 +722,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::create_zone_by_file(const std::string &path, int *retry_time) {
@@ -737,7 +737,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::remove_zone(const std::string &ns, const std::string &zone, int *retry_time) {
@@ -752,7 +752,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::modify_zone(EA::discovery::ZoneInfo &zone_info, int *retry_time) {
@@ -766,7 +766,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::modify_zone_by_json(const std::string &json_str, int *retry_time) {
@@ -781,7 +781,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::modify_zone_by_file(const std::string &path, int *retry_time) {
@@ -796,7 +796,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::list_zone(std::vector<EA::discovery::ZoneInfo> &zone_list, int *retry_time) {
@@ -808,12 +808,12 @@ namespace EA::client {
             return rs;
         }
         if (response.errcode() != EA::SUCCESS) {
-            return turbo::UnknownError(response.errmsg());
+            return turbo::unknown_error(response.errmsg());
         }
         for (auto &zone: response.zone_infos()) {
             zone_list.push_back(zone);
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status
@@ -828,7 +828,7 @@ namespace EA::client {
                 zone_list.push_back(zone);
             }
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::list_zone(std::vector<std::string> &zone_list, int *retry_time) {
@@ -840,7 +840,7 @@ namespace EA::client {
         for (auto &zone: zone_proto_list) {
             zone_list.push_back(turbo::Format("{},{}", zone.namespace_name(), zone.zone()));
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::list_zone(std::string &ns, std::vector<std::string> &zone_list, int *retry_time) {
@@ -852,7 +852,7 @@ namespace EA::client {
         for (auto &zone: zone_proto_list) {
             zone_list.push_back(turbo::Format("{},{}", zone.namespace_name(), zone.zone()));
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
 
@@ -870,7 +870,7 @@ namespace EA::client {
             }
             zone_list.push_back(json_content);
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status
@@ -888,7 +888,7 @@ namespace EA::client {
             }
             zone_list.push_back(json_content);
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::list_zone_to_file(const std::string &save_path, int *retry_time) {
@@ -910,7 +910,7 @@ namespace EA::client {
             }
         }
         file.close();
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::list_zone_to_file(const std::string &ns, const std::string &save_path, int *retry_time) {
@@ -932,7 +932,7 @@ namespace EA::client {
             }
         }
         file.close();
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status
@@ -942,7 +942,7 @@ namespace EA::client {
         EA::discovery::DiscoveryQueryResponse response;
         request.set_op_type(EA::discovery::QUERY_ZONE);
         if (ns_name.empty()) {
-            return turbo::InvalidArgumentError("namespace name empty");
+            return turbo::invalid_argument_error("namespace name empty");
         }
         request.set_namespace_name(ns_name);
         request.set_zone(zone_name);
@@ -951,13 +951,13 @@ namespace EA::client {
             return rs;
         }
         if (response.errcode() != EA::SUCCESS) {
-            return turbo::UnknownError(response.errmsg());
+            return turbo::unknown_error(response.errmsg());
         }
         if (response.zone_infos_size() != 1) {
-            return turbo::UnknownError("bad proto format for zone info size {}", response.zone_infos_size());
+            return turbo::unknown_error("bad proto format for zone info size {}", response.zone_infos_size());
         }
         zone_pb = response.zone_infos(0);
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status
@@ -993,7 +993,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status
@@ -1038,7 +1038,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::modify_servlet(const EA::discovery::ServletInfo &servlet_info, int *retry_time) {
@@ -1052,7 +1052,7 @@ namespace EA::client {
         if (!rs.ok()) {
             return rs;
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::modify_servlet_by_json(const std::string &json_str, int *retry_time) {
@@ -1082,12 +1082,12 @@ namespace EA::client {
             return rs;
         }
         if (response.errcode() != EA::SUCCESS) {
-            return turbo::UnknownError(response.errmsg());
+            return turbo::unknown_error(response.errmsg());
         }
         for (auto &servlet: response.servlet_infos()) {
             servlet_list.push_back(servlet);
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status
@@ -1103,7 +1103,7 @@ namespace EA::client {
                 servlet_list.push_back(servlet);
             }
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status
@@ -1119,7 +1119,7 @@ namespace EA::client {
                 servlet_list.push_back(servlet);
             }
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::list_servlet(std::vector<std::string> &servlet_list, int *retry_time) {
@@ -1131,7 +1131,7 @@ namespace EA::client {
         for (auto &servlet: all_servlet_list) {
             servlet_list.push_back(servlet.servlet_name());
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status
@@ -1146,7 +1146,7 @@ namespace EA::client {
                 servlet_list.push_back(servlet.servlet_name());
             }
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status
@@ -1162,7 +1162,7 @@ namespace EA::client {
                 servlet_list.push_back(servlet.servlet_name());
             }
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::list_servlet_to_json(std::vector<std::string> &servlet_list, int *retry_time) {
@@ -1179,7 +1179,7 @@ namespace EA::client {
             }
             servlet_list.push_back(json_content);
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status
@@ -1199,7 +1199,7 @@ namespace EA::client {
                 servlet_list.push_back(json_content);
             }
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::list_servlet_to_json(const std::string &ns, const std::string &zone,
@@ -1219,7 +1219,7 @@ namespace EA::client {
                 servlet_list.push_back(json_content);
             }
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status DiscoveryClient::list_servlet_to_file(const std::string &save_path, int *retry_time) {
@@ -1241,7 +1241,7 @@ namespace EA::client {
             }
         }
         file.close();
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status
@@ -1264,7 +1264,7 @@ namespace EA::client {
             }
         }
         file.close();
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status
@@ -1288,7 +1288,7 @@ namespace EA::client {
             }
         }
         file.close();
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status
@@ -1303,13 +1303,13 @@ namespace EA::client {
             return rs;
         }
         if (response.errcode() != EA::SUCCESS) {
-            return turbo::UnknownError(response.errmsg());
+            return turbo::unknown_error(response.errmsg());
         }
         if (response.servlet_infos_size() != 1) {
-            return turbo::UnknownError("bad proto format for servlet infos size: {}", response.servlet_infos_size());
+            return turbo::unknown_error("bad proto format for servlet infos size: {}", response.servlet_infos_size());
         }
         servlet_pb = response.servlet_infos(0);
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status

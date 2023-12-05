@@ -45,9 +45,9 @@ namespace EA::discovery {
         PrivilegeManager *manager = PrivilegeManager::get_instance();
         BAIDU_SCOPED_LOCK(manager->_user_mutex);
         std::string user_name = request->user_name();
-        turbo::Trim(&user_name);
+        turbo::trim_complete(&user_name);
         std::string namespace_name = request->namespace_name();
-        turbo::Trim(&namespace_name);
+        turbo::trim_complete(&namespace_name);
         std::map<std::string, std::multimap<std::string, EA::discovery::QueryUserPrivilege>> namespace_privileges;
         if (user_name.empty() && namespace_name.empty()) {
             for (auto &privilege_info: manager->_user_privilege) {

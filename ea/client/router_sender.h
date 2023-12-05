@@ -189,7 +189,7 @@ namespace EA::client {
                 service_desc->FindMethodByName(service_name);
         if (method == nullptr) {
             TLOG_ERROR_IF(_verbose, "service name not exist, service:{}", service_name);
-            return turbo::InvalidArgumentError("service name not exist, service:{}", service_name);
+            return turbo::invalid_argument_error("service name not exist, service:{}", service_name);
         }
         int retry_time = 0;
         uint64_t log_id = butil::fast_rand();
@@ -219,19 +219,19 @@ namespace EA::client {
                 ++retry_time;
                 continue;
             }
-            return turbo::OkStatus();
+            return turbo::ok_status();
             /*
             if (response.errcode() != EA::SUCCESS) {
                 TLOG_WARN_IF(_verbose, "send discovery server fail, log_id:{}, response:{}", cntl.log_id(),
                              response.ShortDebugString());
-                //return turbo::UnavailableError("send discovery server fail, log_id:{}, response:{}", cntl.log_id(),
+                //return turbo::unavailable_error("send discovery server fail, log_id:{}, response:{}", cntl.log_id(),
                 //                               response.ShortDebugString());
-                return turbo::OkStatus();
+                return turbo::ok_status();
             } else {
-                return turbo::OkStatus();
+                return turbo::ok_status();
             }*/
         } while (retry_time < retry_times);
-        return turbo::DeadlineExceededError("try times {} reach max_try {} and can not get response.", retry_time,
+        return turbo::deadline_exceeded_error("try times {} reach max_try {} and can not get response.", retry_time,
                                             retry_times);
 
     }

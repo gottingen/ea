@@ -228,7 +228,7 @@ namespace EA::cli {
         if(opt->cluster == "atomic") {
             return 1;
         }
-        return turbo::InvalidArgumentError("unknown");
+        return turbo::invalid_argument_error("unknown");
     }
 
     turbo::Table RaftCmd::show_raft_result(EA::RaftControlResponse &res) {

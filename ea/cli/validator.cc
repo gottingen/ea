@@ -33,10 +33,10 @@ namespace EA::cli {
         int i = 0;
         for(auto c : ns) {
             if(AllowChar.find(c) == AllowChar.end()) {
-                return turbo::InvalidArgumentError("the {} char {} of {} is not allow used in name the valid set is[a-z,A-Z,0-9,_]", i, c, ns);
+                return turbo::invalid_argument_error("the {} char {} of {} is not allow used in name the valid set is[a-z,A-Z,0-9,_]", i, c, ns);
             }
             ++i;
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 }  // namespace EA::cli

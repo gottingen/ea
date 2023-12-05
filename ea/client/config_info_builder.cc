@@ -36,17 +36,17 @@ namespace EA::client {
         }
         /// check field
         if (!_info->has_name() || _info->name().empty()) {
-            return turbo::DataLossError("miss required field name");
+            return turbo::data_loss_error("miss required field name");
         }
         if (!_info->has_version() ||
             (_info->version().major() == 0 && _info->version().minor() == 0 && _info->version().patch() == 0)) {
-            return turbo::DataLossError("miss field version");
+            return turbo::data_loss_error("miss field version");
         }
 
         if (!_info->has_content() || _info->content().empty()) {
-            return turbo::DataLossError("miss required field name");
+            return turbo::data_loss_error("miss required field name");
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status ConfigInfoBuilder::build_from_json_file(const std::string &json_path) {
@@ -159,7 +159,7 @@ namespace EA::client {
         _info->set_content(content);
         *_info->mutable_version() = version;
         _info->set_type(type);
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status ConfigInfoBuilder::build_from_content(const std::string &name, const std::string &content,

@@ -45,7 +45,7 @@ namespace EA::cli {
             auto verbose =  OptionContext::get_instance()->verbose;
             if (method == nullptr) {
                 TLOG_ERROR_IF(verbose, "service name not exist, service:{}", service_name);
-                return turbo::InvalidArgumentError("service name not exist, service:{}", service_name);
+                return turbo::invalid_argument_error("service name not exist, service:{}", service_name);
             }
             int retry_time = 0;
             uint64_t log_id = butil::fast_rand();
@@ -78,14 +78,14 @@ namespace EA::cli {
                 if (response.errcode() != EA::SUCCESS) {
                     TLOG_WARN_IF(verbose, "send discovery router server fail, log_id:{}, response:{}", cntl.log_id(),
                               response.ShortDebugString());
-                    //return turbo::UnavailableError("send discovery router server fail, log_id:{}, response:{}", cntl.log_id(),
+                    //return turbo::unavailable_error("send discovery router server fail, log_id:{}, response:{}", cntl.log_id(),
                     //                               response.ShortDebugString());
-                    return turbo::OkStatus();
+                    return turbo::ok_status();
                 } else {
-                    return turbo::OkStatus();
+                    return turbo::ok_status();
                 }
             } while (retry_time < OptionContext::get_instance()->max_retry);
-            return turbo::DeadlineExceededError("try times {} reach max_try {} and can not get response.", retry_time, OptionContext::get_instance()->max_retry);
+            return turbo::deadline_exceeded_error("try times {} reach max_try {} and can not get response.", retry_time, OptionContext::get_instance()->max_retry);
 
         }
 

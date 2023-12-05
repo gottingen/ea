@@ -40,7 +40,7 @@ namespace EA::cli {
     }
 
     turbo::ResultStatus<EA::discovery::ConfigType> string_to_config_type(const std::string &str) {
-        auto lc = turbo::StrToLower(str);
+        auto lc = turbo::str_to_lower(str);
         if (lc == "json") {
             return EA::discovery::CF_JSON;
         } else if (lc == "text") {
@@ -56,7 +56,7 @@ namespace EA::cli {
         } else if (lc == "toml") {
             return EA::discovery::CF_TOML;
         }
-        return turbo::InvalidArgumentError("unknown format '{}'", str);
+        return turbo::invalid_argument_error("unknown format '{}'", str);
     }
 
     std::string get_op_string(EA::discovery::OpType type) {
@@ -72,23 +72,23 @@ namespace EA::cli {
     }
 
     turbo::Status string_to_version(const std::string &str, EA::discovery::Version *v) {
-        std::vector<std::string> vs = turbo::StrSplit(str, ".");
+        std::vector<std::string> vs = turbo::str_split(str, ".");
         if (vs.size() != 3)
-            return turbo::InvalidArgumentError("version {} error, should be like 1.2.3", str);
+            return turbo::invalid_argument_error("version {} error, should be like 1.2.3", str);
         int64_t m;
-        if (!turbo::SimpleAtoi(vs[0], &m)) {
-            return turbo::InvalidArgumentError("version {} error, should be like 1.2.3", str);
+        if (!turbo::simple_atoi(vs[0], &m)) {
+            return turbo::invalid_argument_error("version {} error, should be like 1.2.3", str);
         }
         v->set_major(m);
-        if (!turbo::SimpleAtoi(vs[1], &m)) {
-            return turbo::InvalidArgumentError("version {} error, should be like 1.2.3", str);
+        if (!turbo::simple_atoi(vs[1], &m)) {
+            return turbo::invalid_argument_error("version {} error, should be like 1.2.3", str);
         }
         v->set_minor(m);
-        if (!turbo::SimpleAtoi(vs[2], &m)) {
-            return turbo::InvalidArgumentError("version {} error, should be like 1.2.3", str);
+        if (!turbo::simple_atoi(vs[2], &m)) {
+            return turbo::invalid_argument_error("version {} error, should be like 1.2.3", str);
         }
         v->set_patch(m);
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     std::string version_to_string(const EA::discovery::Version &v) {

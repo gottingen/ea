@@ -39,31 +39,31 @@ namespace EA::client {
         }
         /// check field
         if (!_instance->has_namespace_name() || _instance->namespace_name().empty()) {
-            return turbo::DataLossError("miss required field namespace_name");
+            return turbo::data_loss_error("miss required field namespace_name");
         }
 
         if (!_instance->has_zone_name() || _instance->zone_name().empty()) {
-            return turbo::DataLossError("miss required field zone_name");
+            return turbo::data_loss_error("miss required field zone_name");
         }
 
         if (!_instance->has_servlet_name() || _instance->servlet_name().empty()) {
-            return turbo::DataLossError("miss required field servlet_name");
+            return turbo::data_loss_error("miss required field servlet_name");
         }
 
         if (!_instance->has_address() || _instance->address().empty()) {
-            return turbo::DataLossError("miss required field address");
+            return turbo::data_loss_error("miss required field address");
         }
 
         if (!_instance->has_env() || _instance->env().empty()) {
-            return turbo::DataLossError("miss required field address");
+            return turbo::data_loss_error("miss required field address");
         }
 
         butil::EndPoint peer;
         if(butil::str2endpoint(_instance->address().c_str(),&peer) != 0) {
-            return turbo::InvalidArgumentError("bad address");
+            return turbo::invalid_argument_error("bad address");
         }
 
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status ServletInstanceBuilder::build_from_json_file(const std::string &json_path) {

@@ -20,7 +20,7 @@ namespace EA::discovery {
 
     turbo::Status RouterServiceImpl::init(const std::string &discovery_peers) {
         if(_is_init) {
-            return  turbo::OkStatus();
+            return  turbo::ok_status();
         }
         auto rs = _manager_sender.init(discovery_peers);
         if(!rs.ok()) {
@@ -31,7 +31,7 @@ namespace EA::discovery {
             return rs;
         }
         _is_init = true;
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
     void RouterServiceImpl::discovery_manager(::google::protobuf::RpcController* controller,
                       const ::EA::discovery::DiscoveryManagerRequest* request,

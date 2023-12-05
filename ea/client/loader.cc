@@ -25,9 +25,9 @@ namespace EA::client {
     turbo::Status Loader::load_proto(const std::string &content, google::protobuf::Message &message) {
         std::string err;
         if (!json2pb::JsonToProtoMessage(content, &message, &err)) {
-            return turbo::InvalidArgumentError(err);
+            return turbo::invalid_argument_error(err);
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
 

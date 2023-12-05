@@ -297,7 +297,7 @@ namespace EA::cli {
         user_req->set_namespace_name(UserOptionContext::get_instance()->namespace_name);
         user_req->set_username(UserOptionContext::get_instance()->user_name);
         user_req->set_password(UserOptionContext::get_instance()->user_passwd);
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status make_user_remove(EA::discovery::DiscoveryManagerRequest *req) {
@@ -314,7 +314,7 @@ namespace EA::cli {
         user_req->set_namespace_name(UserOptionContext::get_instance()->namespace_name);
         user_req->set_username(UserOptionContext::get_instance()->user_name);
         user_req->set_password(UserOptionContext::get_instance()->user_passwd);
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status make_user_add_privilege(EA::discovery::DiscoveryManagerRequest *req) {
@@ -367,9 +367,9 @@ namespace EA::cli {
         for (auto &write_servlet: opt->user_ws) {
             read_set.erase(write_servlet);
             EA::discovery::PrivilegeServlet ps;
-            std::vector<std::string> names = turbo::StrSplit(write_servlet, ".", turbo::SkipEmpty());
+            std::vector<std::string> names = turbo::str_split(write_servlet, ".", turbo::skip_empty());
             if (names.size() != 2) {
-                return turbo::InvalidArgumentError("bad format of {} should be zone.servlet", write_servlet);
+                return turbo::invalid_argument_error("bad format of {} should be zone.servlet", write_servlet);
             }
             ps.set_zone(names[0]);
             ps.set_servlet_name(names[1]);
@@ -380,9 +380,9 @@ namespace EA::cli {
 
         for (auto &read_servlet: read_set) {
             EA::discovery::PrivilegeServlet ps;
-            std::vector<std::string> names = turbo::StrSplit(read_servlet, ".", turbo::SkipEmpty());
+            std::vector<std::string> names = turbo::str_split(read_servlet, ".", turbo::skip_empty());
             if (names.size() != 2) {
-                return turbo::InvalidArgumentError("bad format of {} should be zone.servlet", read_servlet);
+                return turbo::invalid_argument_error("bad format of {} should be zone.servlet", read_servlet);
             }
             ps.set_zone(names[0]);
             ps.set_servlet_name(names[1]);
@@ -390,7 +390,7 @@ namespace EA::cli {
             ps.set_force(opt->force);
             *pri_req->add_privilege_servlet() = ps;
         }
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status make_user_remove_privilege(EA::discovery::DiscoveryManagerRequest *req) {
@@ -443,9 +443,9 @@ namespace EA::cli {
         for (auto &write_servlet: opt->user_ws) {
             read_set.erase(write_servlet);
             EA::discovery::PrivilegeServlet ps;
-            std::vector<std::string> names = turbo::StrSplit(write_servlet, ".", turbo::SkipEmpty());
+            std::vector<std::string> names = turbo::str_split(write_servlet, ".", turbo::skip_empty());
             if (names.size() != 2) {
-                return turbo::InvalidArgumentError("bad format of {} should be zone.servlet", write_servlet);
+                return turbo::invalid_argument_error("bad format of {} should be zone.servlet", write_servlet);
             }
             ps.set_zone(names[0]);
             ps.set_servlet_name(names[1]);
@@ -456,9 +456,9 @@ namespace EA::cli {
 
         for (auto &read_servlet: read_set) {
             EA::discovery::PrivilegeServlet ps;
-            std::vector<std::string> names = turbo::StrSplit(read_servlet, ".", turbo::SkipEmpty());
+            std::vector<std::string> names = turbo::str_split(read_servlet, ".", turbo::skip_empty());
             if (names.size() != 2) {
-                return turbo::InvalidArgumentError("bad format of {} should be zone.servlet", read_servlet);
+                return turbo::invalid_argument_error("bad format of {} should be zone.servlet", read_servlet);
             }
             ps.set_zone(names[0]);
             ps.set_servlet_name(names[1]);
@@ -467,18 +467,18 @@ namespace EA::cli {
             *pri_req->add_privilege_servlet() = ps;
         }
 
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status make_user_list(EA::discovery::DiscoveryQueryRequest *req) {
         req->set_op_type(EA::discovery::QUERY_USER_PRIVILEGE);
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status make_user_flat(EA::discovery::DiscoveryQueryRequest *req) {
             req->set_op_type(EA::discovery::QUERY_PRIVILEGE_FLATTEN);
 
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
     turbo::Status make_user_info(EA::discovery::DiscoveryQueryRequest *req) {
@@ -493,7 +493,7 @@ namespace EA::cli {
         }
         req->set_namespace_name(UserOptionContext::get_instance()->namespace_name);
         req->set_user_name(UserOptionContext::get_instance()->user_name);
-        return turbo::OkStatus();
+        return turbo::ok_status();
     }
 
 }  // namespace EA::cli

@@ -14,7 +14,7 @@
 
 
 #include "ea/discovery/instance_manager.h"
-#include "ea/discovery/schema_manager.h"
+#include "ea/discovery/discovery_manager.h"
 #include "ea/discovery/discovery_rocksdb.h"
 
 namespace EA::discovery {
@@ -23,7 +23,7 @@ namespace EA::discovery {
         auto &instance_info = const_cast<EA::discovery::ServletInstance &>(request.instance_info());
         const std::string &address = instance_info.address();
 
-        auto ret = SchemaManager::get_instance()->check_and_get_for_instance(instance_info);
+        auto ret = DiscoveryManager::get_instance()->check_and_get_for_instance(instance_info);
         if (ret < 0) {
             TLOG_WARN("request not illegal, request:{}", request.ShortDebugString());
             IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "request invalid");

@@ -14,7 +14,7 @@
 //
 
 
-#include "ea/discovery/schema_manager.h"
+#include "ea/discovery/discovery_manager.h"
 #include "ea/discovery/zone_manager.h"
 #include "ea/discovery/servlet_manager.h"
 #include "ea/discovery/instance_manager.h"
@@ -24,7 +24,7 @@
 
 namespace EA::discovery {
 
-    void SchemaManager::process_schema_info(google::protobuf::RpcController *controller,
+    void DiscoveryManager::process_schema_info(google::protobuf::RpcController *controller,
                                             const EA::discovery::DiscoveryManagerRequest *request,
                                             EA::discovery::DiscoveryManagerResponse *response,
                                             google::protobuf::Closure *done) {
@@ -118,7 +118,7 @@ namespace EA::discovery {
     }
 
 
-    int SchemaManager::check_and_get_for_privilege(EA::discovery::UserPrivilege &user_privilege) {
+    int DiscoveryManager::check_and_get_for_privilege(EA::discovery::UserPrivilege &user_privilege) {
         std::string namespace_name = user_privilege.namespace_name();
         int64_t namespace_id = NamespaceManager::get_instance()->get_namespace_id(namespace_name);
         if (namespace_id == 0) {
@@ -163,8 +163,8 @@ namespace EA::discovery {
         return 0;
     }
 
-    int SchemaManager::load_snapshot() {
-        TLOG_INFO("SchemaManager start load_snapshot");
+    int DiscoveryManager::load_snapshot() {
+        TLOG_INFO("DiscoveryManager start load_snapshot");
         NamespaceManager::get_instance()->clear();
         ZoneManager::get_instance()->clear();
         ServletManager::get_instance()->clear();
@@ -176,19 +176,19 @@ namespace EA::discovery {
         RocksStorage *db = RocksStorage::get_instance();
         std::unique_ptr<rocksdb::Iterator> iter(
                 RocksStorage::get_instance()->new_iterator(read_options, db->get_meta_info_handle()));
-        iter->Seek(DiscoveryConstants::SCHEMA_IDENTIFY);
-        std::string max_id_prefix = DiscoveryConstants::SCHEMA_IDENTIFY;
-        max_id_prefix += DiscoveryConstants::MAX_ID_SCHEMA_IDENTIFY;
+        iter->Seek(DiscoveryConstants::DISCOVERY_TREE_IDENTIFY);
+        std::string max_id_prefix = DiscoveryConstants::DISCOVERY_TREE_IDENTIFY;
+        max_id_prefix += DiscoveryConstants::DISCOVERY_TREE_MAX_ID_IDENTIFY;
 
-        std::string namespace_prefix = DiscoveryConstants::SCHEMA_IDENTIFY;
-        namespace_prefix += DiscoveryConstants::NAMESPACE_SCHEMA_IDENTIFY;
+        std::string namespace_prefix = DiscoveryConstants::DISCOVERY_TREE_IDENTIFY;
+        namespace_prefix += DiscoveryConstants::DISCOVERY_TREE_NAMESPACE_IDENTIFY;
 
 
-        std::string zone_prefix = DiscoveryConstants::SCHEMA_IDENTIFY;
-        zone_prefix += DiscoveryConstants::ZONE_SCHEMA_IDENTIFY;
+        std::string zone_prefix = DiscoveryConstants::DISCOVERY_TREE_IDENTIFY;
+        zone_prefix += DiscoveryConstants::DISCOVERY_TREE_ZONE_IDENTIFY;
 
-        std::string servlet_prefix = DiscoveryConstants::SCHEMA_IDENTIFY;
-        servlet_prefix += DiscoveryConstants::SERVLET_SCHEMA_IDENTIFY;
+        std::string servlet_prefix = DiscoveryConstants::DISCOVERY_TREE_IDENTIFY;
+        servlet_prefix += DiscoveryConstants::DISCOVERY_TREE_SERVLET_IDENTIFY;
 
 
         for (; iter->Valid(); iter->Next()) {
@@ -211,11 +211,11 @@ namespace EA::discovery {
                 return -1;
             }
         }
-        TLOG_INFO("SchemaManager load_snapshot done...");
+        TLOG_INFO("DiscoveryManager load_snapshot done...");
         return 0;
     }
 
-    int SchemaManager::check_and_get_for_instance(EA::discovery::ServletInstance &instance) {
+    int DiscoveryManager::check_and_get_for_instance(EA::discovery::ServletInstance &instance) {
         std::string namespace_name = instance.namespace_name();
         int64_t namespace_id = NamespaceManager::get_instance()->get_namespace_id(namespace_name);
         if (namespace_id == 0) {
@@ -251,7 +251,7 @@ namespace EA::discovery {
     }
 
 
-    int SchemaManager::load_max_id_snapshot(const std::string &max_id_prefix,
+    int DiscoveryManager::load_max_id_snapshot(const std::string &max_id_prefix,
                                             const std::string &key,
                                             const std::string &value) {
         std::string max_key(key, max_id_prefix.size());

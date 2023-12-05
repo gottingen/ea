@@ -17,19 +17,18 @@
 
 namespace EA::discovery {
 
-    const std::string DiscoveryConstants::SCHEMA_IDENTIFY(1, 0x01);
+    const std::string DiscoveryConstants::DISCOVERY_TREE_IDENTIFY(1, 0x01);
 
-    const std::string DiscoveryConstants::MAX_ID_SCHEMA_IDENTIFY(1, 0x01);
-    const std::string DiscoveryConstants::NAMESPACE_SCHEMA_IDENTIFY(1, 0x02);
-    const std::string DiscoveryConstants::ZONE_SCHEMA_IDENTIFY(1, 0x09);
-    const std::string DiscoveryConstants::SERVLET_SCHEMA_IDENTIFY(1, 0x0A);
+    const std::string DiscoveryConstants::DISCOVERY_TREE_MAX_ID_IDENTIFY(1, 0x01);
+    const std::string DiscoveryConstants::DISCOVERY_TREE_NAMESPACE_IDENTIFY(1, 0x02);
+    const std::string DiscoveryConstants::DISCOVERY_TREE_ZONE_IDENTIFY(1, 0x09);
+    const std::string DiscoveryConstants::DISCOVERY_TREE_SERVLET_IDENTIFY(1, 0x0A);
 
     const std::string DiscoveryConstants::PRIVILEGE_IDENTIFY(1, 0x02);
 
     const std::string DiscoveryConstants::CONFIG_IDENTIFY(1, 0x04);
 
     const std::string DiscoveryConstants::DISCOVERY_IDENTIFY(1, 0x03);
-    const std::string DiscoveryConstants::DISCOVERY_MAX_ID_IDENTIFY(1, 0x01);
     const std::string DiscoveryConstants::DISCOVERY_INSTANCE_IDENTIFY(1, 0x03);
     const std::string DiscoveryConstants::INSTANCE_PARAM_CLUSTER_IDENTIFY(1, 0x04);
 
@@ -40,7 +39,6 @@ namespace EA::discovery {
     const std::string DiscoveryConstants::MAX_NAMESPACE_ID_KEY = "max_namespace_id";
     const std::string DiscoveryConstants::MAX_ZONE_ID_KEY = "max_zone_id";
     const std::string DiscoveryConstants::MAX_SERVLET_ID_KEY = "max_servlet_id";
-    const std::string DiscoveryConstants::MAX_INSTANCE_ID_KEY = "max_instance_id";
 
     const int DiscoveryConstants::DiscoveryMachineRegion = 0;
     const int DiscoveryConstants::AutoIDMachineRegion = 1;

@@ -196,15 +196,15 @@ namespace EA::discovery {
     }
 
     inline std::string ServletManager::construct_servlet_key(int64_t servlet_id) {
-        std::string servlet_key = DiscoveryConstants::SCHEMA_IDENTIFY
-                                   + DiscoveryConstants::SERVLET_SCHEMA_IDENTIFY;
+        std::string servlet_key = DiscoveryConstants::DISCOVERY_TREE_IDENTIFY
+                                   + DiscoveryConstants::DISCOVERY_TREE_SERVLET_IDENTIFY;
         servlet_key.append((char *) &servlet_id, sizeof(int64_t));
         return servlet_key;
     }
 
     inline std::string ServletManager::construct_max_servlet_id_key() {
-        std::string max_servlet_id_key = DiscoveryConstants::SCHEMA_IDENTIFY
-                                          + DiscoveryConstants::MAX_ID_SCHEMA_IDENTIFY
+        std::string max_servlet_id_key = DiscoveryConstants::DISCOVERY_TREE_IDENTIFY
+                                          + DiscoveryConstants::DISCOVERY_TREE_MAX_ID_IDENTIFY
                                           + DiscoveryConstants::MAX_SERVLET_ID_KEY;
         return max_servlet_id_key;
     }

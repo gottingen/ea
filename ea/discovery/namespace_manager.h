@@ -220,15 +220,15 @@ namespace EA::discovery {
     }
 
     inline std::string NamespaceManager::construct_namespace_key(int64_t namespace_id) {
-        std::string namespace_key = DiscoveryConstants::SCHEMA_IDENTIFY
-                                    + DiscoveryConstants::NAMESPACE_SCHEMA_IDENTIFY;
+        std::string namespace_key = DiscoveryConstants::DISCOVERY_TREE_IDENTIFY
+                                    + DiscoveryConstants::DISCOVERY_TREE_NAMESPACE_IDENTIFY;
         namespace_key.append((char *) &namespace_id, sizeof(int64_t));
         return namespace_key;
     }
 
     inline std::string NamespaceManager::construct_max_namespace_id_key() {
-        std::string max_namespace_id_key = DiscoveryConstants::SCHEMA_IDENTIFY
-                                           + DiscoveryConstants::MAX_ID_SCHEMA_IDENTIFY
+        std::string max_namespace_id_key = DiscoveryConstants::DISCOVERY_TREE_IDENTIFY
+                                           + DiscoveryConstants::DISCOVERY_TREE_MAX_ID_IDENTIFY
                                            + DiscoveryConstants::MAX_NAMESPACE_ID_KEY;
         return max_namespace_id_key;
     }

@@ -22,16 +22,15 @@ namespace EA::discovery {
 
     struct DiscoveryConstants {
 
-        static const std::string SCHEMA_IDENTIFY;
-        static const std::string MAX_ID_SCHEMA_IDENTIFY;
-        static const std::string NAMESPACE_SCHEMA_IDENTIFY;
-        static const std::string ZONE_SCHEMA_IDENTIFY;
-        static const std::string SERVLET_SCHEMA_IDENTIFY;
+        static const std::string DISCOVERY_TREE_IDENTIFY;
+        static const std::string DISCOVERY_TREE_MAX_ID_IDENTIFY;
+        static const std::string DISCOVERY_TREE_NAMESPACE_IDENTIFY;
+        static const std::string DISCOVERY_TREE_ZONE_IDENTIFY;
+        static const std::string DISCOVERY_TREE_SERVLET_IDENTIFY;
 
         static const std::string PRIVILEGE_IDENTIFY;
 
         static const std::string DISCOVERY_IDENTIFY;
-        static const std::string DISCOVERY_MAX_ID_IDENTIFY;
         static const std::string DISCOVERY_INSTANCE_IDENTIFY;
         static const std::string INSTANCE_PARAM_CLUSTER_IDENTIFY;
 
@@ -43,7 +42,6 @@ namespace EA::discovery {
         static const std::string MAX_NAMESPACE_ID_KEY;
         static const std::string MAX_ZONE_ID_KEY;
         static const std::string MAX_SERVLET_ID_KEY;
-        static const std::string MAX_INSTANCE_ID_KEY;
 
         static const int DiscoveryMachineRegion;
         static const int AutoIDMachineRegion;

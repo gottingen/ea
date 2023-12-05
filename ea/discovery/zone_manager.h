@@ -229,15 +229,15 @@ namespace EA::discovery {
     }
 
     inline std::string ZoneManager::construct_zone_key(int64_t zone_id) {
-        std::string zone_key = DiscoveryConstants::SCHEMA_IDENTIFY
-                               + DiscoveryConstants::ZONE_SCHEMA_IDENTIFY;
+        std::string zone_key = DiscoveryConstants::DISCOVERY_TREE_IDENTIFY
+                               + DiscoveryConstants::DISCOVERY_TREE_ZONE_IDENTIFY;
         zone_key.append((char *) &zone_id, sizeof(int64_t));
         return zone_key;
     }
 
     inline std::string ZoneManager::construct_max_zone_id_key() {
-        std::string max_zone_id_key = DiscoveryConstants::SCHEMA_IDENTIFY
-                                      + DiscoveryConstants::MAX_ID_SCHEMA_IDENTIFY
+        std::string max_zone_id_key = DiscoveryConstants::DISCOVERY_TREE_IDENTIFY
+                                      + DiscoveryConstants::DISCOVERY_TREE_MAX_ID_IDENTIFY
                                       + DiscoveryConstants::MAX_ZONE_ID_KEY;
         return max_zone_id_key;
     }

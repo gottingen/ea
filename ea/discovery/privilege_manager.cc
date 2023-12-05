@@ -17,7 +17,7 @@
 #include "ea/discovery/privilege_manager.h"
 #include <brpc/channel.h>
 #include "ea/discovery/discovery_state_machine.h"
-#include "ea/discovery/schema_manager.h"
+#include "ea/discovery/discovery_manager.h"
 #include "ea/discovery/discovery_server.h"
 #include "ea/discovery/discovery_rocksdb.h"
 
@@ -80,7 +80,7 @@ namespace EA::discovery {
             IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "username has been repeated");
             return;
         }
-        int ret = SchemaManager::get_instance()->check_and_get_for_privilege(user_privilege);
+        int ret = DiscoveryManager::get_instance()->check_and_get_for_privilege(user_privilege);
         if (ret < 0) {
             TLOG_WARN("request not illegal, request:{}", request.ShortDebugString());
             IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "request invalid");
@@ -139,7 +139,7 @@ namespace EA::discovery {
             IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "username not exist");
             return;
         }
-        int ret = SchemaManager::get_instance()->check_and_get_for_privilege(user_privilege);
+        int ret = DiscoveryManager::get_instance()->check_and_get_for_privilege(user_privilege);
         if (ret < 0) {
             TLOG_WARN("request not illegal, request:{}", request.ShortDebugString());
             IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "request invalid");
@@ -190,7 +190,7 @@ namespace EA::discovery {
             IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "username not exist");
             return;
         }
-        int ret = SchemaManager::get_instance()->check_and_get_for_privilege(user_privilege);
+        int ret = DiscoveryManager::get_instance()->check_and_get_for_privilege(user_privilege);
         if (ret < 0) {
             TLOG_WARN("request not illegal, request:{}", request.ShortDebugString());
             IF_DONE_SET_RESPONSE(done, EA::INPUT_PARAM_ERROR, "request invalid");

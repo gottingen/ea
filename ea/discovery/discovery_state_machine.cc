@@ -19,7 +19,7 @@
 #include <braft/storage.h>
 #include "ea/base/scope_exit.h"
 #include "ea/discovery/privilege_manager.h"
-#include "ea/discovery/schema_manager.h"
+#include "ea/discovery/discovery_manager.h"
 #include "ea/discovery/config_manager.h"
 #include "ea/discovery/namespace_manager.h"
 #include "ea/discovery/zone_manager.h"
@@ -213,7 +213,7 @@ namespace EA::discovery {
     int DiscoveryStateMachine::on_snapshot_load(braft::SnapshotReader *reader) {
         TLOG_WARN("start on snapshot load");
         //先删除数据
-        std::string remove_start_key(DiscoveryConstants::SCHEMA_IDENTIFY);
+        std::string remove_start_key(DiscoveryConstants::DISCOVERY_TREE_IDENTIFY);
         rocksdb::WriteOptions options;
         auto status = RocksStorage::get_instance()->remove_range(options,
                                                                  RocksStorage::get_instance()->get_meta_info_handle(),
@@ -232,7 +232,7 @@ namespace EA::discovery {
         rocksdb::ReadOptions read_options;
         std::unique_ptr<rocksdb::Iterator> iter(RocksStorage::get_instance()->new_iterator(read_options,
                                                                                            RocksStorage::get_instance()->get_meta_info_handle()));
-        iter->Seek(DiscoveryConstants::SCHEMA_IDENTIFY);
+        iter->Seek(DiscoveryConstants::DISCOVERY_TREE_IDENTIFY);
         for (; iter->Valid(); iter->Next()) {
             TLOG_WARN("iter key:{}, iter value:{} when on snapshot load",
                        iter->key().ToString(), iter->value().ToString());
@@ -264,9 +264,9 @@ namespace EA::discovery {
                     TLOG_ERROR("PrivilegeManager load snapshot fail");
                     return -1;
                 }
-                ret = SchemaManager::get_instance()->load_snapshot();
+                ret = DiscoveryManager::get_instance()->load_snapshot();
                 if (ret != 0) {
-                    TLOG_ERROR("SchemaManager load snapshot fail");
+                    TLOG_ERROR("DiscoveryManager load snapshot fail");
                     return -1;
                 }
 

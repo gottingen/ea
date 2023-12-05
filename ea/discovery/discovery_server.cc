@@ -19,7 +19,7 @@
 #include "ea/discovery/tso_state_machine.h"
 #include "ea/discovery/discovery_state_machine.h"
 #include "ea/discovery/privilege_manager.h"
-#include "ea/discovery/schema_manager.h"
+#include "ea/discovery/discovery_manager.h"
 #include "ea/discovery/config_manager.h"
 #include "ea/discovery/query_config_manager.h"
 #include "ea/discovery/query_privilege_manager.h"
@@ -81,7 +81,7 @@ namespace EA::discovery {
         }
         TLOG_WARN("_tso_state_machine init success");
 
-        SchemaManager::get_instance()->set_discovery_state_machine(_discovery_state_machine);
+        DiscoveryManager::get_instance()->set_discovery_state_machine(_discovery_state_machine);
         ConfigManager::get_instance()->set_discovery_state_machine(_discovery_state_machine);
         PrivilegeManager::get_instance()->set_discovery_state_machine(_discovery_state_machine);
         _flush_bth.run([this]() { flush_memtable_thread(); });
@@ -145,7 +145,7 @@ namespace EA::discovery {
             || request->op_type() == EA::discovery::OP_UPDATE_INSTANCE
             || request->op_type() == EA::discovery::OP_MODIFY_RESOURCE_TAG
             || request->op_type() == EA::discovery::OP_UPDATE_MAIN_LOGICAL_ROOM) {
-            SchemaManager::get_instance()->process_schema_info(controller,
+            DiscoveryManager::get_instance()->process_schema_info(controller,
                                                                request,
                                                                response,
                                                                done_guard.release());

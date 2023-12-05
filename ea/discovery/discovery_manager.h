@@ -21,14 +21,14 @@
 
 namespace EA::discovery {
 
-    class SchemaManager {
+    class DiscoveryManager {
     public:
-        static SchemaManager *get_instance() {
-            static SchemaManager instance;
+        static DiscoveryManager *get_instance() {
+            static DiscoveryManager instance;
             return &instance;
         }
 
-        ~SchemaManager() {}
+        ~DiscoveryManager() {}
 
         ///
         /// \param controller
@@ -59,7 +59,7 @@ namespace EA::discovery {
         }
 
     private:
-        SchemaManager() = default;
+        DiscoveryManager() = default;
 
         int load_max_id_snapshot(const std::string &max_id_prefix,
                                  const std::string &key,

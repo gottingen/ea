@@ -253,7 +253,7 @@ namespace EA::client {
     }
 
     std::string ConfigCache::make_cache_file_path(const std::string &dir, const EA::discovery::ConfigInfo &config) {
-        return turbo::Format("{}/{}-{}.{}.{}.{}", dir,
+        return turbo::format("{}/{}-{}.{}.{}.{}", dir,
                              config.name(),
                              config.version().minor(),
                              config.version().minor(),

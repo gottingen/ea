@@ -89,8 +89,8 @@ namespace EA::cli {
         if (response.errcode() == EA::SUCCESS) {
             turbo::Table summary;
             summary.add_row({"servlet id", "start id", "end id"});
-            summary.add_row({turbo::Format(opt->servlet_id), turbo::Format(response.start_id()),
-                             turbo::Format(response.end_id())});
+            summary.add_row({turbo::format(opt->servlet_id), turbo::format(response.start_id()),
+                             turbo::format(response.end_id())});
             ss.add_table("summary", std::move(summary), true);
         }
     }
@@ -131,8 +131,8 @@ namespace EA::cli {
         if (response.errcode() == EA::SUCCESS) {
             turbo::Table summary;
             summary.add_row({"servlet id", "start id", "end id"});
-            summary.add_row({turbo::Format(opt->servlet_id), turbo::Format(response.start_id()),
-                             turbo::Format(response.end_id())});
+            summary.add_row({turbo::format(opt->servlet_id), turbo::format(response.start_id()),
+                             turbo::format(response.end_id())});
             ss.add_table("summary", std::move(summary), true);
         }
     }
@@ -162,7 +162,7 @@ namespace EA::cli {
         if (response.errcode() == EA::SUCCESS) {
             turbo::Table summary;
             summary.add_row({"servlet id", "start id"});
-            summary.add_row({turbo::Format(opt->servlet_id), turbo::Format(response.start_id())});
+            summary.add_row({turbo::format(opt->servlet_id), turbo::format(response.start_id())});
             ss.add_table("summary", std::move(summary), true);
         }
     }

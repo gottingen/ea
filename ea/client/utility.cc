@@ -101,11 +101,11 @@ namespace EA::client {
     }
 
     std::string version_to_string(const EA::discovery::Version &v) {
-        return turbo::Format("{}.{}.{}", v.major(), v.minor(), v.patch());
+        return turbo::format("{}.{}.{}", v.major(), v.minor(), v.patch());
     }
 
     std::string module_version_to_string(const turbo::ModuleVersion &v) {
-        return turbo::Format("{}.{}.{}", v.major, v.minor, v.patch);
+        return turbo::format("{}.{}.{}", v.major, v.minor, v.patch);
     }
 
     static turbo::flat_hash_set<char> AllowChar{'a', 'b', 'c', 'd', 'e', 'f', 'g',

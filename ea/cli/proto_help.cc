@@ -92,7 +92,7 @@ namespace EA::cli {
     }
 
     std::string version_to_string(const EA::discovery::Version &v) {
-        return turbo::Format("{}.{}.{}", v.major(), v.minor(), v.patch());
+        return turbo::format("{}.{}.{}", v.major(), v.minor(), v.patch());
     }
 
 

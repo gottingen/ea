@@ -156,12 +156,12 @@ namespace EA::cli {
                                 "region split lines"});
         for (auto &zone: zones) {
             summary.add_row(
-                    turbo::Table::Row_t{zone.namespace_name(), zone.zone(), turbo::Format(zone.zone_id()),
-                          turbo::Format(zone.version()),
-                          turbo::Format(zone.quota()), turbo::Format(zone.replica_num()), zone.resource_tag(),
-                          turbo::Format(zone.region_split_lines())});
+                    turbo::Table::Row_t{zone.namespace_name(), zone.zone(), turbo::format(zone.zone_id()),
+                          turbo::format(zone.version()),
+                          turbo::format(zone.quota()), turbo::format(zone.replica_num()), zone.resource_tag(),
+                          turbo::format(zone.region_split_lines())});
             auto last = summary.size() - 1;
-            summary[last].format().font_color(turbo::Color::green);
+            summary[last].format().font_color(turbo::fg(turbo::terminal_color::green));
         }
         return summary;
     }

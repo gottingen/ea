@@ -14,7 +14,8 @@
 #include "braft/log_entry.h"
 #include "re2/re2.h"
 
-namespace fmt {
+/*
+namespace turbo {
 
     template<>
     struct formatter<rocksdb::Status::Code> : public formatter<int> {
@@ -65,5 +66,5 @@ namespace fmt {
             return formatter<int>::format(static_cast<int>(a), ctx);
         }
     };
-}
+}*/
 #endif  // EA_COMMON_PROTO_HELPER_H_

@@ -284,7 +284,7 @@ namespace EA::client {
             return rs;
         }
         turbo::SequentialWriteFile file;
-        auto path = turbo::Format("{}.{}", config_name, type);
+        auto path = turbo::format("{}.{}", config_name, type);
         rs = file.open(path, true);
         if (!rs.ok()) {
             return rs;
@@ -838,7 +838,7 @@ namespace EA::client {
             return rs;
         }
         for (auto &zone: zone_proto_list) {
-            zone_list.push_back(turbo::Format("{},{}", zone.namespace_name(), zone.zone()));
+            zone_list.push_back(turbo::format("{},{}", zone.namespace_name(), zone.zone()));
         }
         return turbo::ok_status();
     }
@@ -850,7 +850,7 @@ namespace EA::client {
             return rs;
         }
         for (auto &zone: zone_proto_list) {
-            zone_list.push_back(turbo::Format("{},{}", zone.namespace_name(), zone.zone()));
+            zone_list.push_back(turbo::format("{},{}", zone.namespace_name(), zone.zone()));
         }
         return turbo::ok_status();
     }

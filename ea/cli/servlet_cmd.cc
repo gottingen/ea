@@ -159,10 +159,10 @@ namespace EA::cli {
         sumary.add_row({"namespace", "zone", "servlet", "id", "version", "replica number", "resource tag"});
         for (auto &ns: servlets) {
             sumary.add_row(
-                    turbo::Table::Row_t{ns.namespace_name(), ns.zone(), ns.servlet_name(), turbo::Format(ns.servlet_id()),
-                          turbo::Format(ns.version()), turbo::Format(ns.replica_num()), ns.resource_tag()});
+                    turbo::Table::Row_t{ns.namespace_name(), ns.zone(), ns.servlet_name(), turbo::format(ns.servlet_id()),
+                          turbo::format(ns.version()), turbo::format(ns.replica_num()), ns.resource_tag()});
             auto last = sumary.size() - 1;
-            sumary[last].format().font_color(turbo::Color::green);
+            sumary[last].format().font_color(turbo::fg(turbo::terminal_color::green));
         }
         return sumary;
     }

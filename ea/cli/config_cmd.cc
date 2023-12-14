@@ -185,7 +185,7 @@ namespace EA::cli {
             ss.add_table("write", "ok", true);
         }
         file.close();
-        ss.add_table("summary", turbo::Format("success write to  file: {}", file_path), true);
+        ss.add_table("summary", turbo::format("success write to  file: {}", file_path), true);
     }
 
     void ConfigCmd::run_config_test_cmd() {
@@ -219,13 +219,13 @@ namespace EA::cli {
         turbo::Println("name size:{}", request.name().size());
         turbo::Table result_table;
         result_table.add_row(turbo::Table::Row_t{"name", request.name()});
-        result_table.add_row(turbo::Table::Row_t{"version", turbo::Format("{}.{}.{}", request.version().major(),
+        result_table.add_row(turbo::Table::Row_t{"version", turbo::format("{}.{}.{}", request.version().major(),
                                                                           request.version().minor(),
                                                                           request.version().patch())});
         result_table.add_row(turbo::Table::Row_t{"type", config_type_to_string(request.type())});
-        result_table.add_row(turbo::Table::Row_t{"size", turbo::Format(request.content().size())});
-        turbo::Time cs = turbo::FromTimeT(request.time());
-        result_table.add_row(turbo::Table::Row_t{"time", turbo::FormatTime(cs)});
+        result_table.add_row(turbo::Table::Row_t{"size", turbo::format(request.content().size())});
+        turbo::Time cs = turbo::from_time_t(request.time());
+        result_table.add_row(turbo::Table::Row_t{"time", turbo::format_time(cs)});
         result_table.add_row(turbo::Table::Row_t{"content", request.content()});
         ss.add_table("result", std::move(result_table), true);
     }
@@ -324,7 +324,7 @@ namespace EA::cli {
     [[nodiscard]] turbo::Status
     ConfigCmd::make_example_config_dump(EA::discovery::ConfigInfo *req) {
         req->set_name("example");
-        req->set_time(static_cast<int>(turbo::ToTimeT(turbo::Now())));
+        req->set_time(static_cast<int>(turbo::to_time_t(turbo::time_now())));
         req->set_type(EA::discovery::CF_JSON);
         auto v = req->mutable_version();
         v->set_major(1);
@@ -384,12 +384,12 @@ namespace EA::cli {
     turbo::Table ConfigCmd::show_query_ops_config_list_response(const EA::discovery::DiscoveryQueryResponse &res) {
         turbo::Table result;
         auto &config_list = res.config_infos();
-        result.add_row(turbo::Table::Row_t{"config size", turbo::Format(config_list.size())});
+        result.add_row(turbo::Table::Row_t{"config size", turbo::format(config_list.size())});
         auto last = result.size() - 1;
-        result[last].format().font_color(turbo::Color::green);
+        result[last].format().font_color(turbo::fg(turbo::terminal_color::green));
         result.add_row(turbo::Table::Row_t{"number", "config"});
         last = result.size() - 1;
-        result[last].format().font_color(turbo::Color::green);
+        result[last].format().font_color(turbo::fg(turbo::terminal_color::green));
         int i = 0;
         std::vector<EA::discovery::ConfigInfo> sorted_list;
         for (auto &ns: config_list) {
@@ -400,9 +400,9 @@ namespace EA::cli {
         };
         std::sort(sorted_list.begin(), sorted_list.end(),less_fun);
         for (auto &ns: sorted_list) {
-            result.add_row(turbo::Table::Row_t{turbo::Format(i++), ns.name()});
+            result.add_row(turbo::Table::Row_t{turbo::format(i++), ns.name()});
             last = result.size() - 1;
-            result[last].format().font_color(turbo::Color::yellow);
+            result[last].format().font_color(turbo::fg(turbo::terminal_color::yellow));
 
         }
         return result;
@@ -411,20 +411,20 @@ namespace EA::cli {
     turbo::Table ConfigCmd::show_query_ops_config_list_version_response(const EA::discovery::DiscoveryQueryResponse &res) {
         turbo::Table result;
         auto &config_versions = res.config_infos();
-        result.add_row(turbo::Table::Row_t{"version num", turbo::Format(config_versions.size())});
+        result.add_row(turbo::Table::Row_t{"version num", turbo::format(config_versions.size())});
         auto last = result.size() - 1;
-        result[last].format().font_color(turbo::Color::green);
+        result[last].format().font_color(turbo::fg(turbo::terminal_color::green));
         result.add_row(turbo::Table::Row_t{"number", "version"});
         last = result.size() - 1;
-        result[last].format().font_color(turbo::Color::green);
+        result[last].format().font_color(turbo::fg(turbo::terminal_color::green));
         int i = 0;
         for (auto &ns: config_versions) {
             result.add_row(
-                    turbo::Table::Row_t{turbo::Format(i++),
-                                        turbo::Format("{}.{}.{}", ns.version().major(), ns.version().minor(),
+                    turbo::Table::Row_t{turbo::format(i++),
+                                        turbo::format("{}.{}.{}", ns.version().major(), ns.version().minor(),
                                                       ns.version().patch())});
             last = result.size() - 1;
-            result[last].format().font_color(turbo::Color::yellow);
+            result[last].format().font_color(turbo::fg(turbo::terminal_color::yellow));
 
         }
         return result;
@@ -434,28 +434,28 @@ namespace EA::cli {
                                                                const turbo::Status &save_status) {
         turbo::Table result_table;
         auto config = res.config_infos(0);
-        result_table.add_row(turbo::Table::Row_t{"version", turbo::Format("{}.{}.{}", config.version().major(),
+        result_table.add_row(turbo::Table::Row_t{"version", turbo::format("{}.{}.{}", config.version().major(),
                                                                           config.version().minor(),
                                                                           config.version().patch())});
         auto last = result_table.size() - 1;
-        result_table[last].format().font_color(turbo::Color::green);
+        result_table[last].format().font_color(turbo::fg(turbo::terminal_color::green));
         result_table.add_row(turbo::Table::Row_t{"type", config_type_to_string(config.type())});
         last = result_table.size() - 1;
-        result_table[last].format().font_color(turbo::Color::green);
-        result_table.add_row(turbo::Table::Row_t{"size", turbo::Format(config.content().size())});
+        result_table[last].format().font_color(turbo::fg(turbo::terminal_color::green));
+        result_table.add_row(turbo::Table::Row_t{"size", turbo::format(config.content().size())});
         last = result_table.size() - 1;
-        result_table[last].format().font_color(turbo::Color::green);
-        turbo::Time cs = turbo::FromTimeT(config.time());
-        result_table.add_row(turbo::Table::Row_t{"time", turbo::FormatTime(cs)});
+        result_table[last].format().font_color(turbo::fg(turbo::terminal_color::green));
+        turbo::Time cs = turbo::from_time_t(config.time());
+        result_table.add_row(turbo::Table::Row_t{"time", turbo::format_time(cs)});
         last = result_table.size() - 1;
-        result_table[last].format().font_color(turbo::Color::green);
+        result_table[last].format().font_color(turbo::fg(turbo::terminal_color::green));
         if (!ConfigOptionContext::get_instance()->config_file.empty()) {
             result_table.add_row(turbo::Table::Row_t{"file", ConfigOptionContext::get_instance()->config_file});
             last = result_table.size() - 1;
-            result_table[last].format().font_color(turbo::Color::green);
+            result_table[last].format().font_color(turbo::fg(turbo::terminal_color::green));
             result_table.add_row(turbo::Table::Row_t{"status", save_status.ok() ? "ok" : save_status.message()});
             last = result_table.size() - 1;
-            result_table[last].format().font_color(turbo::Color::green);
+            result_table[last].format().font_color(turbo::fg(turbo::terminal_color::green));
         }
 
         return result_table;
@@ -523,7 +523,7 @@ namespace EA::cli {
     }
 
     turbo::Status ConfigCmd::save_config_to_file(const std::string &basedir, const EA::client::ConfigCallbackData &data) {
-        std::string file_name = turbo::Format("{}/{}-{}.{}.{}.{}", basedir, data.config_name, data.new_version.major,
+        std::string file_name = turbo::format("{}/{}-{}.{}.{}.{}", basedir, data.config_name, data.new_version.major,
                                               data.new_version.minor, data.new_version.patch, data.type);
         if(turbo::filesystem::exists(file_name)) {
             return turbo::already_exists_error("write file [{}] already exists", file_name);

@@ -56,7 +56,7 @@ namespace EA::discovery {
             auto it = manager->_namespace_instance.find(request->namespace_name());
             if(it == manager->_namespace_instance.end()) {
                 response->set_errcode(EA::INPUT_PARAM_ERROR);
-                auto msg = turbo::Format("no instance in namespace {}", request->namespace_name());
+                auto msg = turbo::format("no instance in namespace {}", request->namespace_name());
                 response->set_errmsg(msg);
                 return;
             }
@@ -76,7 +76,7 @@ namespace EA::discovery {
             auto it = manager->_zone_instance.find(zone_key);
             if(it == manager->_zone_instance.end()) {
                 response->set_errcode(EA::INPUT_PARAM_ERROR);
-                auto msg = turbo::Format("no instance in namespace {}.{}", request->namespace_name(), request->zone());
+                auto msg = turbo::format("no instance in namespace {}.{}", request->namespace_name(), request->zone());
                 response->set_errmsg(msg);
                 return;
             }
@@ -96,7 +96,7 @@ namespace EA::discovery {
         auto it = manager->_servlet_instance.find(servlet_key);
         if(it == manager->_servlet_instance.end()) {
             response->set_errcode(EA::INPUT_PARAM_ERROR);
-            auto msg = turbo::Format("no instance in {}.{}.{}", request->namespace_name(), request->zone(), request->servlet());
+            auto msg = turbo::format("no instance in {}.{}.{}", request->namespace_name(), request->zone(), request->servlet());
             response->set_errmsg(msg);
             return;
         }

@@ -78,7 +78,7 @@ namespace EA {
     }
 
     MemTracker::~MemTracker() {
-        TLOG_DEBUG("~MemTracker {} log_id:{} used_bytes:{}", turbo::Ptr(this), _log_id, _bytes_consumed.load());
+        TLOG_DEBUG("~MemTracker {} log_id:{} used_bytes:{}", turbo::ptr(this), _log_id, _bytes_consumed.load());
         int64_t bytes = bytes_consumed();
         if (bytes > 0 && _parent) {
             _parent->release(_bytes_consumed.load());

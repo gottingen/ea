@@ -45,18 +45,18 @@ namespace EA::cli {
         response_result.add_row(Row_t{"status", server_role, "op code", "op string", "error code", "error message"});
         if (code != EA::SUCCESS) {
             response_result.add_row(
-                    Row_t{"fail", server_addr, turbo::Format(qt),qts,turbo::Format("{}", static_cast<int>(code)), msg});
+                    Row_t{"fail", server_addr, turbo::format(qt),qts,turbo::format("{}", static_cast<int>(code)), msg});
         } else {
             response_result.add_row(
-                    Row_t{"success", server_addr, turbo::Format(qt),qts,turbo::Format("{}", static_cast<int>(code)), msg});
+                    Row_t{"success", server_addr, turbo::format(qt),qts,turbo::format("{}", static_cast<int>(code)), msg});
         }
         auto last = response_result.size() - 1;
-        response_result[last][0].format().font_color(turbo::Color::green).font_style({turbo::FontStyle::bold});
+        response_result[last][0].format().font_color(turbo::fg(turbo::terminal_color::green)).font_style(turbo::emphasis::bold);
 
         if (code == EA::SUCCESS) {
-            response_result[last][1].format().font_color(turbo::Color::yellow);
+            response_result[last][1].format().font_color(fg(turbo::terminal_color::yellow));
         } else {
-            response_result[last][1].format().font_color(turbo::Color::red);
+            response_result[last][1].format().font_color(fg(turbo::terminal_color::red));
         }
         return response_result;
     }
@@ -76,18 +76,18 @@ namespace EA::cli {
         response_result.add_row(Row_t{"status", server_role, "op code", "op string", "error code", "error message"});
         if (code != EA::SUCCESS) {
             response_result.add_row(
-                    Row_t{"fail", server_addr, turbo::Format(qt),qts,turbo::Format("{}", static_cast<int>(code)), msg});
+                    Row_t{"fail", server_addr, turbo::format(qt),qts,turbo::format("{}", static_cast<int>(code)), msg});
         } else {
             response_result.add_row(
-                    Row_t{"success", server_addr, turbo::Format(qt),qts,turbo::Format("{}", static_cast<int>(code)), msg});
+                    Row_t{"success", server_addr, turbo::format(qt),qts,turbo::format("{}", static_cast<int>(code)), msg});
         }
         auto last = response_result.size() - 1;
-        response_result[last][0].format().font_color(turbo::Color::green).font_style({turbo::FontStyle::bold});
+        response_result[last][0].format().font_color(fg(turbo::terminal_color::green)).font_style(turbo::emphasis::bold);
 
         if (code == EA::SUCCESS) {
-            response_result[last][1].format().font_color(turbo::Color::yellow);
+            response_result[last][1].format().font_color(fg(turbo::terminal_color::yellow));
         } else {
-            response_result[last][1].format().font_color(turbo::Color::red);
+            response_result[last][1].format().font_color(fg(turbo::terminal_color::red));
         }
         return response_result;
     }
@@ -96,27 +96,27 @@ namespace EA::cli {
         turbo::Table result;
         result.add_row(Row_t{"status", "op code", "op string", "error code", "error message"});
         auto last = result.size() - 1;
-        result[last].format().font_color(turbo::Color::yellow).font_style({turbo::FontStyle::bold});
+        result[last].format().font_color(fg(turbo::terminal_color::yellow)).font_style(turbo::emphasis::bold);
         if (s.ok()) {
             result.add_row(
-                    Row_t{"success", turbo::Format(qt), qts,
-                          turbo::Format("{}", static_cast<int>(s.code())), s.message()});
+                    Row_t{"success", turbo::format(qt), qts,
+                          turbo::format("{}", static_cast<int>(s.code())), s.message()});
             last = result.size() - 1;
-            result[last][0].format().font_color(turbo::Color::green);
-            result[last][1].format().font_color(turbo::Color::yellow);
-            result[last][2].format().font_color(turbo::Color::yellow);
-            result[last][3].format().font_color(turbo::Color::green);
-            result[last][4].format().font_color(turbo::Color::green);
+            result[last][0].format().font_color(fg(turbo::terminal_color::green));
+            result[last][1].format().font_color(fg(turbo::terminal_color::yellow));
+            result[last][2].format().font_color(fg(turbo::terminal_color::yellow));
+            result[last][3].format().font_color(fg(turbo::terminal_color::green));
+            result[last][4].format().font_color(fg(turbo::terminal_color::green));
         } else {
             result.add_row(
-                    Row_t{"fail", turbo::Format(qt), qts,
-                          turbo::Format("{}", static_cast<int>(s.code())), s.message()});
+                    Row_t{"fail", turbo::format(qt), qts,
+                          turbo::format("{}", static_cast<int>(s.code())), s.message()});
             last = result.size() - 1;
-            result[last][0].format().font_color(turbo::Color::red);
-            result[last][1].format().font_color(turbo::Color::yellow);
-            result[last][2].format().font_color(turbo::Color::yellow);
-            result[last][3].format().font_color(turbo::Color::red);
-            result[last][4].format().font_color(turbo::Color::red);
+            result[last][0].format().font_color(fg(turbo::terminal_color::red));
+            result[last][1].format().font_color(fg(turbo::terminal_color::yellow));
+            result[last][2].format().font_color(fg(turbo::terminal_color::yellow));
+            result[last][3].format().font_color(fg(turbo::terminal_color::red));
+            result[last][4].format().font_color(fg(turbo::terminal_color::red));
         }
         return result;
     }
@@ -124,29 +124,29 @@ namespace EA::cli {
     turbo::Table ShowHelper::pre_send_error(const turbo::Status &s, const EA::discovery::DiscoveryManagerRequest &req) {
         turbo::Table result;
         result.add_row(Row_t{"status", "op code", "op string", "error message"});
-        result[0].format().font_color(turbo::Color::green).font_style({turbo::FontStyle::bold}).font_align(
+        result[0].format().font_color(fg(turbo::terminal_color::green)).font_style(turbo::emphasis::bold).font_align(
                 turbo::FontAlign::center);
         if (!req.has_op_type()) {
             result.add_row(Row_t{"fail", "nil", "nil", "op_type field is required but not set not set"});
             auto last = result.size() - 1;
-            result[last].format().font_color(turbo::Color::red).font_style(
-                    {turbo::FontStyle::bold}).font_align(
+            result[last].format().font_color(fg(turbo::terminal_color::red)).font_style(
+                    turbo::emphasis::bold).font_align(
                     turbo::FontAlign::center);
         } else if (!s.ok()) {
             result.add_row(
-                    Row_t{"fail", turbo::Format("{}", static_cast<int>(req.op_type())), get_op_string(req.op_type()),
+                    Row_t{"fail", turbo::format("{}", static_cast<int>(req.op_type())), get_op_string(req.op_type()),
                           s.message()});
             auto last = result.size() - 1;
-            result[last][0].format().font_color(turbo::Color::red).font_style(
-                    {turbo::FontStyle::bold}).font_align(
+            result[last][0].format().font_color(fg(turbo::terminal_color::red)).font_style(
+                    turbo::emphasis::bold).font_align(
                     turbo::FontAlign::center);
         } else {
             result.add_row(
-                    Row_t{"success", turbo::Format("{}", static_cast<int>(req.op_type())), get_op_string(req.op_type()),
+                    Row_t{"success", turbo::format("{}", static_cast<int>(req.op_type())), get_op_string(req.op_type()),
                           s.message()});
             auto last = result.size() - 1;
-            result[last][0].format().font_color(turbo::Color::green).font_style(
-                    {turbo::FontStyle::bold}).font_align(
+            result[last][0].format().font_color(fg(turbo::terminal_color::green)).font_style(
+                    turbo::emphasis::bold).font_align(
                     turbo::FontAlign::center);
         }
         return result;
@@ -155,31 +155,31 @@ namespace EA::cli {
     turbo::Table ShowHelper::pre_send_error(const turbo::Status &s, const EA::discovery::DiscoveryQueryRequest &req) {
         turbo::Table result;
         result.add_row(Row_t{"status", "op code", "op string", "error message"});
-        result[0].format().font_color(turbo::Color::green).font_style({turbo::FontStyle::bold}).font_align(
+        result[0].format().font_color(fg(turbo::terminal_color::green)).font_style(turbo::emphasis::bold).font_align(
                 turbo::FontAlign::center);
         if (!req.has_op_type()) {
             result.add_row(Row_t{"fail", "nil", "nil", "op_type field is required but not set not set"});
             auto last = result.size() - 1;
-            result[last].format().font_color(turbo::Color::red).font_style(
-                    {turbo::FontStyle::bold}).font_align(
+            result[last].format().font_color(fg(turbo::terminal_color::red)).font_style(
+                    turbo::emphasis::bold).font_align(
                     turbo::FontAlign::center);
         } else if (!s.ok()) {
             result.add_row(
-                    Row_t{"fail", turbo::Format("{}", static_cast<int>(req.op_type())),
+                    Row_t{"fail", turbo::format("{}", static_cast<int>(req.op_type())),
                           get_op_string(req.op_type()),
                           s.message()});
             auto last = result.size() - 1;
-            result[last][0].format().font_color(turbo::Color::red).font_style(
-                    {turbo::FontStyle::bold}).font_align(
+            result[last][0].format().font_color(fg(turbo::terminal_color::red)).font_style(
+                    turbo::emphasis::bold).font_align(
                     turbo::FontAlign::center);
         } else {
             result.add_row(
-                    Row_t{"success", turbo::Format("{}", static_cast<int>(req.op_type())),
+                    Row_t{"success", turbo::format("{}", static_cast<int>(req.op_type())),
                           get_op_string(req.op_type()),
                           s.message()});
             auto last = result.size() - 1;
-            result[last][0].format().font_color(turbo::Color::green).font_style(
-                    {turbo::FontStyle::bold}).font_align(
+            result[last][0].format().font_color(fg(turbo::terminal_color::green)).font_style(
+                    turbo::emphasis::bold).font_align(
                     turbo::FontAlign::center);
         }
         return result;
@@ -188,31 +188,31 @@ namespace EA::cli {
     turbo::Table ShowHelper::pre_send_error(const turbo::Status &s, const EA::RaftControlRequest &req) {
         turbo::Table result;
         result.add_row(Row_t{"status", "op code", "op string", "error message"});
-        result[0].format().font_color(turbo::Color::green).font_style({turbo::FontStyle::bold}).font_align(
+        result[0].format().font_color(fg(turbo::terminal_color::green)).font_style(turbo::emphasis::bold).font_align(
                 turbo::FontAlign::center);
         if (!req.has_op_type()) {
             result.add_row(Row_t{"fail", "nil", "nil", "op_type field is required but not set not set"});
             auto last = result.size() - 1;
-            result[last].format().font_color(turbo::Color::red).font_style(
-                    {turbo::FontStyle::bold}).font_align(
+            result[last].format().font_color(fg(turbo::terminal_color::red)).font_style(
+                    turbo::emphasis::bold).font_align(
                     turbo::FontAlign::center);
         } else if (!s.ok()) {
             result.add_row(
-                    Row_t{"fail", turbo::Format("{}", static_cast<int>(req.op_type())),
+                    Row_t{"fail", turbo::format("{}", static_cast<int>(req.op_type())),
                           get_op_string(req.op_type()),
                           s.message()});
             auto last = result.size() - 1;
-            result[last][0].format().font_color(turbo::Color::red).font_style(
-                    {turbo::FontStyle::bold}).font_align(
+            result[last][0].format().font_color(fg(turbo::terminal_color::red)).font_style(
+                    turbo::emphasis::bold).font_align(
                     turbo::FontAlign::center);
         } else {
             result.add_row(
-                    Row_t{"success", turbo::Format("{}", static_cast<int>(req.op_type())),
+                    Row_t{"success", turbo::format("{}", static_cast<int>(req.op_type())),
                           get_op_string(req.op_type()),
                           s.message()});
             auto last = result.size() - 1;
-            result[last][0].format().font_color(turbo::Color::green).font_style(
-                    {turbo::FontStyle::bold}).font_align(
+            result[last][0].format().font_color(fg(turbo::terminal_color::green)).font_style(
+                    turbo::emphasis::bold).font_align(
                     turbo::FontAlign::center);
         }
         return result;
@@ -220,17 +220,17 @@ namespace EA::cli {
 
     ScopeShower::ScopeShower() {
         result_table.add_row({"phase","status"});
-        result_table[0].format().font_color(turbo::Color::blue);
+        result_table[0].format().font_color(fg(turbo::terminal_color::blue));
         result_table[0][1].format().font_align(turbo::FontAlign::left);
         result_table[0][1].format().font_align(turbo::FontAlign::center);
     }
 
     ScopeShower::ScopeShower(const std::string & operation) {
         result_table.add_row({"operation", operation});
-        result_table[0][0].format().font_color(turbo::Color::yellow).font_align(turbo::FontAlign::left);
-        result_table[0][1].format().font_color(turbo::Color::magenta).font_align(turbo::FontAlign::center);
+        result_table[0][0].format().font_color(fg(turbo::terminal_color::yellow)).font_align(turbo::FontAlign::left);
+        result_table[0][1].format().font_color(fg(turbo::terminal_color::magenta)).font_align(turbo::FontAlign::center);
         result_table.add_row({"phase","status"});
-        result_table[1].format().font_color(turbo::Color::blue);
+        result_table[1].format().font_color(fg(turbo::terminal_color::blue));
         result_table[1][1].format().font_align(turbo::FontAlign::left);
         result_table[1][1].format().font_align(turbo::FontAlign::center);
 
@@ -249,38 +249,38 @@ namespace EA::cli {
     void ScopeShower::add_table(const std::string &stage, turbo::Table &&table, bool ok) {
         auto &t = result_table.add_row({stage,std::move(table)});
         auto last = result_table.size() - 1;
-        result_table[last][0].format().font_color(turbo::Color::yellow);
+        result_table[last][0].format().font_color(fg(turbo::terminal_color::yellow));
         if(ok) {
-            result_table[last][1].format().font_color(turbo::Color::green);
+            result_table[last][1].format().font_color(fg(turbo::terminal_color::green));
         } else {
-            result_table[last][1].format().font_color(turbo::Color::red);
+            result_table[last][1].format().font_color(fg(turbo::terminal_color::red));
         }
     }
 
     void ScopeShower::add_table(const std::string &stage, const std::string &msg, bool ok) {
         result_table.add_row({stage,msg});
         auto last = result_table.size() - 1;
-        result_table[last][0].format().font_color(turbo::Color::yellow);
+        result_table[last][0].format().font_color(fg(turbo::terminal_color::yellow));
         if(ok) {
-            result_table[last][1].format().font_color(turbo::Color::green).font_align(turbo::FontAlign::center);
+            result_table[last][1].format().font_color(fg(turbo::terminal_color::green)).font_align(turbo::FontAlign::center);
         } else {
-            result_table[last][1].format().font_color(turbo::Color::red).font_align(turbo::FontAlign::center);
+            result_table[last][1].format().font_color(fg(turbo::terminal_color::red)).font_align(turbo::FontAlign::center);
         }
     }
 
     void ScopeShower::prepare(const turbo::Status &status) {
         if(status.ok()) {
             result_table.add_row({"prepare", turbo::Table().add_row({"ok"})});
-            result_table[2][1].format().font_color(turbo::Color::green)
+            result_table[2][1].format().font_color(fg(turbo::terminal_color::green))
                     .font_align(turbo::FontAlign::center)
-                    .font_style({turbo::FontStyle::concealed});
+                    .font_style({turbo::emphasis::conceal});
         } else {
             result_table.add_row({"prepare", turbo::Table().add_row({"ok"})});
-            result_table[2][1].format().font_color(turbo::Color::red)
+            result_table[2][1].format().font_color(fg(turbo::terminal_color::red))
             .font_align(turbo::FontAlign::center)
-            .font_style({turbo::FontStyle::concealed});
+            .font_style({turbo::emphasis::conceal});
         }
-        result_table[2][0].format().font_color(turbo::Color::yellow);
+        result_table[2][0].format().font_color(fg(turbo::terminal_color::yellow));
     }
 
     std::string ShowHelper::json_format(const std::string &json_str) {

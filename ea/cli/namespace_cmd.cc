@@ -157,20 +157,20 @@ namespace EA::cli {
         result.add_row(
                 turbo::Table::Row_t{"namespace", "id", "version", "quota", "replica number", "resource tag", "region split lines"});
         auto last = result.size() - 1;
-        result[last].format().font_color(turbo::Color::green);
+        result[last].format().font_color(turbo::fg(turbo::terminal_color::green));
 
 
         for (auto &ns: nss) {
             result.add_row(
                     turbo::Table::Row_t{ns.namespace_name(),
-                          turbo::Format(ns.namespace_id()),
-                          turbo::Format(ns.version()),
-                          turbo::Format(ns.quota()),
-                          turbo::Format(ns.replica_num()),
+                          turbo::format(ns.namespace_id()),
+                          turbo::format(ns.version()),
+                          turbo::format(ns.quota()),
+                          turbo::format(ns.replica_num()),
                           ns.resource_tag(),
-                          turbo::Format(ns.region_split_lines())});
+                          turbo::format(ns.region_split_lines())});
             last = result.size() - 1;
-            result[last].format().font_color(turbo::Color::green);
+            result[last].format().font_color(turbo::fg(turbo::terminal_color::green));
         }
         return result;
     }

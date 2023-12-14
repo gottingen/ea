@@ -384,12 +384,12 @@ namespace EA::cli {
     turbo::Table DiscoveryCmd::show_query_instance_list_response(const EA::discovery::DiscoveryQueryResponse &res) {
         turbo::Table result;
         auto &instance_list = res.flatten_instances();
-        result.add_row(turbo::Table::Row_t{"instance num", turbo::Format(instance_list.size())});
+        result.add_row(turbo::Table::Row_t{"instance num", turbo::format(instance_list.size())});
         auto last = result.size() - 1;
-        result[last].format().font_color(turbo::Color::green);
+        result[last].format().font_color(turbo::fg(turbo::terminal_color::green));
         result.add_row(turbo::Table::Row_t{"number", "instance"});
         last = result.size() - 1;
-        result[last].format().font_color(turbo::Color::green);
+        result[last].format().font_color(turbo::fg(turbo::terminal_color::green));
         int i = 0;
         std::vector<EA::discovery::QueryInstance> sorted_list;
         for (auto &ns: instance_list) {
@@ -400,11 +400,11 @@ namespace EA::cli {
         };
         std::sort(sorted_list.begin(), sorted_list.end(), less_fun);
         for (auto &ns: sorted_list) {
-            result.add_row(turbo::Table::Row_t{turbo::Format(i++),
-                                               turbo::Format("{}.{}.{}#{}", ns.namespace_name(), ns.zone_name(),
+            result.add_row(turbo::Table::Row_t{turbo::format(i++),
+                                               turbo::format("{}.{}.{}#{}", ns.namespace_name(), ns.zone_name(),
                                                              ns.servlet_name(), ns.address())});
             last = result.size() - 1;
-            result[last].format().font_color(turbo::Color::yellow);
+            result[last].format().font_color(turbo::fg(turbo::terminal_color::yellow));
 
         }
         return result;
@@ -416,13 +416,13 @@ namespace EA::cli {
         result.add_row(turbo::Table::Row_t{"uri", "address", "env", "color","create time", "version","status"});
         result.add_row(
                 turbo::Table::Row_t{
-                        turbo::Format("{}.{}.{}", instance.namespace_name(), instance.zone_name(),
+                        turbo::format("{}.{}.{}", instance.namespace_name(), instance.zone_name(),
                                       instance.servlet_name()),
                         instance.address(),
                         instance.env(),
                         instance.color(),
-                        turbo::Format(instance.timestamp()),
-                        turbo::Format(instance.version()),
+                        turbo::format(instance.timestamp()),
+                        turbo::format(instance.version()),
                         EA::discovery::Status_Name(instance.status())
                 }
         );

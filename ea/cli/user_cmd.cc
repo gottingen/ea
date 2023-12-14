@@ -243,12 +243,12 @@ namespace EA::cli {
             turbo::Table zone_table;
             for (auto zp: user.privilege_zone()) {
                 zone_table.add_row(
-                        {turbo::Format("{}:{} {}", zp.zone(), EA::discovery::RW_Name(zp.zone_rw()), zp.force())});
+                        {turbo::format("{}:{} {}", zp.zone(), EA::discovery::RW_Name(zp.zone_rw()), zp.force())});
             }
 
             turbo::Table servlet_table;
             for (auto sp: user.privilege_servlet()) {
-                servlet_table.add_row({turbo::Format("{}.{}:{} {}", sp.zone(), sp.servlet_name(),
+                servlet_table.add_row({turbo::format("{}.{}:{} {}", sp.zone(), sp.servlet_name(),
                                                      EA::discovery::RW_Name(sp.servlet_rw()), sp.force())});
             }
 
@@ -256,13 +256,13 @@ namespace EA::cli {
                 passwd = user.password();
             }
             summary.add_row(
-                    turbo::Table::Row_t{user.namespace_name(), user.username(), turbo::Format(user.version()), passwd,
+                    turbo::Table::Row_t{user.namespace_name(), user.username(), turbo::format(user.version()), passwd,
                                         ip_table,
                                         zone_table,
                                         servlet_table
                     });
             auto last = summary.size() - 1;
-            summary[last].format().font_color(turbo::Color::green);
+            summary[last].format().font_color(turbo::fg(turbo::terminal_color::green));
         }
         return summary;
     }
@@ -277,7 +277,7 @@ namespace EA::cli {
                     turbo::Table::Row_t{user.namespace_name(), user.username(), user.privilege(),
                                         EA::discovery::RW_Name(user.servlet_rw()), "******"});
             auto last = summary.size() - 1;
-            summary[last].format().font_color(turbo::Color::green);
+            summary[last].format().font_color(turbo::fg(turbo::terminal_color::green));
         }
 
         return summary;
